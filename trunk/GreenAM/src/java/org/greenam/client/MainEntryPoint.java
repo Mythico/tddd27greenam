@@ -47,7 +47,6 @@ public class MainEntryPoint implements EntryPoint {
         grid.getColumnFormatter().setWidth(2, "25%");
         grid.getFlexCellFormatter().setHeight(0, 1, "250px");
         
-        
         grid.getFlexCellFormatter().setAlignment(0, 0, 
                 HasHorizontalAlignment.ALIGN_LEFT, 
                 HasVerticalAlignment.ALIGN_TOP);
