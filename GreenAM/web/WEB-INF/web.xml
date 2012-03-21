@@ -8,6 +8,25 @@
         <servlet-name>MusicSearchService</servlet-name>
         <url-pattern>/org.greenam.Main/musicsearchservice</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>LoginRequiredServlet</servlet-name>
+        <servlet-class>org.greenam.server.LoginRequiredServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginRequiredServlet</servlet-name>
+        <url-pattern>/_ah/login_required</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Security Constraints used by open id Login-->
+    <!--<security-constraint>
+        <web-resource-collection>
+            <url-pattern>.*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>*</role-name>
+        </auth-constraint>
+    </security-constraint> -->
+    
     <session-config>
         <session-timeout>
             30
