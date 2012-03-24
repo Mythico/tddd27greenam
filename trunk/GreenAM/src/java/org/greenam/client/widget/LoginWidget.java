@@ -7,11 +7,11 @@ package org.greenam.client.widget;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import org.greenam.client.rpc.AccessService;
+import org.greenam.client.rpc.AccessServiceAsync;
 
 /**
  *
@@ -19,22 +19,32 @@ import com.google.gwt.user.client.ui.*;
  */
 public class LoginWidget extends VerticalPanel {
 
-    private final Button button = new Button("Login");
-    private final DialogBox box = new DialogBox(true);
+    private final Button loginButton = new Button("Login");
+    private final AccessServiceAsync async = GWT.create(AccessService.class);
 
     public LoginWidget() {
-        
-        button.addClickHandler(new ClickHandler() {
+        loginButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                box.center();
+                Window.Location.replace("/_ah/login_required");
+
             }
         });
-                
-        Frame frame = new Frame("_ah/login_required");
-        frame.setSize("600px", "600px");
-        box.add(frame);
-        add(button);
+
+        add(loginButton);
+        async.hasAccess(callback);
     }
+    AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+
+        @Override
+        public void onFailure(Throwable caught) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void onSuccess(Boolean login) {
+            loginButton.setText(login ? "Logout" : "Login");
+        }
+    };
 }

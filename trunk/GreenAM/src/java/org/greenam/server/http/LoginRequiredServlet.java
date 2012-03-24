@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.greenam.server;
+package org.greenam.server.http;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -48,18 +48,9 @@ public class LoginRequiredServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
 
         if (user != null) {
-            out.println("Hello <i>" + user.getNickname() + "</i>!");
-            out.println("[<a href=\""
-                    + userService.createLogoutURL(req.getRequestURI())
-                    + "\">sign out</a>]");
+            resp.sendRedirect(userService.createLogoutURL("../"));
         } else {
-            out.println("Hello world! Sign in at: ");
-            for (String providerName : openIdProviders.keySet()) {
-                String providerUrl = openIdProviders.get(providerName);
-                String loginUrl = userService.createLoginURL(req
-                        .getRequestURI(), null, providerUrl, attributes);
-                out.println("[<a href=\"" + loginUrl + "\">" + providerName + "</a>] ");
-            }
+            resp.sendRedirect(userService.createLoginURL("../"));
         }
     }
 }
