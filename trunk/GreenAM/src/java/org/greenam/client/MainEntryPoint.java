@@ -4,12 +4,11 @@
  */
 package org.greenam.client;
 
-import org.greenam.client.widget.LoginWidget;
-import org.greenam.client.widget.SearchWidget;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.*;
 import org.greenam.client.view.ViewController;
+import org.greenam.client.widget.LoginWidget;
+import org.greenam.client.widget.SearchWidget;
 
 /**
  * Main entry point.
@@ -28,6 +27,7 @@ public class MainEntryPoint implements EntryPoint {
      * The entry point method, called automatically by loading a module that
      * declares an implementing class as an entry-point
      */
+    @Override
     public void onModuleLoad() {
         RootLayoutPanel.get().setStyleName("gam-Page");
         final FlexTable grid = new FlexTable();
