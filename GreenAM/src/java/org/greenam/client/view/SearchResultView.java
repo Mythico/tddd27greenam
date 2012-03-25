@@ -5,13 +5,10 @@
 package org.greenam.client.view;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
-import java.util.LinkedList;
-import org.greenam.client.rpc.MusicSearchService;
-import org.greenam.client.rpc.MusicSearchServiceAsync;
-import org.greenam.client.rpc.Record;
+import org.greenam.client.rpc.SearchService;
+import org.greenam.client.rpc.SearchServiceAsync;
+import org.greenam.client.widget.AlbumListWidget;
 import org.greenam.client.widget.RecordListWidget;
 
 /**
@@ -21,45 +18,51 @@ import org.greenam.client.widget.RecordListWidget;
 public class SearchResultView extends VerticalPanel {
 
     private ScrollPanel scrollPanel;
-    private final ViewController viewController;
-    private final RecordListWidget recList;
-    private final MusicSearchServiceAsync async = GWT.create(MusicSearchService.class);
-
+    private final RecordListWidget recordList;
+    private final AlbumListWidget albumList;
+    private final SearchServiceAsync async = GWT.create(SearchService.class);
+    
     public SearchResultView(ViewController viewController) {
         setStyleName("gam-ContentView");
-        this.viewController = viewController;
-        recList = new RecordListWidget(viewController);
-        scrollPanel = new ScrollPanel(recList);
+        recordList = new RecordListWidget(viewController);
+        albumList = new AlbumListWidget(viewController);
+        
+        scrollPanel = new ScrollPanel(recordList);
 
         add(scrollPanel);
     }
     
     public void search(String search){
-        async.search(search, recList.callback);        
+        scrollPanel.setWidget(albumList);
+        async.search(search, recordList.callback);        
     }
     
 
-    public void searchAlbum(int albumId) {
-        async.searchAlbum(albumId, recList.callback);
+    public void searchAlbum(Long id) {
+        scrollPanel.setWidget(albumList);
+        async.searchAlbum(id, albumList.callbackId);
     }
     
-    public void searchAlbum(String album) {
-        async.searchAlbum(album, recList.callback);
+    public void searchAlbum(String name) {
+        scrollPanel.setWidget(albumList);
+        async.searchAlbum(name, albumList.callback);
     }
 
-    public void searchTitle(int titleId) {
-        async.searchTitle(titleId, recList.callback);
+    public void searchTitle(Long id) {
+        scrollPanel.setWidget(recordList);
+        async.searchTitle(id, recordList.callbackId);
     }
 
-    public void searchTitle(String title) {
-        async.searchTitle(title, recList.callback);
+    public void searchTitle(String name) {
+        scrollPanel.setWidget(recordList);
+        async.searchTitle(name, recordList.callback);
     }
 
     public void searchGenre(int genre) {
-        async.searchGenre(genre, recList.callback);        
+        //async.searchGenre(genre, albumList.callback);        
     }
 
     void searchGenre(String genre) {
-        async.searchGenre(genre, recList.callback);        
+        //async.searchGenre(genre, albumList.callback);        
     }
 }

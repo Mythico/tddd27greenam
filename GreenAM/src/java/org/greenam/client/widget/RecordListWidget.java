@@ -11,21 +11,18 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import java.util.LinkedList;
-import org.greenam.client.rpc.Record;
+import java.util.List;
+import org.greenam.client.rpc.jdo.Record;
 import org.greenam.client.view.ViewController;
 
 /**
  *
  * @author Emil
  */
-public class RecordListWidget extends Grid {
-
-    private final ViewController viewController;
+public class RecordListWidget extends ListWidget<Record> {
 
     public RecordListWidget(ViewController viewController) {
-        this.viewController = viewController;
-
-        setStyleName("gam-RecordListWidget");
+        super(viewController);
 
 
         resize(1, 6);
@@ -34,10 +31,19 @@ public class RecordListWidget extends Grid {
         setText(0, 3, "Artist");
         setText(0, 4, "Genre");
         setText(0, 5, "Buy");
-        
+
     }
 
-    public void setRecords(LinkedList<Record> records) {
+    private String genreToString(int genre) { //TODO: temp
+        switch (genre) {
+            case 0:
+                return "Dance";
+        }
+        return null;
+    }
+
+    @Override
+    protected void update(List<Record> records) {
         int row = records.size() + 1;
         resize(row, 6);
 
@@ -45,10 +51,10 @@ public class RecordListWidget extends Grid {
         for (final Record record : records) {
             Image playImg = new Image("img/play.png");
             Image buyImg = new Image("img/buy.png");
-            Label title = new Label(record.getTitle());
-            Label album = new Label(record.getAlbum());
-            Label artist = new Label(record.getArtist());
-            Label genre = new Label(genreToString(record.getGenre()));
+            Label title = new Label(record.title);
+            Label album = new Label(record.album);
+            Label artist = new Label("Fetch name from id: " + record.artistId);
+            Label genre = new Label(genreToString(record.genre));
 
             playImg.setStyleName("gam-RecordListWidgetLink");
             buyImg.setStyleName("gam-RecordListWidgetLink");
@@ -61,27 +67,26 @@ public class RecordListWidget extends Grid {
             title.addClickHandler(new ClickHandler() {
 
                 public void onClick(ClickEvent event) {
-                    viewController.setSearchTitleView(record.getTitleId());
+                    //viewController.setSearchTitleView(record.titleId);
                 }
             });
 
             artist.addClickHandler(new ClickHandler() {
 
                 public void onClick(ClickEvent event) {
-                    viewController.setArtistView(record.getArtistId(),
-                            record.getArtist());
+                    viewController.setArtistView(record.artistId, "Fetch name from id: " + record.artistId);
                 }
             });
             album.addClickHandler(new ClickHandler() {
 
                 public void onClick(ClickEvent event) {
-                    viewController.setSearchAlbumView(record.getAlbumId());
+                    //viewController.setSearchAlbumView(record.albumId);
                 }
             });
             genre.addClickHandler(new ClickHandler() {
 
                 public void onClick(ClickEvent event) {
-                    viewController.setSearchGenreView(record.getGenre());
+                    viewController.setSearchGenreView(record.genre);
                 }
             });
 
@@ -94,26 +99,5 @@ public class RecordListWidget extends Grid {
             i++;
         }
 
-    }
-    public final AsyncCallback<LinkedList<Record>> callback =
-            new AsyncCallback<LinkedList<Record>>() {
-
-                public void onSuccess(LinkedList<Record> result) {
-                    setRecords(result);
-                }
-
-                public void onFailure(Throwable caught) {
-                }
-            };
-    
-    
-    
-    //TODO: Temp create a real system. HIHIHO
-    private String genreToString(int genre){
-        switch(genre){
-            case 0:
-                return "Dance";
-        }
-        return null;
     }
 }
