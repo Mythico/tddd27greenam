@@ -12,8 +12,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
 import java.util.LinkedList;
-import org.greenam.client.rpc.MusicSearchService;
-import org.greenam.client.rpc.MusicSearchServiceAsync;
+import org.greenam.client.rpc.SearchService;
+import org.greenam.client.rpc.SearchServiceAsync;
 import org.greenam.client.view.ViewController;
 
 /**
@@ -22,8 +22,7 @@ import org.greenam.client.view.ViewController;
  */
 public class SearchWidget extends HorizontalPanel {
 
-    private final ViewController viewController;
-    private final MusicSearchServiceAsync async = GWT.create(MusicSearchService.class);
+    private final SearchServiceAsync async = GWT.create(SearchService.class);
     private final Button searchButton = new Button("Search");
     private final MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
     private final SuggestBox searchBox = new SuggestBox(oracle);
@@ -42,7 +41,6 @@ public class SearchWidget extends HorizontalPanel {
             };
 
     public SearchWidget(final ViewController viewController) {
-        this.viewController = viewController;
         searchBox.addKeyUpHandler(new KeyUpHandler() {
 
             @Override
