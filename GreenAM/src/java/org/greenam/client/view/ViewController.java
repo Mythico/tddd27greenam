@@ -4,7 +4,7 @@
  */
 package org.greenam.client.view;
 
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.DeckPanel;
 
 /**
  *
@@ -19,8 +19,6 @@ public final class ViewController extends DeckPanel{
 
     private final ArtistView artistView = new ArtistView(this);
     private final SearchResultView searchResultView = new SearchResultView(this);
-    ;
-    private int currentView;
 
     public ViewController() {
         insert(searchResultView, SEARCH_RESULT);
@@ -32,7 +30,7 @@ public final class ViewController extends DeckPanel{
     
  
 
-    public void setArtistView(int id, String name) {        
+    public void setArtistView(Long id, String name) {        
         artistView.setArtist(id, name);
         showWidget(ARTIST);        
     }
@@ -42,23 +40,23 @@ public final class ViewController extends DeckPanel{
         showWidget(SEARCH_RESULT);    
     }
     
-    public void setSearchAlbumView(int albumId) {
-        searchResultView.searchAlbum(albumId);
+    public void setSearchAlbumView(Long id) {
+        searchResultView.searchAlbum(id);
         showWidget(SEARCH_RESULT);    
     }
     
-    public void setSearchAlbumView(String album) {
-        searchResultView.searchAlbum(album);
+    public void setSearchAlbumView(String name) {
+        searchResultView.searchAlbum(name);
         showWidget(SEARCH_RESULT);    
     }
 
-    public void setSearchTitleView(int titleId) {
-        searchResultView.searchTitle(titleId);
+    public void setSearchTitleView(Long id) {
+        searchResultView.searchTitle(id);
         showWidget(SEARCH_RESULT);    
     }
     
-    public void setSearchTitleView(String title) {
-        searchResultView.searchTitle(title);
+    public void setSearchTitleView(String name) {
+        searchResultView.searchTitle(name);
         showWidget(SEARCH_RESULT);    
     }
 
