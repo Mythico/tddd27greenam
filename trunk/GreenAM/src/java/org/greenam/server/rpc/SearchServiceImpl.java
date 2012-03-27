@@ -14,6 +14,7 @@ import org.greenam.client.rpc.SearchService;
 import org.greenam.client.rpc.jdo.Album;
 import org.greenam.client.rpc.jdo.Artist;
 import org.greenam.client.rpc.jdo.Record;
+import org.greenam.client.rpc.jdo.User;
 
 /**
  *
@@ -21,10 +22,38 @@ import org.greenam.client.rpc.jdo.Record;
  */
 public class SearchServiceImpl extends RemoteServiceServlet implements SearchService {
 
+    private boolean createArtist = true;
+
     @Override
     public List<Record> search(String s) {
         LinkedList<Record> list = new LinkedList<Record>();
-        List<Artist> alist = searchNonKey("name", s, Artist.class);
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        if (createArtist) {
+
+            //Add temporary artists
+            try {
+                User usr1 = pm.makePersistent(new User("1"));
+                User usr2 = pm.makePersistent(new User("2"));
+                User usr3 = pm.makePersistent(new User("3"));
+                User usr4 = pm.makePersistent(new User("4"));
+                pm.makePersistent(new Artist(usr1, "Allsong", "", null, null, null));
+                pm.makePersistent(new Artist(usr2, "Berit", "", null, null, null));
+                pm.makePersistent(new Artist(usr3, "Alban", "", null, null, null));
+                pm.makePersistent(new Artist(usr4, "Tycke", "", null, null, null));
+                createArtist = false;
+            } finally {
+                pm.close();
+            }
+            pm = PMF.get().getPersistenceManager();
+        }
+        List<Artist> alist = null;
+        try {
+            Query query = pm.newQuery(Artist.class);
+            alist = (List<Artist>) query.execute();
+            alist.size(); // To load lasy fetch objects.
+        } finally {
+            pm.close();
+        }
 
         for (Artist a : alist) {
             list.add(new Record("Alban", "Ballen", a.getId(), 0));
@@ -44,7 +73,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
     @Override
     public List<Record> searchArtist(Long id) {
-        return searchNonKey("artistId", id.toString(), Record.class);
+        return searchNonKey("artistId", id.longValue() + "", Record.class);
     }
 
     @Override
@@ -82,7 +111,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
         T type = null;
         try {
             type = pm.getObjectById(cls, id);
-            
+
         } finally {
             pm.close();
         }
@@ -94,7 +123,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
         List<T> list = null;
         try {
             Query query = pm.newQuery(cls, property + " == '" + name + "'");
-            list = (List<T>) query.execute();     
+            list = (List<T>) query.execute();
             list.size(); // To load lasy fetch objects.
         } finally {
             pm.close();

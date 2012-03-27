@@ -29,26 +29,7 @@ public class ArtistInfoServiceImpl extends RemoteServiceServlet implements Artis
 
     private UserService userService = UserServiceFactory.getUserService();
 
-    public ArtistInfoServiceImpl() {
-        
-        //Add temporary artists
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-        try {
-            User usr1 = pm.makePersistent(new User("1"));
-            User usr2 = pm.makePersistent(new User("2"));
-            User usr3 = pm.makePersistent(new User("3"));
-            User usr4 = pm.makePersistent(new User("4"));
-            pm.makePersistent(new Artist(usr1,"Allsong", "", null, null, null));
-            pm.makePersistent(new Artist(usr2,"Berit", "", null, null, null));
-            pm.makePersistent(new Artist(usr3,"Alban", "", null, null, null));
-            pm.makePersistent(new Artist(usr4,"Tycke", "", null, null, null));
-        } finally {
-            pm.close();
-        }
-        
-        
-        
-    }
+   
 
     
     
