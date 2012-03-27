@@ -35,7 +35,7 @@ public class AccessServiceImpl extends RemoteServiceServlet implements AccessSer
 
         return userService.isUserLoggedIn();
     }
-
+    
     /**
      * Checks if the current user has the user id.
      *
@@ -48,6 +48,13 @@ public class AccessServiceImpl extends RemoteServiceServlet implements AccessSer
         String fid = userService.getCurrentUser().getFederatedIdentity();
 
         return getUserId(fid) == userId;
+    }
+
+    public String userLoggedIn(){
+        if (userService.isUserLoggedIn())
+            return userService.getCurrentUser().getEmail();
+        else
+            return "Not logged in";
     }
 
     /**
