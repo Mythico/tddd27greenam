@@ -51,10 +51,10 @@ public class RecordListWidget extends ListWidget<Record> {
         for (final Record record : records) {
             Image playImg = new Image("img/play.png");
             Image buyImg = new Image("img/buy.png");
-            Label title = new Label(record.title);
-            Label album = new Label(record.album);
-            Label artist = new Label("Fetch name from id: " + record.artistId);
-            Label genre = new Label(genreToString(record.genre));
+            Label title = new Label(record.getTitle());
+            Label album = new Label(record.getAlbum());
+            Label artist = new Label("Fetch name from id: " + record.getArtistId());
+            Label genre = new Label(genreToString(record.getGenre()));
 
             playImg.setStyleName("gam-RecordListWidgetLink");
             buyImg.setStyleName("gam-RecordListWidgetLink");
@@ -74,7 +74,7 @@ public class RecordListWidget extends ListWidget<Record> {
             artist.addClickHandler(new ClickHandler() {
 
                 public void onClick(ClickEvent event) {
-                    viewController.setArtistView(record.artistId, "Fetch name from id: " + record.artistId);
+                    viewController.setArtistView(record.getArtistId());
                 }
             });
             album.addClickHandler(new ClickHandler() {
@@ -86,7 +86,7 @@ public class RecordListWidget extends ListWidget<Record> {
             genre.addClickHandler(new ClickHandler() {
 
                 public void onClick(ClickEvent event) {
-                    viewController.setSearchGenreView(record.genre);
+                    viewController.setSearchGenreView(record.getGenre());
                 }
             });
 

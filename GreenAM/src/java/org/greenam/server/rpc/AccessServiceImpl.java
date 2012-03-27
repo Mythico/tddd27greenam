@@ -44,6 +44,7 @@ public class AccessServiceImpl extends RemoteServiceServlet implements AccessSer
      */
     @Override
     public boolean hasAccess(Long userId) {
+        
         String fid = userService.getCurrentUser().getFederatedIdentity();
 
         return getUserId(fid) == userId;

@@ -39,7 +39,8 @@ public class LoginWidget extends VerticalPanel {
 
         @Override
         public void onFailure(Throwable caught) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            //TODO: handle this exception.
+            Window.alert("TODO: Handle this exception + \n" + caught);
         }
 
         @Override

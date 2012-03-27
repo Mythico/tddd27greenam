@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
-import java.util.LinkedList;
+import java.util.List;
 import org.greenam.client.rpc.SearchService;
 import org.greenam.client.rpc.SearchServiceAsync;
 import org.greenam.client.view.ViewController;
@@ -26,15 +26,15 @@ public class SearchWidget extends HorizontalPanel {
     private final Button searchButton = new Button("Search");
     private final MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
     private final SuggestBox searchBox = new SuggestBox(oracle);
-    private final AsyncCallback<LinkedList<String>> callback =
-            new AsyncCallback<LinkedList<String>>() {
+    private final AsyncCallback<List<String>> callback =
+            new AsyncCallback<List<String>>() {
 
                 @Override
                 public void onFailure(Throwable caught) {
                 }
 
                 @Override
-                public void onSuccess(LinkedList<String> result) {
+                public void onSuccess(List<String> result) {
                     oracle.clear();
                     oracle.addAll(result);
                 }

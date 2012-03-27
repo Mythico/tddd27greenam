@@ -65,8 +65,8 @@ public class ArtistView extends VerticalPanel{
 
         @Override
         public void execute() {
+            bioPane.setArtist(artistId);
             deckPanel.showWidget(BIOGRAPHY);
-            bioPane.setArtistId(artistId);
         }
     };
     private final Command showBlog = new Command() {
@@ -131,10 +131,10 @@ public class ArtistView extends VerticalPanel{
     }
     
     
-    void setArtist(Long artistId, String artistName) {
+    void setArtist(Long artistId) {
         this.artistId = artistId;
-        artistLabel.setText(artistName + " : " + artistId);
-        showMusic.execute();
+        artistLabel.setText("Artist id : " + artistId);
+        showBio.execute(); //TODO: set showMusic as default
                 
     }
 
