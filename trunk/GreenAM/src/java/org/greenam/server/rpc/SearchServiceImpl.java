@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
-import javax.jdo.annotations.Transactional;
 import org.greenam.client.rpc.SearchService;
 import org.greenam.client.rpc.jdo.Album;
 import org.greenam.client.rpc.jdo.Artist;
