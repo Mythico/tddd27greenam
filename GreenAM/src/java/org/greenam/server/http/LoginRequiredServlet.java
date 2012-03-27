@@ -7,8 +7,6 @@ package org.greenam.server.http;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -47,10 +45,10 @@ public class LoginRequiredServlet extends HttpServlet {
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
 
-        if (user != null) {
-            resp.sendRedirect(userService.createLogoutURL("../"));
+        if (user != null) {            
+            resp.sendRedirect(userService.createLogoutURL("/"));
         } else {
-            resp.sendRedirect(userService.createLoginURL("../"));
+            resp.sendRedirect(userService.createLoginURL("/"));
         }
     }
 }

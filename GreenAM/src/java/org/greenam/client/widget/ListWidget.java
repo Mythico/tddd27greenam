@@ -23,6 +23,7 @@ public abstract class ListWidget<T> extends Grid {
 
                 public void onSuccess(List<T> result) {
                     update(result);
+                    Window.alert(result.toString());
                 }
 
                 public void onFailure(Throwable caught) {

@@ -47,7 +47,6 @@ public class LoginWidget extends VerticalPanel {
             @Override
             public void onSuccess(String result) {
                 richTextArea.setText(result);
-                richTextArea.setSize(result, result);
             }
         });
         

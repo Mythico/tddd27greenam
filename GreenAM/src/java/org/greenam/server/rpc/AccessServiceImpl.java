@@ -7,7 +7,9 @@ package org.greenam.server.rpc;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import java.util.List;
 import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 
 import org.greenam.client.rpc.AccessService;
 import org.greenam.client.rpc.exception.AccessException;
@@ -29,11 +31,18 @@ public class AccessServiceImpl extends RemoteServiceServlet implements AccessSer
      */
     @Override
     public boolean hasAccess() {
+        if (!userService.isUserLoggedIn()) {
+            return false;
+        }
 
         //Create an useraccount if the user dosn't allready have one.
-        //getUserId(userService.getCurrentUser().getFederatedIdentity());
+        String fid = userService.getCurrentUser().getFederatedIdentity();
+        if (fid == null) { //Should only happen in debugmode.
+            fid = userService.getCurrentUser().getEmail();
+        }
+        getUserId(fid);
 
-        return userService.isUserLoggedIn();
+        return true;
     }
     
     /**
@@ -44,12 +53,16 @@ public class AccessServiceImpl extends RemoteServiceServlet implements AccessSer
      */
     @Override
     public boolean hasAccess(Long userId) {
-        
-        String fid = userService.getCurrentUser().getFederatedIdentity();
 
+        //Create an useraccount if the user dosn't allready have one.
+        String fid = userService.getCurrentUser().getFederatedIdentity();
+        if (fid == null) { //Should only happen in debugmode.
+            fid = userService.getCurrentUser().getEmail();
+        }
         return getUserId(fid) == userId;
     }
 
+    @Override
     public String userLoggedIn(){
         if (userService.isUserLoggedIn())
             return userService.getCurrentUser().getEmail();
@@ -70,12 +83,18 @@ public class AccessServiceImpl extends RemoteServiceServlet implements AccessSer
         Long id = null;
 
         try {
-            User user = pm.getObjectById(User.class, federatedId);
-            if (user == null) {
+            Query query = pm.newQuery(User.class, "federatedId == '" + federatedId + "'");
+            List<User> list = (List<User>) query.execute();
+            System.out.println("------------------------------------\n"
+                    + "TEMP: add check or better sulotion, size: " + list.size()
+                    + "\n--------------------------------------------");
+            User user = null;
+            if (list.isEmpty()) {
                 user = new org.greenam.client.rpc.jdo.User(federatedId);
                 pm.makePersistent(user);
+            } else {
+                user = list.get(0);
             }
-            pm.close();
             id = user.getId();
 
         } finally {
