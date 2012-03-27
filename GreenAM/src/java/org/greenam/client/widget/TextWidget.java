@@ -34,9 +34,8 @@ public class TextWidget extends VerticalPanel {
         final Button saveButton = new Button("Edit");
         final Button cancelButton = new Button("Cancel");
         cancelButton.setVisible(false);
-
+       
         saveButton.addClickHandler(new ClickHandler() {
-
             @Override
             public void onClick(ClickEvent event) {
                 if (cancelButton.isVisible()) {
@@ -44,6 +43,7 @@ public class TextWidget extends VerticalPanel {
                     saveButton.setText("Edit");
                     textArea.setEnabled(false);
                     cancelButton.setVisible(false);
+                    
                 } else {
                     saveButton.setText("Save");
                     textArea.setEnabled(true);
@@ -58,6 +58,7 @@ public class TextWidget extends VerticalPanel {
                 load();
                 textArea.setEnabled(false);
                 cancelButton.setVisible(false);
+                saveButton.setText("Edit");
             }
         });
 
@@ -75,7 +76,7 @@ public class TextWidget extends VerticalPanel {
        //TODO: Mabey add something to the constructor so we can reuse this Widget.
 
         //Check if current login user has access to edit this page.
-        /*accessAsync.hasAccess(artistId, new AsyncCallback<Boolean>() {
+        accessAsync.hasAccess(new AsyncCallback<Boolean>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -84,10 +85,12 @@ public class TextWidget extends VerticalPanel {
 
             @Override
             public void onSuccess(Boolean result) {
-                save(result);
+                if (result = true)
+                    save(result);
+                else
+                    Window.alert("You do not have permission to do that!");
             }
-        }); */
-        save(true);
+        });
     }
     
     private void save(boolean b) {
