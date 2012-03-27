@@ -18,7 +18,7 @@ import javax.jdo.annotations.PrimaryKey;
  * @author Emil
  */
 @PersistenceCapable
-public class Artist implements Serializable {
+public class Artist implements Ijdo, Serializable {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -33,8 +33,8 @@ public class Artist implements Serializable {
     private String biography;
     //@Persistent
     //private ArrayList<Blog> blogPosts;
-    //@Persistent
-    //private Set<Album> albums;
+    @Persistent
+    private Set<Long> albums;
     //@Persistent
     //private List<Event> events;
 
@@ -59,13 +59,17 @@ public class Artist implements Serializable {
     //    return user;
     //}
 
-    //public Set<Album> getAlbums() {
-    //    return albums;
-    //}
+    public Set<Long> getAlbums() {
+        return albums;
+    }
 
-    //public void setAlbums(Set<Album> albums) {
-    //    this.albums = albums;
-    //}
+    public void addAlbum(Album album) {
+        this.albums.add(album.getId());
+    }
+    public void addAlbum(Long albumId) {
+        this.albums.add(albumId);
+    }
+    
 
     public String getBiography() {
         return biography;

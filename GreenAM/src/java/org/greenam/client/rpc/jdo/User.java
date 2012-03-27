@@ -4,6 +4,7 @@
  */
 package org.greenam.client.rpc.jdo;
 
+import java.io.Serializable;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -14,7 +15,7 @@ import javax.jdo.annotations.PrimaryKey;
  * @author Emil
  */
 @PersistenceCapable
-public class User {
+public class User implements Ijdo, Serializable{
     
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -22,6 +23,9 @@ public class User {
     
     @Persistent
     private String federatedId;
+
+    public User() {
+    }    
     
 
     public User(String federatedId) {

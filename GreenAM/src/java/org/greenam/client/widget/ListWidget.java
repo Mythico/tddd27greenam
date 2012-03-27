@@ -7,36 +7,26 @@ package org.greenam.client.widget;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Grid;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
+import org.greenam.client.rpc.jdo.Ijdo;
 import org.greenam.client.view.ViewController;
 
 /**
  *
  * @author Emil
  */
-public abstract class ListWidget<T> extends Grid {
+public abstract class ListWidget<Jdo extends Ijdo> extends Grid {
 
     protected final ViewController viewController;
-    public final AsyncCallback<List<T>> callback =
-            new AsyncCallback<List<T>>() {
+    public final AsyncCallback<Collection<Jdo>> callback =
+            new AsyncCallback<Collection<Jdo>>() {
 
-                public void onSuccess(List<T> result) {
-                    update(result);
-                    Window.alert(result.toString());
-                }
-
-                public void onFailure(Throwable caught) {
-                    Window.alert(caught.toString());
-                }
-            };
-    public final AsyncCallback<List<T>> callbackId =
-            new AsyncCallback<List<T>>() {
-
-                public void onSuccess(List<T> result) {                                        
+                @Override
+                public void onSuccess(Collection<Jdo> result) {
                     update(result);
                 }
 
+                @Override
                 public void onFailure(Throwable caught) {
                     Window.alert(caught.toString());
                 }
@@ -47,5 +37,5 @@ public abstract class ListWidget<T> extends Grid {
         setStyleName("gam-RecordListWidget");
     }
 
-    protected abstract void update(List<T> list);
+    protected abstract void update(Collection<Jdo> list);
 }

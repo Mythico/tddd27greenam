@@ -4,16 +4,13 @@
  */
 package org.greenam.server.rpc;
 
-import org.greenam.client.rpc.jdo.BlogPage;
 import org.greenam.client.rpc.jdo.Artist;
 import org.greenam.client.rpc.jdo.Blog;
 import org.greenam.client.rpc.jdo.Event;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.rpc.server.Pair;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import java.util.ArrayList;
 import java.util.List;
 import javax.jdo.PersistenceManager;
 import org.greenam.client.rpc.ArtistInfoService;
@@ -48,32 +45,32 @@ public class ArtistInfoServiceImpl extends RemoteServiceServlet implements Artis
         return bio;
     }
 
-    @Override
-    public BlogPage getBlog(Long artistId, int page)
-            throws DataNotFoundException {
-        BlogPage blogPage = new BlogPage();
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-         ArrayList<Blog> blogs = null;
-        try {
-            Artist artist = getArtist(artistId, pm);
-            //blogs = artist.getBlogPosts(); //TODO: Uncomment this
-        } finally {
-            pm.close();
-        }
-
-        //Logic for adding only the correct blogs.
-        int from = blogPage.SIZE * page;
-        int to = blogPage.SIZE * page + blogPage.SIZE;
-
-        if (from >= blogs.size()) {
-            throw new RuntimeException("Blogpage dosn't exist"); //TODO: Add better exception?
-        }
-
-        to = (to < blogs.size()) ? to : blogs.size() - 1;
-
-        blogPage.setBlogs(blogs.subList(from, to));
-        return blogPage;
-    }
+//    @Override
+//    public Blog getBlog(Long artistId, int page)
+//            throws DataNotFoundException {
+//        BlogPage blogPage = new BlogPage();
+//        PersistenceManager pm = PMF.get().getPersistenceManager();
+//         ArrayList<Blog> blogs = null;
+//        try {
+//            Artist artist = getArtist(artistId, pm);
+//            //blogs = artist.getBlogPosts(); //TODO: Uncomment this
+//        } finally {
+//            pm.close();
+//        }
+//
+//        //Logic for adding only the correct blogs.
+//        int from = blogPage.SIZE * page;
+//        int to = blogPage.SIZE * page + blogPage.SIZE;
+//
+//        if (from >= blogs.size()) {
+//            throw new RuntimeException("Blogpage dosn't exist"); //TODO: Add better exception?
+//        }
+//
+//        to = (to < blogs.size()) ? to : blogs.size() - 1;
+//
+//        blogPage.setBlogs(blogs.subList(from, to));
+//        return blogPage;
+//    }
 
     @Override
     public List<Event> getEventCalender(Long artistId, int month)

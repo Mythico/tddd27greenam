@@ -5,6 +5,7 @@
 package org.greenam.server.rpc;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import javax.jdo.PersistenceManager;
@@ -24,7 +25,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
     private boolean createArtist = true;
 
     @Override
-    public List<Record> search(String s) {
+    public Collection<Record> search(String s) {
         LinkedList<Record> list = new LinkedList<Record>();
         PersistenceManager pm = PMF.get().getPersistenceManager();
         if (createArtist) {
@@ -53,80 +54,32 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
         } finally {
             pm.close();
         }
-
+        System.out.println("a size:" + alist.size());
         for (Artist a : alist) {
-            list.add(new Record("Alban", "Ballen", a.getId(), 0));
+            list.add(new Record("Alban", new Album(), a, 0));
         }
         return list;
     }
-
-    @Override
-    public List<String> searchForTitlesBeginingWith(String s) {
-
-        LinkedList<String> list = new LinkedList<String>();
-
-
-
-        return list;
-    }
-
-    @Override
-    public List<Record> searchArtist(Long id) {
-        return searchNonKey("artistId", id.longValue() + "", Record.class);
-    }
-
-    @Override
-    public List<Record> searchArtist(String name) {
-        return searchNonKey("name", name, Record.class);
-    }
-
-    @Override
-    public Record searchTitle(Long id) {
-        return searchKey(id, Record.class);
-    }
-
-    @Override
-    public List<Record> searchTitle(String name) {
-        return searchNonKey("name", name, Record.class);
-    }
-
-    @Override
-    public Album searchAlbum(Long id) {
-        return searchKey(id, Album.class);
-    }
-
-    @Override
-    public List<Album> searchAlbum(String name) {
-        return searchNonKey("name", name, Album.class);
-    }
-
-    @Override
-    public List<Record> searchGenre(int genre) {
-        return searchNonKey("genre", "" + genre, Record.class);
-    }
-
-    private <T> T searchKey(Long id, Class<T> cls) {
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-        T type = null;
-        try {
-            type = pm.getObjectById(cls, id);
-
-        } finally {
-            pm.close();
-        }
-        return type;
-    }
-
-    private <T> List<T> searchNonKey(String property, String name, Class<T> cls) {
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<T> list = null;
-        try {
-            Query query = pm.newQuery(cls, property + " == '" + name + "'");
-            list = (List<T>) query.execute();
-            list.size(); // To load lasy fetch objects.
-        } finally {
-            pm.close();
-        }
-        return list;
-    }
+    /*
+     * @Override public LinkedList<Package> search(String name, Package table) {
+     * PersistenceManager pm = PMF.get().getPersistenceManager(); List<Package>
+     * list = null;
+     *
+     * try { Query query = pm.newQuery(table.get().getClass());
+     * query.setFilter("name == value"); query.declareParameters("String
+     * value"); list = (List<Package>) query.execute(name); list.size(); // To
+     * load lasy fetch objects. } finally { pm.close(); } return new
+     * LinkedList<Package>(list); }
+     *
+     * @Override public Package search( Long id, Package table) {
+     * PersistenceManager pm = PMF.get().getPersistenceManager(); Package type =
+     * null; try { type = new Package(pm.getObjectById(table.type(), id)); }
+     * finally { pm.close(); }
+     *
+     * return type; }
+     *
+     * @Override public Collection<Package> search(Collection<Long> ids, Package
+     * table){ LinkedList list = new LinkedList(); for(Long id : ids){
+     * list.add(search(id, table)); } return list; } *
+     */
 }

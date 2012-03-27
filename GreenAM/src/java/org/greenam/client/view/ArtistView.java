@@ -6,10 +6,13 @@ package org.greenam.client.view;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import org.greenam.client.rpc.SearchService;
 import org.greenam.client.rpc.SearchServiceAsync;
-import org.greenam.client.widget.RecordListWidget;
+import org.greenam.client.rpc.jdo.Album;
+import org.greenam.client.rpc.jdo.Artist;
+import org.greenam.client.widget.AlbumListWidget;
 import org.greenam.client.widget.TextWidget;
 
 /**
@@ -23,7 +26,7 @@ public class ArtistView extends VerticalPanel{
     private Long artistId = 0l;
     
     //Constant used by the deckpanel
-    private final int RECORD_LIST = 0;
+    private final int ALBUM_LIST = 0;
     private final int BIOGRAPHY = 1;
     private final int BLOG = 2;
     private final int EVENT_CALENDER = 3;
@@ -57,8 +60,24 @@ public class ArtistView extends VerticalPanel{
 
         @Override
         public void execute() {
-            deckPanel.showWidget(RECORD_LIST);
-            async.searchArtist(artistId, recordListWidget.callbackId);
+            deckPanel.showWidget(ALBUM_LIST);
+            
+            AsyncCallback<Artist> artistCallback = new AsyncCallback<Artist>() {
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    throw new UnsupportedOperationException("Not supported yet.");
+                }
+
+                @Override
+                public void onSuccess(Artist artist) {
+                    //async.search(artist.getAlbums(), Album.class, 
+                    //        albumListWidget.callback);
+                }
+            };
+            //async.search(artistId, Artist.class, artistCallback); 
+            
+            
         }
     };
     private final Command showBio = new Command() {
@@ -100,7 +119,7 @@ public class ArtistView extends VerticalPanel{
     private final MenuItem uploadItem = new MenuItem("Upload", uploadEvent);
     
     
-    private final RecordListWidget recordListWidget;
+    private final AlbumListWidget albumListWidget;
     private final TextWidget bioPane = new TextWidget();
     private final BlogPane blogPane = new BlogPane();
     private final EventCalanderPane eventPane = new EventCalanderPane();
@@ -110,7 +129,7 @@ public class ArtistView extends VerticalPanel{
     public ArtistView(ViewController viewController) {
         setStyleName("gam-ContentView");
                 
-        recordListWidget = new RecordListWidget(viewController);
+        albumListWidget = new AlbumListWidget(viewController);
         
         menuBar.setStyleName("demo-MenuBar");
         menuBar.addItem(musicItem);
@@ -119,7 +138,7 @@ public class ArtistView extends VerticalPanel{
         menuBar.addItem(eventItem);
         menuBar.addItem(uploadItem);
         
-        deckPanel.insert(recordListWidget, RECORD_LIST);
+        deckPanel.insert(albumListWidget, ALBUM_LIST);
         deckPanel.insert(bioPane, BIOGRAPHY);
         deckPanel.insert(blogPane, BLOG);
         deckPanel.insert(eventPane, EVENT_CALENDER);

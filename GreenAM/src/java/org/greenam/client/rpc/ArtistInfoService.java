@@ -10,7 +10,6 @@ import java.util.List;
 import org.greenam.client.rpc.exception.AccessException;
 import org.greenam.client.rpc.exception.DataNotFoundException;
 import org.greenam.client.rpc.jdo.Blog;
-import org.greenam.client.rpc.jdo.BlogPage;
 import org.greenam.client.rpc.jdo.Event;
 
 
@@ -23,8 +22,8 @@ import org.greenam.client.rpc.jdo.Event;
 public interface ArtistInfoService extends RemoteService {
 
     public String getBiogarphy(Long artistId) throws DataNotFoundException ;
-    public BlogPage getBlog(Long artistId, int page)
-            throws DataNotFoundException ;
+    //public BlogPage getBlog(Long artistId, int page)
+    //        throws DataNotFoundException ;
     public List<Event> getEventCalender(Long artistId, int month)
             throws DataNotFoundException ;
     

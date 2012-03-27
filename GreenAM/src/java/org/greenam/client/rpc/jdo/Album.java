@@ -16,7 +16,7 @@ import javax.jdo.annotations.PrimaryKey;
  * @author Emil
  */
 @PersistenceCapable
-public class Album implements Serializable {
+public class Album implements Ijdo ,Serializable {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
