@@ -17,11 +17,11 @@ import org.greenam.client.rpc.AccessServiceAsync;
  *
  * @author Emil
  */
-public class LoginWidget extends VerticalPanel {
+public class LoginWidget extends HorizontalPanel {
 
     private final Button loginButton = new Button("Login");
     private final AccessServiceAsync async = GWT.create(AccessService.class);
-    private final RichTextArea richTextArea = new RichTextArea();
+    private final Label loggedInLabel = new Label();
     
     public LoginWidget() {
         loginButton.addClickHandler(new ClickHandler() {
@@ -33,20 +33,20 @@ public class LoginWidget extends VerticalPanel {
         });
         
         add(loginButton);
-        add(richTextArea);
+        add(loggedInLabel);
         
         //Get the name of the user currently logged in
         async.userLoggedIn(new AsyncCallback<String>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                Window.alert("FAILS + \n" + caught);
+                Window.alert("Callback för userLoggedIn failade! + \n" + caught);
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
             public void onSuccess(String result) {
-                richTextArea.setText(result);
+                loggedInLabel.setText(result);
             }
         });
         
