@@ -22,7 +22,7 @@ public interface SearchService extends RemoteService {
     public List<String> searchForTitlesBeginingWith(String s);
     
     
-    public Record searchArtist(Long id);
+    public List<Record> searchArtist(Long id);
     public List<Record> searchArtist(String name);
     
     public Record searchTitle(Long id);

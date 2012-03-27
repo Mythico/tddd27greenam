@@ -7,8 +7,11 @@ package org.greenam.client.widget;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import org.greenam.client.rpc.AccessService;
+import org.greenam.client.rpc.AccessServiceAsync;
 import org.greenam.client.rpc.ArtistInfoService;
 import org.greenam.client.rpc.ArtistInfoServiceAsync;
 
@@ -21,7 +24,8 @@ public class TextWidget extends VerticalPanel {
     private final RichTextArea textArea = new RichTextArea();
     private final HorizontalPanel editPane = new HorizontalPanel();
     private final ArtistInfoServiceAsync async = GWT.create(ArtistInfoService.class);
-    private Long artistId = 0l;
+    private final AccessServiceAsync accessAsync = GWT.create(AccessService.class);
+    private Long artistId;
 
     public TextWidget() {
         setSize("100%", "100%");
@@ -67,50 +71,11 @@ public class TextWidget extends VerticalPanel {
 
     }
 
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
+    private void save(){
+       //TODO: Mabey add something to the constructor so we can reuse this Widget.
 
         //Check if current login user has access to edit this page.
-        boolean hasAccess = true;
-        editPane.setVisible(hasAccess);
-
-
-        load();
-    }
-
-    private void save() {
-        //TODO: Mabey add something to the constructor so we can reuse this Widget.
-
-        //Check if current login user has access to edit this page.
-        boolean hasAccess = true;
-        if (!hasAccess) {
-            //TODO: Set an error msg.
-            return;
-        }
-    
-
-        String content = textArea.getHTML();
-
-        //Mabey change artistId for something else like UserInfo?
-//        async.postBiography(artistId, content, new AsyncCallback() {
-//
-//            @Override
-//            public void onFailure(Throwable caught) {
-//                //Access denied
-//                throw new UnsupportedOperationException("Not supported yet.");
-//            }
-//
-//            @Override
-//            public void onSuccess(Object result) {/* Do nothing*/}
-//        });
-
-    }
-
-    private void load() {
-        //TODO: Mabey add something to the constructor so we can reuse this Widget.
-        
-        /*async.getBiogarphy(artistId, new AsyncCallback<String>() {
+        /*accessAsync.hasAccess(artistId, new AsyncCallback<Boolean>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -118,13 +83,62 @@ public class TextWidget extends VerticalPanel {
             }
 
             @Override
+            public void onSuccess(Boolean result) {
+                save(result);
+            }
+        }); */
+        save(true);
+    }
+    
+    private void save(boolean b) {
+        if(!b){
+            return;
+        }
+    
+
+        String content = textArea.getHTML();
+
+        //Mabey change artistId for something else like UserInfo?
+        async.postBiography(artistId, content, new AsyncCallback() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                //Access denied
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void onSuccess(Object result) {/* Do nothing*/}
+        });
+
+    }
+
+    private void load() {
+        
+        //TODO: Mabey add something to the constructor so we can reuse this Widget.
+        
+        async.getBiogarphy(artistId, new AsyncCallback<String>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Window.alert(caught.toString());
+            }
+
+            @Override
             public void onSuccess(String result) {
                 textArea.setHTML(result);
             }
-        });*/
+        });
     }
     
-    public void setArtistId(Long id){
-        artistId = id;
+    
+    public void setArtist(Long id){
+        artistId = id;        
+        
+        //Check if current login user has access to edit this page.
+        boolean hasAccess = true;
+        editPane.setVisible(hasAccess);
+        
+        load();
     }
 }

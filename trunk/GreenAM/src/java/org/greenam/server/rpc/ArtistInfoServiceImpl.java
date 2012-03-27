@@ -29,6 +29,30 @@ public class ArtistInfoServiceImpl extends RemoteServiceServlet implements Artis
 
     private UserService userService = UserServiceFactory.getUserService();
 
+    public ArtistInfoServiceImpl() {
+        
+        //Add temporary artists
+        PersistenceManager pm = PMF.get().getPersistenceManager();
+        try {
+            User usr1 = pm.makePersistent(new User("1"));
+            User usr2 = pm.makePersistent(new User("2"));
+            User usr3 = pm.makePersistent(new User("3"));
+            User usr4 = pm.makePersistent(new User("4"));
+            pm.makePersistent(new Artist(usr1,"Allsong", "", null, null, null));
+            pm.makePersistent(new Artist(usr2,"Berit", "", null, null, null));
+            pm.makePersistent(new Artist(usr3,"Alban", "", null, null, null));
+            pm.makePersistent(new Artist(usr4,"Tycke", "", null, null, null));
+        } finally {
+            pm.close();
+        }
+        
+        
+        
+    }
+
+    
+    
+    
     @Override
     public String getBiogarphy(Long artistId) throws DataNotFoundException {
         PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -51,7 +75,7 @@ public class ArtistInfoServiceImpl extends RemoteServiceServlet implements Artis
          ArrayList<Blog> blogs = null;
         try {
             Artist artist = getArtist(artistId, pm);
-            blogs = artist.getBlogPosts();
+            //blogs = artist.getBlogPosts(); //TODO: Uncomment this
         } finally {
             pm.close();
         }
@@ -78,7 +102,7 @@ public class ArtistInfoServiceImpl extends RemoteServiceServlet implements Artis
         List<Event> events = null;
         try{
             Artist artist = getArtist(artistId, pm);
-            events = artist.getEvents();
+            //events = artist.getEvents(); //TODO: Uncomment this
         } finally{
             pm.close();
         }
@@ -115,7 +139,7 @@ public class ArtistInfoServiceImpl extends RemoteServiceServlet implements Artis
         try{
             checkLogin(artistId, pm);                
             Artist artist = getArtist(artistId, pm);
-            artist.getBlogPosts().add(blog);
+            //artist.getBlogPosts().add(blog); //TODO: Uncomment this
         } finally{
             pm.close();
         }
@@ -129,7 +153,7 @@ public class ArtistInfoServiceImpl extends RemoteServiceServlet implements Artis
         try {
             checkLogin(artistId, pm);            
             Artist artist = getArtist(artistId, pm);
-            artist.getEvents().add(event);
+            //artist.getEvents().add(event); //TODO: Uncomment this
         } finally {
             pm.close();
         }
@@ -142,7 +166,7 @@ public class ArtistInfoServiceImpl extends RemoteServiceServlet implements Artis
         PersistenceManager pm = PMF.get().getPersistenceManager();
         
         try{
-            checkLogin(artistId, pm);
+            //checkLogin(artistId, pm);
             Artist artist = getArtist(artistId, pm);
             artist.setBiography(bio);
         } finally{
@@ -153,7 +177,8 @@ public class ArtistInfoServiceImpl extends RemoteServiceServlet implements Artis
     private void checkLogin(Long artistId, PersistenceManager pm)
             throws AccessException {
         String fid = userService.getCurrentUser().getFederatedIdentity();
-        Long id = pm.getObjectById(User.class, fid).getId();
+        User user = pm.getObjectById(User.class, fid);
+        Long id = user.getId();
 
         if (id != artistId) {
             throw new AccessException("User " + artistId
@@ -171,8 +196,7 @@ public class ArtistInfoServiceImpl extends RemoteServiceServlet implements Artis
      */
     private Artist getArtist(Long artistId, PersistenceManager pm)
             throws DataNotFoundException {
-        Artist artist = null;
-        artist = pm.getObjectById(Artist.class, artistId);
+        Artist artist = pm.getObjectById(Artist.class, artistId);
 
         if (artist == null) {
             throw new DataNotFoundException("Could not find Artist with id: "

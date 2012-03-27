@@ -17,11 +17,12 @@ import javax.jdo.annotations.PrimaryKey;
 public class User {
     
     @PrimaryKey
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+    private Long id;
+    
     @Persistent
     private String federatedId;
     
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Long id;
 
     public User(String federatedId) {
         this.federatedId = federatedId;
@@ -29,10 +30,6 @@ public class User {
     
     public String getFederatedId() {
         return federatedId;
-    }
-
-    public void setFederatedId(String federatedId) {
-        this.federatedId = federatedId;
     }
 
     public Long getId() {

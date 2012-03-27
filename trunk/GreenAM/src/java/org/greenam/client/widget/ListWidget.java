@@ -4,10 +4,9 @@
  */
 package org.greenam.client.widget;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Grid;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.greenam.client.view.ViewController;
@@ -27,28 +26,25 @@ public abstract class ListWidget<T> extends Grid {
                 }
 
                 public void onFailure(Throwable caught) {
+                    Window.alert(caught.toString());
                 }
             };
-    public final AsyncCallback<T> callbackId =
-            new AsyncCallback<T>() {
+    public final AsyncCallback<List<T>> callbackId =
+            new AsyncCallback<List<T>>() {
 
-                public void onSuccess(T result) {
-                    LinkedList<T> t = new LinkedList<T>();
-                    t.add(result);
-                    update(t);
+                public void onSuccess(List<T> result) {                                        
+                    update(result);
                 }
 
                 public void onFailure(Throwable caught) {
+                    Window.alert(caught.toString());
                 }
             };
-    
-    
+
     public ListWidget(ViewController viewController) {
         this.viewController = viewController;
         setStyleName("gam-RecordListWidget");
     }
-    
-    
+
     protected abstract void update(List<T> list);
-;
 }

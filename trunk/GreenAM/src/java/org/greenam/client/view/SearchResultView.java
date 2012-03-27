@@ -33,14 +33,14 @@ public class SearchResultView extends VerticalPanel {
     }
     
     public void search(String search){
-        scrollPanel.setWidget(albumList);
+        scrollPanel.setWidget(recordList);
         async.search(search, recordList.callback);        
     }
     
 
     public void searchAlbum(Long id) {
         scrollPanel.setWidget(albumList);
-        async.searchAlbum(id, albumList.callbackId);
+        //async.searchAlbum(id, albumList.callbackId);
     }
     
     public void searchAlbum(String name) {
@@ -50,7 +50,7 @@ public class SearchResultView extends VerticalPanel {
 
     public void searchTitle(Long id) {
         scrollPanel.setWidget(recordList);
-        async.searchTitle(id, recordList.callbackId);
+        //async.searchTitle(id, recordList.callbackId);
     }
 
     public void searchTitle(String name) {
