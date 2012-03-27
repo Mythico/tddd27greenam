@@ -50,7 +50,9 @@ public class RecordListWidget extends ListWidget<Record> {
         int i = 1;
         for (final Record record : records) {
             Image playImg = new Image("img/play.png");
+            playImg.setSize("20px", "20px");
             Image buyImg = new Image("img/buy.png");
+            buyImg.setSize("20px", "20px");
             Label title = new Label(record.getTitle());
             Label album = new Label(record.getAlbum());
             Label artist = new Label("Fetch name from id: " + record.getArtistId());
