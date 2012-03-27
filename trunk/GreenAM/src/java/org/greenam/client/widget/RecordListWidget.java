@@ -4,14 +4,14 @@
  */
 package org.greenam.client.widget;
 
+import com.google.gwt.dom.client.SourceElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.media.client.Audio;
+import com.google.gwt.media.client.MediaBase;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
 import org.greenam.client.rpc.jdo.Record;
 import org.greenam.client.view.ViewController;
 
@@ -21,9 +21,13 @@ import org.greenam.client.view.ViewController;
  */
 public class RecordListWidget extends ListWidget<Record> {
 
+    private Audio audio;
+    
     public RecordListWidget(ViewController viewController) {
         super(viewController);
 
+        audio = Audio.createIfSupported();
+        audio.addSource("sound/Rondo_Alla_Turka.ogg");
 
         resize(1, 6);
         setText(0, 1, "Title");
@@ -43,7 +47,7 @@ public class RecordListWidget extends ListWidget<Record> {
     }
 
     @Override
-    protected void update(List<Record> records) {
+    protected void update(Collection<Record> records) {
         int row = records.size() + 1;
         resize(row, 6);
 
@@ -54,8 +58,8 @@ public class RecordListWidget extends ListWidget<Record> {
             Image buyImg = new Image("img/buy.png");
             buyImg.setSize("20px", "20px");
             Label title = new Label(record.getTitle());
-            Label album = new Label(record.getAlbum());
-            Label artist = new Label("Fetch name from id: " + record.getArtistId());
+            Label album = new Label("Fetch: " + record.getAlbum());
+            Label artist = new Label("Fetch: " + record.getArtist());
             Label genre = new Label(genreToString(record.getGenre()));
 
             playImg.setStyleName("gam-RecordListWidgetLink");
@@ -66,8 +70,16 @@ public class RecordListWidget extends ListWidget<Record> {
             genre.setStyleName("gam-RecordListWidgetLink");
 
             //Click handlers
+            playImg.addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    audio.play();
+                }
+            });
             title.addClickHandler(new ClickHandler() {
 
+                @Override
                 public void onClick(ClickEvent event) {
                     //viewController.setSearchTitleView(record.titleId);
                 }
@@ -75,20 +87,23 @@ public class RecordListWidget extends ListWidget<Record> {
 
             artist.addClickHandler(new ClickHandler() {
 
+                @Override
                 public void onClick(ClickEvent event) {
-                    viewController.setArtistView(record.getArtistId());
+                    viewController.setArtistView(record.getArtist());
                 }
             });
             album.addClickHandler(new ClickHandler() {
 
+                @Override
                 public void onClick(ClickEvent event) {
                     //viewController.setSearchAlbumView(record.albumId);
                 }
             });
             genre.addClickHandler(new ClickHandler() {
 
+                @Override
                 public void onClick(ClickEvent event) {
-                    viewController.setSearchGenreView(record.getGenre());
+                    //viewController.setSearchGenreView(record.getGenre());
                 }
             });
 

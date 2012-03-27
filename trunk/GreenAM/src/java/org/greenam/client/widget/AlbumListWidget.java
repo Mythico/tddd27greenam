@@ -4,19 +4,16 @@
  */
 package org.greenam.client.widget;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Label;
-import java.util.List;
+import java.util.Collection;
 import org.greenam.client.rpc.jdo.Album;
-import org.greenam.client.rpc.jdo.Artist;
 import org.greenam.client.view.ViewController;
 
 /**
  *
  * @author Emil
  */
-public class AlbumListWidget  extends ListWidget<Album> {
+public class AlbumListWidget extends ListWidget<Album> {
 
     public AlbumListWidget(ViewController viewController) {
         super(viewController);
@@ -27,7 +24,7 @@ public class AlbumListWidget  extends ListWidget<Album> {
     }
 
     @Override
-    protected void update(List<Album> list) {
+    protected void update(Collection<Album> list) {
         int row = list.size() + 1;
         resize(row, 6);
 

@@ -6,6 +6,7 @@ package org.greenam.client.widget;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -31,6 +32,7 @@ public class SearchWidget extends HorizontalPanel {
 
                 @Override
                 public void onFailure(Throwable caught) {
+                    Window.alert("SearchWidgetCallback \n" + caught);
                 }
 
                 @Override
@@ -47,9 +49,7 @@ public class SearchWidget extends HorizontalPanel {
             public void onKeyUp(KeyUpEvent event) {
                 if (event.getSource().equals(KeyCodes.KEY_ENTER)) {
                     viewController.setSearchView(searchBox.getText());
-                } else {
-                    async.searchForTitlesBeginingWith(searchBox.getText(),
-                            callback);
+                    searchBox.setText("");
                 }
             }
         });

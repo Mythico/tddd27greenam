@@ -39,35 +39,4 @@ public final class ViewController extends DeckPanel{
         searchResultView.search(search);
         showWidget(SEARCH_RESULT);    
     }
-    
-    public void setSearchAlbumView(Long id) {
-        searchResultView.searchAlbum(id);
-        showWidget(SEARCH_RESULT);    
-    }
-    
-    public void setSearchAlbumView(String name) {
-        searchResultView.searchAlbum(name);
-        showWidget(SEARCH_RESULT);    
-    }
-
-    public void setSearchTitleView(Long id) {
-        searchResultView.searchTitle(id);
-        showWidget(SEARCH_RESULT);    
-    }
-    
-    public void setSearchTitleView(String name) {
-        searchResultView.searchTitle(name);
-        showWidget(SEARCH_RESULT);    
-    }
-
-    public void setSearchGenreView(int genre) {
-        searchResultView.searchGenre(genre);
-        showWidget(SEARCH_RESULT);    
-    }
-    
-    public void setSearchGenreView(String genre) {
-        searchResultView.searchGenre(genre);
-        showWidget(SEARCH_RESULT);    
-    }
-
 }
