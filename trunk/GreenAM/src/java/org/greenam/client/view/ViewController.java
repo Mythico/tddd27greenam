@@ -30,8 +30,8 @@ public final class ViewController extends DeckPanel{
     
  
 
-    public void setArtistView(Long id) {        
-        artistView.setArtist(id);
+    public void setArtistView(Long artistId) {        
+        artistView.setArtist(artistId);
         showWidget(ARTIST);        
     }
 

@@ -7,10 +7,11 @@ package org.greenam.client.view;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import org.greenam.client.rpc.SearchService;
-import org.greenam.client.rpc.SearchServiceAsync;
 import org.greenam.client.widget.AlbumListWidget;
 import org.greenam.client.widget.RecordListWidget;
+import org.greenam.shared.service.ApplicationRequestFactory;
+import org.greenam.shared.service.ApplicationRequestFactory.RecordRequestContext;
+import org.greenam.shared.service.ClientFactory;
 
 /**
  *
@@ -21,7 +22,7 @@ public class SearchResultView extends VerticalPanel {
     private ScrollPanel scrollPanel;
     private final RecordListWidget recordList;
     private final AlbumListWidget albumList;
-    private final SearchServiceAsync async = GWT.create(SearchService.class);
+    private final ApplicationRequestFactory rf = ClientFactory.getRequestFactory();
     
     public SearchResultView(ViewController viewController) {
         setStyleName("gam-ContentView");
@@ -35,6 +36,8 @@ public class SearchResultView extends VerticalPanel {
     
     public void search(String search){
         scrollPanel.setWidget(recordList);
-        async.search(search, recordList.callback); 
+        RecordRequestContext reqCtx = rf.recordRequest();
+        reqCtx.search(search).with("title", "artists", "genre", "tags")
+                .fire(recordList.callback); 
     }
 }
