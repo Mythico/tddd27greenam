@@ -5,15 +5,15 @@
 package org.greenam.client.widget;
 
 import com.google.gwt.user.client.ui.Label;
-import java.util.Collection;
-import org.greenam.client.rpc.jdo.Album;
+import java.util.List;
 import org.greenam.client.view.ViewController;
+import org.greenam.shared.proxy.AlbumProxy;
 
 /**
  *
  * @author Emil
  */
-public class AlbumListWidget extends ListWidget<Album> {
+public class AlbumListWidget extends ListWidget<AlbumProxy> {
 
     public AlbumListWidget(ViewController viewController) {
         super(viewController);
@@ -24,13 +24,13 @@ public class AlbumListWidget extends ListWidget<Album> {
     }
 
     @Override
-    protected void update(Collection<Album> list) {
+    protected void update(List<AlbumProxy> list) {
         int row = list.size() + 1;
         resize(row, 6);
 
         int i = 1;
-        for (final Album album : list) {
-            Label name = new Label(album.getName());
+        for (final AlbumProxy album : list) {
+            Label name = new Label(album.getTitle());
 
             name.setStyleName("gam-RecordListWidgetLink");
 
