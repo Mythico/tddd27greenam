@@ -20,7 +20,7 @@ public interface UserService extends RemoteService {
 
     public boolean hasAccess(Long userId);
 
-    public long makeArtist(Long userId);
+    public long makeArtist(Long userId, String name);
 
     public void deleteArtist(Long artistId);
 

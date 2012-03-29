@@ -18,7 +18,7 @@ public interface UserServiceAsync {
 
     public void hasAccess(Long userId, AsyncCallback<Boolean> callback);
 
-    public void makeArtist(Long userId, AsyncCallback<Long> callback);
+    public void makeArtist(Long userId, String name, AsyncCallback<Long> callback);
 
     public void deleteArtist(Long artistId, AsyncCallback callback);
 

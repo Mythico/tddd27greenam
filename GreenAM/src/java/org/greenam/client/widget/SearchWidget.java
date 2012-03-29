@@ -18,8 +18,7 @@ import org.greenam.client.view.ViewController;
 public class SearchWidget extends HorizontalPanel {
 
     private final Button searchButton = new Button("Search");
-    private final MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-    private final SuggestBox searchBox = new SuggestBox(oracle);
+    private final SuggestBox searchBox = new SuggestBox();
 
     public SearchWidget(final ViewController viewController) {
         searchBox.addKeyUpHandler(new KeyUpHandler() {

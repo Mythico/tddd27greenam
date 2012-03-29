@@ -43,25 +43,33 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
     }
 
     @Override
-    public boolean hasAccess(Long userId) {
+    public boolean hasAccess(Long artistId) {
         if (!userService.isUserLoggedIn()) {
             return false;
         }
         //Create an useraccount if the user dosn't allready have one.
         String fid = getFederatedId();
-        return getOrCreateUser(fid) == userId;
+        Long accessingUser = getOrCreateUser(fid).getId();
+        
+        Objectify ofy = ObjectifyService.begin();
+        Artist artist = ofy.query(Artist.class).filter("userId", accessingUser).get();
+        if(artist == null){ //User is not an artist
+            return false;
+        }
+        
+        return artist.getId() == artistId;
     }
 
     @Override
-    public long makeArtist(Long userId) {
+    public long makeArtist(Long userId, String name) {
         //TODO: Check for moderator or admin status
         Objectify ofy = ObjectifyService.begin();
 
-        Artist artist = ofy.query(Artist.class).filter("user", userId).get();
+        Artist artist = ofy.query(Artist.class).filter("userId", userId).get();
         if (artist != null) {
             //TODO: Throw error? Artist allready an artist?
         }
-        artist = new Artist(userId);
+        artist = new Artist(userId, name);
         ofy.put(artist);
         return artist.getId();
     }
@@ -81,7 +89,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 
     @Override
     public User getCurrentUser() {
-        return null;
+        if(!userService.isUserLoggedIn()){
+            return null;
+        }
+        String fid = getFederatedId();
+        return getOrCreateUser(fid);
     }
     
     /**
@@ -91,7 +103,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
      * @param fid
      * @return A userid.
      */
-    private Long getOrCreateUser(String fid) {
+    private User getOrCreateUser(String fid) {
         Objectify ofy = ObjectifyService.begin();
 
         
@@ -101,7 +113,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
             ofy.put(user);
         }
 
-        return user.getId();
+        return user;
     }
 
     private String getFederatedId() {
