@@ -4,9 +4,9 @@
  */
 package org.greenam.client.widget;
 
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.web.bindery.requestfactory.shared.EntityProxy;
-import com.google.web.bindery.requestfactory.shared.Receiver;
 import java.util.List;
 import org.greenam.client.view.ViewController;
 
@@ -14,14 +14,19 @@ import org.greenam.client.view.ViewController;
  *
  * @author Emil
  */
-public abstract class ListWidget<T extends EntityProxy> extends Grid {
+public abstract class ListWidget<T> extends Grid {
 
     protected final ViewController viewController;
-    public final Receiver<List<T>> callback = new Receiver<List<T>>() {
+    public final AsyncCallback<List<T>> callback = new AsyncCallback<List<T>>() {
 
         @Override
         public void onSuccess(List<T> response) {
             update(response);
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            Window.alert("ListWidget failed callback. " + caught);
         }
     };
     

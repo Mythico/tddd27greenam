@@ -10,14 +10,14 @@ import com.google.gwt.media.client.Audio;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import java.util.List;
+import org.greenam.client.domain.Record;
 import org.greenam.client.view.ViewController;
-import org.greenam.shared.proxy.RecordProxy;
 
 /**
  *
  * @author Emil
  */
-public class RecordListWidget extends ListWidget<RecordProxy> {
+public class RecordListWidget extends ListWidget<Record> {
 
     private Audio audio;
 
@@ -45,12 +45,12 @@ public class RecordListWidget extends ListWidget<RecordProxy> {
     }
 
     @Override
-    protected void update(List<RecordProxy> records) {
+    protected void update(List<Record> records) {
         int row = records.size() + 1;
         resize(row, 6);
 
         int i = 1;
-        for (final RecordProxy record : records) {
+        for (final Record record : records) {
             Image playImg = new Image("img/play.png");
             playImg.setSize("20px", "20px");
             Image buyImg = new Image("img/buy.png");
@@ -88,7 +88,8 @@ public class RecordListWidget extends ListWidget<RecordProxy> {
                 @Override
                 public void onClick(ClickEvent event) {
                     if (record.getArtistIds().size() == 1) {
-                        viewController.setArtistView(record.getArtistIds().get(0));
+                        //TODO: Fetch data
+                        //viewController.setArtistView(record.getArtistIds().get(0));
                     } else{
                         //TODO: add a popup with choises for selecting an artist.
                     }

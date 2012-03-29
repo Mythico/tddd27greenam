@@ -6,17 +6,12 @@ package org.greenam.client.view;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import com.google.web.bindery.requestfactory.shared.Receiver;
-import com.google.web.bindery.requestfactory.shared.Request;
-import com.googlecode.objectify.Key;
+import org.greenam.client.domain.Artist;
+import org.greenam.client.rpc.ArtistService;
+import org.greenam.client.rpc.ArtistServiceAsync;
 import org.greenam.client.widget.AlbumListWidget;
 import org.greenam.client.widget.BiographyWidget;
-import org.greenam.shared.proxy.ArtistProxy;
-import org.greenam.shared.service.ApplicationRequestFactory;
-import org.greenam.shared.service.ApplicationRequestFactory.UserRequestContext;
-import org.greenam.shared.service.ClientFactory;
 
 /**
  *
@@ -24,8 +19,7 @@ import org.greenam.shared.service.ClientFactory;
  */
 public class ArtistView extends VerticalPanel {
 
-    private final ApplicationRequestFactory rf = ClientFactory.getRequestFactory();
-    private ArtistProxy artist;
+    private Artist artist;
     //Constant used by the deckpanel
     private final int ALBUM_LIST = 0;
     private final int BIOGRAPHY = 1;
@@ -132,19 +126,9 @@ public class ArtistView extends VerticalPanel {
         add(scrollPanel);
     }
 
-    void setArtist(Long artistId) {
-        UserRequestContext reqCtx = rf.userRequest();
-
-        Request<ArtistProxy> req = reqCtx.getArtist(artistId);
-
-        req.fire(new Receiver<ArtistProxy>() {
-
-            @Override
-            public void onSuccess(ArtistProxy response) {
-                artist = response;
-                artistLabel.setText("[" + artist.getId() + "]Artist: " + artist.getName());
-                showBio.execute(); //TODO: set showMusic as default
-            }
-        });
+    void setArtist(Artist artist) {
+        this.artist = artist;
+        artistLabel.setText("[" + artist.getId() + "]Artist: " + artist.getName());
+        showBio.execute(); //TODO: set showMusic as default
     }
 }
