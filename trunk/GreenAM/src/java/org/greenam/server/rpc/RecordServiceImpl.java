@@ -24,7 +24,8 @@ public class RecordServiceImpl extends RemoteServiceServlet implements RecordSer
     private boolean createArtist = true;
 
     @Override
-    public List<Record> search(String s) {LinkedList<Record> list = new LinkedList<Record>();
+    public List<Record> search(String s) {
+        LinkedList<Record> list = new LinkedList<Record>();
 
         Objectify ofy = ObjectifyService.begin();
 
