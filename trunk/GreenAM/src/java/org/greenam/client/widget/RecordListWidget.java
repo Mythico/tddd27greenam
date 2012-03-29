@@ -4,13 +4,22 @@
  */
 package org.greenam.client.widget;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.media.client.Audio;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import java.util.HashMap;
 import java.util.List;
+import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Record;
+import org.greenam.client.rpc.ArtistService;
+import org.greenam.client.rpc.ArtistServiceAsync;
+import org.greenam.client.rpc.UserService;
+import org.greenam.client.rpc.UserServiceAsync;
 import org.greenam.client.view.ViewController;
 
 /**
@@ -20,6 +29,9 @@ import org.greenam.client.view.ViewController;
 public class RecordListWidget extends ListWidget<Record> {
 
     private Audio audio;
+    private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
+    private final UserServiceAsync userInfo = GWT.create(UserService.class);
+    private final HashMap<Long, Artist> artists = new HashMap<Long, Artist>();
 
     public RecordListWidget(ViewController viewController) {
         super(viewController);
@@ -56,8 +68,11 @@ public class RecordListWidget extends ListWidget<Record> {
             Image buyImg = new Image("img/buy.png");
             buyImg.setSize("20px", "20px");
             Label title = new Label(record.getTitle());
-            Label album = new Label("Fetch: ");
-            Label artist = new Label("Fetch: artists");
+            Label album = new Label("Fetching...");
+            Label artist = new Label("Fetching...");
+
+
+            fetchArtists(artist, record.getArtistIds());
 //            Label genre = new Label(genreToString(record.getGenre()));
 
             playImg.setStyleName("gam-RecordListWidgetLink");
@@ -65,7 +80,7 @@ public class RecordListWidget extends ListWidget<Record> {
             title.setStyleName("gam-RecordListWidgetLink");
             album.setStyleName("gam-RecordListWidgetLink");
             artist.setStyleName("gam-RecordListWidgetLink");
-             // genre.setStyleName("gam-RecordListWidgetLink");
+            // genre.setStyleName("gam-RecordListWidgetLink");
 
             //Click handlers
             playImg.addClickHandler(new ClickHandler() {
@@ -88,9 +103,10 @@ public class RecordListWidget extends ListWidget<Record> {
                 @Override
                 public void onClick(ClickEvent event) {
                     if (record.getArtistIds().size() == 1) {
-                        //TODO: Fetch data
-                        //viewController.setArtistView(record.getArtistIds().get(0));
-                    } else{
+                        Long id = record.getArtistIds().get(0);
+                        Artist artist = artists.get(id);
+                        viewController.setArtistView(artist);
+                    } else {
                         //TODO: add a popup with choises for selecting an artist.
                     }
 
@@ -103,13 +119,12 @@ public class RecordListWidget extends ListWidget<Record> {
                     //viewController.setSearchAlbumView(record.albumId);
                 }
             });
-            /*genre.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    //viewController.setSearchGenreView(record.getGenre());
-                }
-            });*/
+            /*
+             * genre.addClickHandler(new ClickHandler() {
+             *
+             * @Override public void onClick(ClickEvent event) {
+             * //viewController.setSearchGenreView(record.getGenre()); } });
+             */
 
             setWidget(i, 0, playImg);
             setWidget(i, 1, title);
@@ -120,5 +135,29 @@ public class RecordListWidget extends ListWidget<Record> {
             i++;
         }
 
+    }
+
+    private void fetchArtists(final Label artistLabel, List<Long> ids) {
+
+        final StringBuilder sb = new StringBuilder();
+
+
+        for (Long id : ids) {
+            userInfo.getArtist(id, new AsyncCallback<Artist>() {
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Window.alert("Could not fetch artist.\n" + caught);
+                }
+
+                @Override
+                public void onSuccess(Artist artist) {
+                    artists.put(artist.getId(), artist);
+                    sb.append(artist.getName());
+                    sb.append(" ");
+                    artistLabel.setText(sb.toString());
+                }
+            });
+        }
     }
 }

@@ -17,6 +17,7 @@ public class User extends DatastoreObject{
         
     @NotNull
     private String federatedId;
+    @NotNull
     private String name;
 
     public User() {
@@ -25,6 +26,7 @@ public class User extends DatastoreObject{
     
     public User(String federatedId, String name) {
         this.federatedId = federatedId;
+        this.name = name;
     }
     
     public String getFederatedId() {

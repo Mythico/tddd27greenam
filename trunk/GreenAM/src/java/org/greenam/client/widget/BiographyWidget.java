@@ -13,6 +13,8 @@ import com.google.gwt.user.client.ui.*;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
+import org.greenam.client.rpc.UserService;
+import org.greenam.client.rpc.UserServiceAsync;
 
 /**
  *
@@ -22,14 +24,15 @@ public class BiographyWidget extends VerticalPanel {
 
     private final RichTextArea textArea = new RichTextArea();
     private final HorizontalPanel editPane = new HorizontalPanel();
-    private final ArtistServiceAsync async = GWT.create(ArtistService.class);
+    private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
+    private final UserServiceAsync userInfo = GWT.create(UserService.class);
     private Artist artist;
+    private final Button saveButton = new Button("Edit");
 
     public BiographyWidget() {
         setSize("100%", "100%");
         textArea.setEnabled(false);
 
-        final Button saveButton = new Button("Edit");
         final Button cancelButton = new Button("Cancel");
         cancelButton.setVisible(false);
 
@@ -54,6 +57,7 @@ public class BiographyWidget extends VerticalPanel {
             @Override
             public void onClick(ClickEvent event) {
                 load();
+                saveButton.setText("Edit");
                 textArea.setEnabled(false);
                 cancelButton.setVisible(false);
             }
@@ -92,7 +96,7 @@ public class BiographyWidget extends VerticalPanel {
 
         artist.setBiography(textArea.getHTML());
 
-        async.save(artist, new AsyncCallback<Void>() {
+        artistInfo.save(artist, new AsyncCallback<Void>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -109,7 +113,7 @@ public class BiographyWidget extends VerticalPanel {
     private void load() {
 
 
-        async.update(artist, new AsyncCallback<Artist>() {
+        artistInfo.update(artist, new AsyncCallback<Artist>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -126,10 +130,23 @@ public class BiographyWidget extends VerticalPanel {
 
     public void setArtist(Artist artist) {
         this.artist = artist;
+        saveButton.setText("Edit");
 
         //Check if current login user has access to edit this page.
-        boolean hasAccess = true;
-        editPane.setVisible(hasAccess);
+        editPane.setVisible(false);
+        userInfo.hasAccess(artist.getId(), new AsyncCallback<Boolean>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Window.alert("Has access failed in BiographWidget.\n" + caught);
+            }
+
+            @Override
+            public void onSuccess(Boolean result) {
+                editPane.setVisible(result);
+            }
+        });
+
 
         load();
     }

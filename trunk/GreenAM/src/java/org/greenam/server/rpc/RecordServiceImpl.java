@@ -8,6 +8,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Query;
 import java.util.LinkedList;
 import java.util.List;
 import org.greenam.client.domain.*;
@@ -30,14 +31,17 @@ public class RecordServiceImpl extends RemoteServiceServlet implements RecordSer
         Objectify ofy = ObjectifyService.begin();
 
         if (createArtist) {
-            ofy.put(new User("1","1"));
-            ofy.put(new User("2","2"));
-            ofy.put(new User("3","3"));
-            ofy.put(new User("4","4"));
-            createArtist = false;
+            ofy.put(new User("1", "1"));
+            List<User> userList = ofy.query(User.class).list();
+            for(User user : userList){
+                ofy.put(new Artist(user.getId(), user.getName())); 
+                //Note: The artist name dosn't have to be the same as the user name.
+            }            
+            createArtist = false;            
         }
-        List<Key<Artist>> alist = ofy.query(Artist.class).listKeys();
-        for (Key<Artist> a : alist) {
+        Query<Artist> alist = ofy.query(Artist.class);
+        
+        for (Artist a : alist) {
             List<Long> al = new LinkedList<Long>();
             al.add(a.getId());
             list.add(new Record("Alban", al, 0));
