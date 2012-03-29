@@ -13,7 +13,7 @@ import org.greenam.client.domain.User;
  *
  * @author Emil
  */
-@RemoteServiceRelativePath("userservice")
+@RemoteServiceRelativePath("rpc/userservice")
 public interface UserService extends RemoteService {
 
     public boolean hasAccess();

@@ -30,8 +30,6 @@
         </auth-constraint>
     </security-constraint> -->
     <servlet>
-        <servlet-name>requestFactoryServlet</servlet-name>
-        <servlet-class>com.google.web.bindery.requestfactory.server.RequestFactoryServlet</servlet-class>
         <init-param>
             <param-name>symbolMapsDirectory</param-name>
             <!-- You'll need to compile with -extras and move the symbolMaps directory 
@@ -40,12 +38,8 @@
         </init-param>
     </servlet>
     <servlet-mapping>
-        <servlet-name>requestFactoryServlet</servlet-name>
-        <url-pattern>/gwtRequest</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>UserService</servlet-name>
-        <url-pattern>/org.greenam.Main/userservice</url-pattern>
+        <url-pattern>/org.greenam.Main/rpc/userservice</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RecordService</servlet-name>
