@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <servlet>
-        <servlet-name>MusicSearchService</servlet-name>
-        <servlet-class>org.greenam.server.rpc.SearchServiceImpl</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ArtistInfoService</servlet-name>
-        <servlet-class>org.greenam.server.rpc.ArtistInfoServiceImpl</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>AccessService</servlet-name>
-        <servlet-class>org.greenam.server.rpc.AccessServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>MusicSearchService</servlet-name>
-        <url-pattern>/org.greenam.Main/searchservice</url-pattern>
-    </servlet-mapping>
-    <servlet>
         <servlet-name>LoginRequiredServlet</servlet-name>
         <servlet-class>org.greenam.server.http.LoginRequiredServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserService</servlet-name>
+        <servlet-class>org.greenam.server.rpc.UserServiceImpl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecordService</servlet-name>
+        <servlet-class>org.greenam.server.rpc.RecordServiceImpl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ArtistService</servlet-name>
+        <servlet-class>org.greenam.server.rpc.ArtistServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginRequiredServlet</servlet-name>
@@ -33,13 +29,31 @@
             <role-name>*</role-name>
         </auth-constraint>
     </security-constraint> -->
+    <servlet>
+        <servlet-name>requestFactoryServlet</servlet-name>
+        <servlet-class>com.google.web.bindery.requestfactory.server.RequestFactoryServlet</servlet-class>
+        <init-param>
+            <param-name>symbolMapsDirectory</param-name>
+            <!-- You'll need to compile with -extras and move the symbolMaps directory 
+			to this location if you want stack trace deobfuscation to work -->
+            <param-value>WEB-INF/classes/symbolMaps/</param-value>
+        </init-param>
+    </servlet>
     <servlet-mapping>
-        <servlet-name>ArtistInfoService</servlet-name>
-        <url-pattern>/org.greenam.Main/rpc/artistinfoservice</url-pattern>
+        <servlet-name>requestFactoryServlet</servlet-name>
+        <url-pattern>/gwtRequest</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>AccessService</servlet-name>
-        <url-pattern>/org.greenam.Main/rpc/accessservice</url-pattern>
+        <servlet-name>UserService</servlet-name>
+        <url-pattern>/org.greenam.Main/userservice</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RecordService</servlet-name>
+        <url-pattern>/org.greenam.Main/rpc/recordservice</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ArtistService</servlet-name>
+        <url-pattern>/org.greenam.Main/rpc/artistservice</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
