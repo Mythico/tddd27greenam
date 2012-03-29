@@ -5,6 +5,7 @@
 package org.greenam.client.view;
 
 import com.google.gwt.user.client.ui.DeckPanel;
+import org.greenam.client.domain.Artist;
 
 /**
  *
@@ -30,8 +31,8 @@ public final class ViewController extends DeckPanel{
     
  
 
-    public void setArtistView(Long artistId) {        
-        artistView.setArtist(artistId);
+    public void setArtistView(Artist artist) {        
+        artistView.setArtist(artist);
         showWidget(ARTIST);        
     }
 
