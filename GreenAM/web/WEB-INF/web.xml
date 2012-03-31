@@ -29,14 +29,6 @@
             <role-name>*</role-name>
         </auth-constraint>
     </security-constraint> -->
-    <servlet>
-        <init-param>
-            <param-name>symbolMapsDirectory</param-name>
-            <!-- You'll need to compile with -extras and move the symbolMaps directory 
-			to this location if you want stack trace deobfuscation to work -->
-            <param-value>WEB-INF/classes/symbolMaps/</param-value>
-        </init-param>
-    </servlet>
     <servlet-mapping>
         <servlet-name>UserService</servlet-name>
         <url-pattern>/org.greenam.Main/rpc/userservice</url-pattern>
