@@ -12,6 +12,7 @@ import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
 import org.greenam.client.widget.AlbumListWidget;
 import org.greenam.client.widget.BiographyWidget;
+import org.greenam.client.widget.BlogWidget;
 
 /**
  *
@@ -26,13 +27,6 @@ public class ArtistView extends VerticalPanel {
     private final int BLOG = 2;
     private final int EVENT_CALENDER = 3;
     private final int UPLOAD = 4;
-
-    private static class BlogPane extends VerticalPanel {
-
-        public BlogPane() {
-            add(new Label("I am a blog."));
-        }
-    }
 
     private static class EventCalanderPane extends VerticalPanel {
 
@@ -99,7 +93,7 @@ public class ArtistView extends VerticalPanel {
     private final MenuItem uploadItem = new MenuItem("Upload", uploadEvent);
     private final AlbumListWidget albumListWidget;
     private final BiographyWidget bioPane = new BiographyWidget();
-    private final BlogPane blogPane = new BlogPane();
+    private final BlogWidget blogPane = new BlogWidget();
     private final EventCalanderPane eventPane = new EventCalanderPane();
     private final UploadPane uploadPane = new UploadPane();
 
