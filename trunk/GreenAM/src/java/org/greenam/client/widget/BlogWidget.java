@@ -1,11 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.client.widget;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dev.asm.Label;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -37,12 +33,11 @@ public class BlogWidget extends VerticalPanel {
     
     public BlogWidget() {
         
-        
         newentryArea.setEnabled(false);
-        newentryArea.setText("Add your new blog entry here!");  
+        newentryArea.setText("Add your new blog entry here!");
         newentryArea.setVisible(false);
                     
-        //add(blogArea);    
+        add(blogArea);    
         add(newentryArea);
         add(newentryButton);
         
@@ -111,6 +106,7 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onSuccess(Artist result) {
+                artist = result;
                 blogPosts = artist.getBlogPosts();          
             }
         });     
