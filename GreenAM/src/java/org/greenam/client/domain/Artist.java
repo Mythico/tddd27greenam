@@ -5,6 +5,7 @@
 package org.greenam.client.domain;
 
 import com.googlecode.objectify.annotation.Entity;
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -18,7 +19,7 @@ public class Artist extends DatastoreObject {
     private String name;
     private String biography;
     //@Persistent
-    //private ArrayList<Blog> blogPosts;
+    private ArrayList<String> blogPosts;
     private Set<Long> albums;
     
     public Artist() {
@@ -28,7 +29,7 @@ public class Artist extends DatastoreObject {
         this.userId = userId;
         this.name = name;
         this.biography = "";
-        //this.blogPosts = blogPosts;
+        this.blogPosts = blogPosts;
         
         //this.events = events;
     }
@@ -50,14 +51,14 @@ public class Artist extends DatastoreObject {
         this.biography = biography;
     }
 
-//    public ArrayList<Blog> getBlogPosts() {
-//        return blogPosts;
-//    }
-//
-//    public void setBlogPosts(ArrayList<Blog> blogPosts) {
-//        this.blogPosts = blogPosts;
-//    }
-//
+    public ArrayList<String> getBlogPosts() {
+        return blogPosts;
+    }
+
+    public void setBlogPosts(ArrayList<String> blogPosts) {
+        this.blogPosts = blogPosts;
+    }
+   
 //    public List<Event> getEvents() {
 //        return events;
 //    }
