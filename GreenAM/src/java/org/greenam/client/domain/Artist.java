@@ -38,7 +38,6 @@ public class Artist extends DatastoreObject {
         return userId;
     }
     
-
     public Set<Long> getAlbums() {
         return albums;
     }    
