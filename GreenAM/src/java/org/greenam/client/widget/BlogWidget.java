@@ -41,7 +41,7 @@ public class BlogWidget extends VerticalPanel {
         add(newentryArea);
         add(newentryButton);
         
-        load();
+       // load(); TODO: FIXXA!
         
         newentryButton.addClickHandler(new ClickHandler() {
 
