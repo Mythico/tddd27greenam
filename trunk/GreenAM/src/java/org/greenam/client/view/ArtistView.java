@@ -67,6 +67,7 @@ public class ArtistView extends VerticalPanel {
 
         @Override
         public void execute() {
+            blogPane.setArtist(artist);
             deckPanel.showWidget(BLOG);
         }
     };

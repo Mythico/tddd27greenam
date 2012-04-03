@@ -19,7 +19,7 @@ public class Artist extends DatastoreObject {
     private String name;
     private String biography;
     //@Persistent
-    private ArrayList<String> blogPosts;
+    private ArrayList<String> blogPosts = new ArrayList<String>();
     private Set<Long> albums;
     
     public Artist() {
