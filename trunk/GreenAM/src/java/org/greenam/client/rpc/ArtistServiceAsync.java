@@ -18,7 +18,7 @@ public interface ArtistServiceAsync {
     
     public void getEvents(Artist artist, int month, AsyncCallback<List<Event>> callback);
 
-    public void getBlogs(Artist artist, int page, AsyncCallback<List<Blog>> callback);
+    public void getBlog(Artist artist, AsyncCallback<List<Blog>> callback);
 
     public void postEvent(Artist artist, Event event, AsyncCallback callback);
 
