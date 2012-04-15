@@ -20,7 +20,7 @@ public interface ArtistService extends RemoteService {
 
     public List<Event> getEvents(Artist artist, int month);
 
-    public List<Blog> getBlogs(Artist artist, int page);
+    public List<Blog> getBlog(Artist artist);
 
     public void postEvent(Artist artist, Event event);
 

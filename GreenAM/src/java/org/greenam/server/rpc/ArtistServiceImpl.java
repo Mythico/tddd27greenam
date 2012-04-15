@@ -18,13 +18,15 @@ import org.greenam.client.rpc.ArtistService;
  */
 public class ArtistServiceImpl extends RemoteServiceServlet implements ArtistService {
     
+    Objectify ofy = ObjectifyService.begin();
+    
     @Override
     public List<Event> getEvents(Artist artist, int month) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Blog> getBlogs(Artist artist, int page) {
+    public List<Blog> getBlog(Artist artist) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -40,16 +42,11 @@ public class ArtistServiceImpl extends RemoteServiceServlet implements ArtistSer
 
     @Override
     public void save(Artist artist) {
-        Objectify ofy = ObjectifyService.begin();
-        
         ofy.put(artist);
     }
 
     @Override
     public Artist update(Artist artist) {
-        
-        Objectify ofy = ObjectifyService.begin();
-        
         return ofy.get(Artist.class, artist.getId());
     }
 }
