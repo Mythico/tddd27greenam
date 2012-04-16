@@ -6,6 +6,7 @@ package org.greenam.client.view;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.rpc.ArtistService;
@@ -13,6 +14,8 @@ import org.greenam.client.rpc.ArtistServiceAsync;
 import org.greenam.client.widget.AlbumListWidget;
 import org.greenam.client.widget.BiographyWidget;
 import org.greenam.client.widget.BlogWidget;
+import org.greenam.client.widget.CalendarWidget;
+import org.greenam.client.widget.UploadWidget;
 
 /**
  *
@@ -21,6 +24,7 @@ import org.greenam.client.widget.BlogWidget;
 public class ArtistView extends VerticalPanel {
 
     private Artist artist;
+    private boolean hasAccess = false;
     //Constant used by the deckpanel
     private final int ALBUM_LIST = 0;
     private final int BIOGRAPHY = 1;
@@ -28,19 +32,6 @@ public class ArtistView extends VerticalPanel {
     private final int EVENT_CALENDER = 3;
     private final int UPLOAD = 4;
 
-    private static class EventCalanderPane extends VerticalPanel {
-
-        public EventCalanderPane() {
-            add(new Label("I am a event calander."));
-        }
-    }
-
-    private static class UploadPane extends VerticalPanel {
-
-        public UploadPane() {
-            add(new FileUpload());
-        }
-    }
     private final DeckPanel deckPanel = new DeckPanel();
     private final ScrollPanel scrollPanel = new ScrollPanel(deckPanel);
     //Commands used when clicking the menu.
@@ -75,6 +66,7 @@ public class ArtistView extends VerticalPanel {
 
         @Override
         public void execute() {
+            eventPane.setArtist(artist, hasAccess);
             deckPanel.showWidget(EVENT_CALENDER);
         }
     };
@@ -95,8 +87,8 @@ public class ArtistView extends VerticalPanel {
     private final AlbumListWidget albumListWidget;
     private final BiographyWidget bioPane = new BiographyWidget();
     private final BlogWidget blogPane = new BlogWidget();
-    private final EventCalanderPane eventPane = new EventCalanderPane();
-    private final UploadPane uploadPane = new UploadPane();
+    private final CalendarWidget eventPane = new CalendarWidget();
+    private final UploadWidget uploadPane = new UploadWidget();
 
     public ArtistView(ViewController viewController) {
         setStyleName("gam-ContentView");
@@ -123,7 +115,11 @@ public class ArtistView extends VerticalPanel {
 
     void setArtist(Artist artist) {
         this.artist = artist;
+        //TODO: add a check
+        hasAccess = true;
+        
         artistLabel.setText("[" + artist.getId() + "]Artist: " + artist.getName());
         showBio.execute(); //TODO: set showMusic as default
+        
     }
 }
