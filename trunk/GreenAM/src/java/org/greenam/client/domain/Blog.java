@@ -13,7 +13,8 @@ import com.googlecode.objectify.annotation.Entity;
 @Entity
 public class Blog extends DatastoreObject {
      
-    private String content;
+    public String content;
+    public Long artistId;
     
     public Blog() {
     }
