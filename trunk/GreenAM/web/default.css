@@ -12,6 +12,13 @@
 
 }
 
+.gam-error-string
+{
+    color: red;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 
 /***********************************************************
 *                     MenuBar Demo
@@ -53,7 +60,6 @@
 .gam-ContentView
 {   
     width                       :   600px;
-    height                      :   600px;
     margin                      :   0 auto;    
     font-size                   :   70%;
     padding                     :   3px;
@@ -88,4 +94,35 @@
 .gam-RecordListWidgetLink
 {
     cursor: pointer;
+}
+
+
+/***********************************************************
+*                     Calendar Widget
+***********************************************************/
+
+.gam-CalendarWidget
+{
+    width                       :   600px; 
+}
+
+.gam-CalendarWidgetEvent
+{
+    width                       :   400px;
+    padding                     :   5px;
+    margin                      :   5px;
+    
+    border-right-style: solid;
+    border-left-style: solid;
+    border-bottom-style: solid;
+    border-top-style: solid;
+    border-right-width: 1px;
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    border-right-color: #000000;
+    border-left-color: #000000;
+    border-bottom-color: #000000;
+    border-top-color: #000000;
+    background-color: #eee;
 }
