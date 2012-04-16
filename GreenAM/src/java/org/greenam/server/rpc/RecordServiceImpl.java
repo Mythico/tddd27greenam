@@ -31,16 +31,18 @@ public class RecordServiceImpl extends RemoteServiceServlet implements RecordSer
         Objectify ofy = ObjectifyService.begin();
 
         if (createArtist) {
+            ofy.delete(User.class, "1");
             ofy.put(new User("1", "1"));
             List<User> userList = ofy.query(User.class).list();
-            for(User user : userList){
-                ofy.put(new Artist(user.getId(), user.getName())); 
+            for (User user : userList) {
+                ofy.delete(Artist.class, user.getId());
+                ofy.put(new Artist(user.getId(), user.getName()));
                 //Note: The artist name dosn't have to be the same as the user name.
-            }            
-            createArtist = false;            
+            }
+            createArtist = false;
         }
-        Query<Artist> alist = ofy.query(Artist.class);
-        
+        Query<Artist> alist = ofy.query(Artist.class).limit(10);
+
         for (Artist a : alist) {
             List<Long> al = new LinkedList<Long>();
             al.add(a.getId());
