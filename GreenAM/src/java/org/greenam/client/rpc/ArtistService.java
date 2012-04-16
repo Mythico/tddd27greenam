@@ -18,13 +18,13 @@ import org.greenam.client.domain.Event;
 @RemoteServiceRelativePath("rpc/artistservice")
 public interface ArtistService extends RemoteService {
 
-    public List<Event> getEvents(Artist artist, int month);
+    public List<Event> getEvents(Artist artist);
 
     public List<Blog> getBlog(Artist artist);
 
-    public void postEvent(Artist artist, Event event);
+    public void postEvent(Event event);
 
-    public void postBlog(Artist artist, Blog blog);
+    public void postBlog(Blog blog);
     
     public void save(Artist artist);
     public Artist update(Artist artist);
