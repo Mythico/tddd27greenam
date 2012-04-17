@@ -46,8 +46,12 @@ public class RecordServiceImpl extends RemoteServiceServlet implements RecordSer
         for (Artist a : alist) {
             List<Long> al = new LinkedList<Long>();
             al.add(a.getId());
-            list.add(new Record("Alban", al, 0));
+            Record record = new Record("Alban", al, 0, "sound/Rondo_Alla_Turka.ogg");
+            ofy.put(record);
+            list.add(record);
         }
-        return list;
+
+        return ofy.query(Record.class).limit(10).list();
+
     }
 }

@@ -5,6 +5,7 @@
 package org.greenam.client.rpc;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import java.util.ArrayList;
 import java.util.List;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Blog;
@@ -18,7 +19,7 @@ public interface ArtistServiceAsync {
     
     public void getEvents(Artist artist, AsyncCallback<List<Event>> callback);
 
-    public void getBlog(Artist artist, AsyncCallback<List<Blog>> callback);
+    public void getBlog(Artist artist, AsyncCallback<ArrayList<Blog>> callback);
 
     public void postEvent(Event event, AsyncCallback callback);
 

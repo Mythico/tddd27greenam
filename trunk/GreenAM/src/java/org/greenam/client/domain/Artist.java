@@ -19,7 +19,7 @@ public class Artist extends DatastoreObject {
     private String name;
     private String biography;
     //@Persistent
-    private ArrayList<String> blogPosts = new ArrayList<String>();
+    private ArrayList<Blog> blogs = new ArrayList<Blog>();
     private Set<Long> albums;
     
     public Artist() {
@@ -29,8 +29,7 @@ public class Artist extends DatastoreObject {
         this.userId = userId;
         this.name = name;
         this.biography = "";
-        this.blogPosts = blogPosts;
-        
+        this.blogs = blogs;
         //this.events = events;
     }
 
@@ -50,14 +49,14 @@ public class Artist extends DatastoreObject {
         this.biography = biography;
     }
 
-    public ArrayList<String> getBlogPosts() {
-        return blogPosts;
+    public ArrayList<Blog> getBlog() {
+        return blogs;
     }
 
-    public void setBlogPosts(ArrayList<String> blogPosts) {
-        this.blogPosts = blogPosts;
+    public void setBlog(ArrayList<Blog> blogs) {
+        this.blogs = blogs;
     }
-   
+    
 //    public List<Event> getEvents() {
 //        return events;
 //    }

@@ -106,8 +106,7 @@ public class RecordListWidget extends ListWidget<Record> {
                 public void onClick(ClickEvent event) {
                     if (record.getArtistIds().size() == 1) {
                         Long id = record.getArtistIds().get(0);
-                        Artist artist = artists.get(id);
-                        viewController.setArtistView(artist);
+                        viewController.setArtistView(id);
                     } else {
                         //TODO: add a popup with choises for selecting an artist.
                     }

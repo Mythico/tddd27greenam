@@ -6,6 +6,7 @@ package org.greenam.client.rpc;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import java.util.ArrayList;
 import java.util.List;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Blog;
@@ -20,7 +21,7 @@ public interface ArtistService extends RemoteService {
 
     public List<Event> getEvents(Artist artist);
 
-    public List<Blog> getBlog(Artist artist);
+    public ArrayList<Blog> getBlog(Artist artist);
 
     public void postEvent(Event event);
 
