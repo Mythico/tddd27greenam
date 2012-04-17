@@ -9,10 +9,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Blog;
-import org.greenam.client.domain.User;
 import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
 import org.greenam.client.rpc.UserService;
@@ -29,7 +27,8 @@ public class BlogWidget extends VerticalPanel {
     private final Button newentryButton = new Button("Add a blog entry");
     private final Button clearblogButton = new Button("Clear your blog");
     private final Button deleteentryButton = new Button("Delete entry");
-    private final HTML blogArea = new HTML("This blog is currently empty.", true);
+    private final VerticalPanel blogArea = new VerticalPanel();
+    private final ScrollPanel scrollArea = new ScrollPanel(blogArea);
     private final RichTextArea newentryArea = new RichTextArea();
     private final HorizontalPanel buttonPanel = new HorizontalPanel();
     private final ListBox lb = new ListBox();
@@ -49,7 +48,7 @@ public class BlogWidget extends VerticalPanel {
         lb.clear();
         lb.addItem("Entry to delete: ");
 
-        add(blogArea);
+        add(scrollArea);
         add(newentryArea);
         add(buttonPanel);
 
@@ -62,7 +61,7 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onClick(ClickEvent event) {
-                if (newentryArea.getText() != "Add your new blog entry here!") {
+                if (!newentryArea.getText().equals("Add your new blog entry here!")) {
                     save();
                 }
             }
@@ -114,7 +113,7 @@ public class BlogWidget extends VerticalPanel {
         if (!b) {
             return;
         }
-        
+
         newblogentry.addEntry(newentryArea.getText(), date);
         newblogentry.artistId = artist.getId();
         artistInfo.postBlog(newblogentry, new AsyncCallback<Void>() {
@@ -140,15 +139,14 @@ public class BlogWidget extends VerticalPanel {
             }
 
             @Override
-            public void onSuccess(ArrayList<Blog> result) {
-                blog = result;
-                
+            public void onSuccess(ArrayList<Blog> blog) {
                 //Clear and print the blog
-                blogArea.setHTML("");
+                //blogArea.setHTML("");
                 for (int i = 0; i < blog.size(); i++) {
-                    blogArea.setHTML(blogArea.getHTML() + "This is entry " + (i+1) + " and was posted " + blog.get(i).getDate() + "<br>" + blog.get(i).getEntry() + "<br>" + "<br>");
-                    newentryArea.setText("Add your new blog entry here!");
+                    //blogArea.setHTML(blogArea.getHTML() + "This is entry " + (i+1) + " and was posted " + blog.get(i).getDate() + "<br>" + blog.get(i).getEntry() + "<br>" + "<br>");
+                    addBlog(blog.get(i), i);
                 }
+                newentryArea.setText("Add your new blog entry here!");
 
                 lb.clear();
                 lb.addItem("Entry to delete:");
@@ -162,6 +160,15 @@ public class BlogWidget extends VerticalPanel {
     public void setArtist(Artist artist) {
         this.artist = artist;
         load();
+    }
+
+    private void addBlog(Blog blog, int i) {
+        VerticalPanel vp = new VerticalPanel();
+        vp.setStyleName("gam-Box");
+        vp.add(new Label("This is entry " + (i + 1) + " and was posted " + blog.getDate()));
+        vp.add(new Label(blog.getEntry()));
+        blogArea.add(vp);
+        scrollArea.setHeight("400px");
     }
 
     private void clearblog() {
@@ -180,7 +187,7 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onSuccess(Void result) {
-                blogArea.setHTML("This blog is currently empty.");
+                //blogArea.setHTML("This blog is currently empty.");
             }
         });
     }

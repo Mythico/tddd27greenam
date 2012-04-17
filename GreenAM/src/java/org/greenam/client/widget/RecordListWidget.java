@@ -38,12 +38,12 @@ public class RecordListWidget extends ListWidget<Record> {
         audio = Audio.createIfSupported();
         audio.addSource("sound/Rondo_Alla_Turka.ogg");
 
-        resize(1, 6);
-        setText(0, 1, "Title");
-        setText(0, 2, "Album");
-        setText(0, 3, "Artist");
-        setText(0, 4, "Genre");
-        setText(0, 5, "Buy");
+        grid.resize(1, 6);
+        grid.setText(0, 1, "Title");
+        grid.setText(0, 2, "Album");
+        grid.setText(0, 3, "Artist");
+        grid.setText(0, 4, "Genre");
+        grid.setText(0, 5, "Buy");
 
     }
 
@@ -58,7 +58,7 @@ public class RecordListWidget extends ListWidget<Record> {
     @Override
     protected void update(List<Record> records) {
         int row = records.size() + 1;
-        resize(row, 6);
+        grid.resize(row, 6);
 
         int i = 1;
         ArtistFetchObject afo = new ArtistFetchObject();
@@ -127,17 +127,18 @@ public class RecordListWidget extends ListWidget<Record> {
              * //viewController.setSearchGenreView(record.getGenre()); } });
              */
 
-            setWidget(i, 0, playImg);
-            setWidget(i, 1, title);
-            setWidget(i, 2, album);
-            setWidget(i, 3, artist);
-            //setWidget(i, 4, genre);
-            setWidget(i, 5, buyImg);
+            grid.setWidget(i, 0, playImg);
+            grid.setWidget(i, 1, title);
+            grid.setWidget(i, 2, album);
+            grid.setWidget(i, 3, artist);
+            //grid.setWidget(i, 4, genre);
+            grid.setWidget(i, 5, buyImg);
             i++;
         }
 
         afo.clear();
         afo.fetch();
+        setSize("600px", "600px");
 
     }
 }

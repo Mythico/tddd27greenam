@@ -27,7 +27,6 @@ import org.greenam.client.rpc.ArtistServiceAsync;
  */
 public class CalendarWidget extends HorizontalPanel {
 
-    private Artist artist;
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     VerticalPanel eventPanel = new VerticalPanel();
     
@@ -57,7 +56,6 @@ public class CalendarWidget extends HorizontalPanel {
     };
 
     public void setArtist(Artist artist, boolean hasAccess) {
-        this.artist = artist;
         artistInfo.getEvents(artist, loadCallback);
         newEventWidget.setArtist(artist, hasAccess);
     }
@@ -67,7 +65,7 @@ public class CalendarWidget extends HorizontalPanel {
         Label date = new Label(e.getDate().toString());
         Label msg = new Label(e.getMessage());
         
-        panel.setStyleName("gam-CalendarWidgetEvent");
+        panel.setStyleName("gam-Box");
         panel.add(date);
         panel.add(msg);
         eventPanel.add(panel);

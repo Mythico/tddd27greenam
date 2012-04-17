@@ -19,14 +19,14 @@ public class AlbumListWidget extends ListWidget<Album> {
         super(viewController);
 
 
-        resize(1, 2);
-        setText(0, 1, "Name");
+        grid.resize(1, 2);
+        grid.setText(0, 1, "Name");
     }
 
     @Override
     protected void update(List<Album> list) {
         int row = list.size() + 1;
-        resize(row, 6);
+        grid.resize(row, 6);
 
         int i = 1;
         for (final Album album : list) {
@@ -35,7 +35,7 @@ public class AlbumListWidget extends ListWidget<Album> {
             name.setStyleName("gam-RecordListWidgetLink");
 
 
-            setWidget(i, 0, name);
+            grid.setWidget(i, 0, name);
             i++;
         }
     }
