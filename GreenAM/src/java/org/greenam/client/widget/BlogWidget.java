@@ -131,6 +131,7 @@ public class BlogWidget extends VerticalPanel {
     }
 
     private void load() {
+        blogArea.clear();
         artistInfo.getBlog(artist, new AsyncCallback<ArrayList<Blog>>() {
 
             @Override
