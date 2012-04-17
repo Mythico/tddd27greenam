@@ -6,11 +6,11 @@ package org.greenam.client.view;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import org.greenam.client.domain.Artist;
-import org.greenam.client.rpc.ArtistService;
-import org.greenam.client.rpc.ArtistServiceAsync;
+import org.greenam.client.rpc.UserService;
+import org.greenam.client.rpc.UserServiceAsync;
 import org.greenam.client.widget.AlbumListWidget;
 import org.greenam.client.widget.BiographyWidget;
 import org.greenam.client.widget.BlogWidget;
@@ -23,6 +23,7 @@ import org.greenam.client.widget.UploadWidget;
  */
 public class ArtistView extends VerticalPanel {
 
+    private final UserServiceAsync userInfo = GWT.create(UserService.class);
     private Artist artist;
     private boolean hasAccess = false;
     //Constant used by the deckpanel
@@ -31,7 +32,6 @@ public class ArtistView extends VerticalPanel {
     private final int BLOG = 2;
     private final int EVENT_CALENDER = 3;
     private final int UPLOAD = 4;
-
     private final DeckPanel deckPanel = new DeckPanel();
     private final ScrollPanel scrollPanel = new ScrollPanel(deckPanel);
     //Commands used when clicking the menu.
@@ -113,13 +113,26 @@ public class ArtistView extends VerticalPanel {
         add(scrollPanel);
     }
 
-    void setArtist(Artist artist) {
-        this.artist = artist;
+    void setArtist(Long artistId) {
+
+        userInfo.getArtist(artistId, new AsyncCallback<Artist>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void onSuccess(Artist result) {
+                artist = result;
+                hasAccess = true;
+                artistLabel.setText("[" + artist.getId() + "]Artist: " + artist.getName());
+                showBio.execute(); //TODO: set showMusic as default
+            }
+        });
+
         //TODO: add a check
-        hasAccess = true;
-        
-        artistLabel.setText("[" + artist.getId() + "]Artist: " + artist.getName());
-        showBio.execute(); //TODO: set showMusic as default
-        
+
+
     }
 }

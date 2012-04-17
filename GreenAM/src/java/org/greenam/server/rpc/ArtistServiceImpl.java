@@ -8,6 +8,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Query;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import org.greenam.client.domain.*;
 
@@ -30,8 +31,11 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
     }
 
     @Override
-    public List<Blog> getBlog(Artist artist) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public ArrayList<Blog> getBlog(Artist artist) {
+        Objectify ofy = ObjectifyService.begin();
+
+        List<Blog> list = ofy.query(Blog.class).filter("artistId", artist.getId()).order("date").list();
+        return new ArrayList<Blog>(list);
     }
 
     @Override
@@ -46,10 +50,11 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
 
     @Override
     public void postBlog(Blog blog) {
-        if (!hasAccess(blog.artistId)) {
+        /*if (!hasAccess(blog.artistId)) {
             return; //TODO: Throw exception?
-        }
+        }*/
         Objectify ofy = ObjectifyService.begin();
+        System.out.println("JAG SPARAR " + blog.getEntry());
         ofy.put(blog);
     }
 

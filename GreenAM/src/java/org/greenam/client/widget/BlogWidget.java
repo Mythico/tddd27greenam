@@ -9,7 +9,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.greenam.client.domain.Artist;
+import org.greenam.client.domain.Blog;
 import org.greenam.client.domain.User;
 import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
@@ -21,52 +23,51 @@ import org.greenam.client.rpc.UserServiceAsync;
  * @author Michael
  */
 public class BlogWidget extends VerticalPanel {
-    
+
     private final UserServiceAsync userInfo = GWT.create(UserService.class);
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     private final Button newentryButton = new Button("Add a blog entry");
     private final Button clearblogButton = new Button("Clear your blog");
     private final Button deleteentryButton = new Button("Delete entry");
+    private final HTML blogArea = new HTML("This blog is currently empty.", true);
     private final RichTextArea newentryArea = new RichTextArea();
     private final HorizontalPanel buttonPanel = new HorizontalPanel();
-    private final HTML blogArea = new HTML("This blog is currently empty.", true);
     private final ListBox lb = new ListBox();
-    private ArrayList<String> blogPosts;
+    private final Blog newblogentry = new Blog();
+    private ArrayList<Blog> blog;
     private Date date = new Date();
-    private final DialogBox dialogbox = new DialogBox(false);;
     private Artist artist;
-    
+
     public BlogWidget() {
-        
+
         newentryArea.setEnabled(false);
         newentryArea.setText("Add your new blog entry here!");
         newentryArea.setVisible(false);
-        
+
         lb.setVisible(false);
         lb.setVisibleItemCount(1);
         lb.clear();
         lb.addItem("Entry to delete: ");
-                
-        add(blogArea);    
+
+        add(blogArea);
         add(newentryArea);
         add(buttonPanel);
-        
+
         buttonPanel.add(newentryButton);
         buttonPanel.add(lb);
         buttonPanel.add(deleteentryButton);
         buttonPanel.add(clearblogButton);
-        
+
         newentryButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                if(newentryArea.getText() != "Add your new blog entry here!")
-                {
+                if (newentryArea.getText() != "Add your new blog entry here!") {
                     save();
                 }
             }
         });
-        
+
         clearblogButton.addClickHandler(new ClickHandler() {
 
             @Override
@@ -74,19 +75,18 @@ public class BlogWidget extends VerticalPanel {
                 clearblog();
             }
         });
-        
+
         deleteentryButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
                 int entrytodelete = lb.getSelectedIndex();
-                if(entrytodelete != 0)
-                {
+                if (entrytodelete != 0) {
                     deleteentry(entrytodelete);
                 }
             }
         });
-        
+
         userInfo.hasAccess(new AsyncCallback<Boolean>() {
 
             @Override
@@ -96,7 +96,7 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onSuccess(Boolean result) {
-                newentryArea.setEnabled(result);  
+                newentryArea.setEnabled(result);
                 newentryArea.setVisible(result);
                 newentryButton.setVisible(result);
                 clearblogButton.setVisible(result);
@@ -114,11 +114,10 @@ public class BlogWidget extends VerticalPanel {
         if (!b) {
             return;
         }
-                
-        blogPosts.add(newentryArea.getText());
-        artist.setBlogPosts(blogPosts);
-
-        artistInfo.save(artist, new AsyncCallback<Void>() {
+        
+        newblogentry.addEntry(newentryArea.getText(), date);
+        newblogentry.artistId = artist.getId();
+        artistInfo.postBlog(newblogentry, new AsyncCallback<Void>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -131,49 +130,46 @@ public class BlogWidget extends VerticalPanel {
             }
         });
     }
-    
+
     private void load() {
-        artistInfo.update(artist, new AsyncCallback<Artist>() {
+        artistInfo.getBlog(artist, new AsyncCallback<ArrayList<Blog>>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                Window.alert("BlogWidget failed RPC on load.\n" + caught);
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
-            public void onSuccess(Artist result) {
-                artist = result;
-                blogPosts = artist.getBlogPosts();    
+            public void onSuccess(ArrayList<Blog> result) {
+                blog = result;
                 
                 //Clear and print the blog
                 blogArea.setHTML("");
-                for(int i=0;i<blogPosts.size();i++)
-                    {
-                        blogArea.setHTML(blogArea.getHTML() + "This is entry " + (i+1) + " and was posted "+ date + "<br>" + blogPosts.get(i) + "<br>" + "<br>");
-                        newentryArea.setText("Add your new blog entry here!");
-                    }
-                
+                for (int i = 0; i < blog.size(); i++) {
+                    blogArea.setHTML(blogArea.getHTML() + "This is entry " + (i+1) + " and was posted " + blog.get(i).getDate() + "<br>" + blog.get(i).getEntry() + "<br>" + "<br>");
+                    newentryArea.setText("Add your new blog entry here!");
+                }
+
                 lb.clear();
                 lb.addItem("Entry to delete:");
-                for(int i=0;i<blogPosts.size();i++)
-                {
-                    lb.addItem("" + (i+1));
+                for (int i = 0; i < blog.size(); i++) {
+                    lb.addItem("" + (i + 1));
                 }
             }
         });
     }
-    
+
     public void setArtist(Artist artist) {
         this.artist = artist;
         load();
     }
-    
+
     private void clearblog() {
-                
-        blogPosts.clear();
+
+        blog.clear();
         lb.clear();
         lb.addItem("Entry to delete:");
-        artist.setBlogPosts(blogPosts);
+        artist.setBlog(blog);
 
         artistInfo.save(artist, new AsyncCallback<Void>() {
 
@@ -188,12 +184,12 @@ public class BlogWidget extends VerticalPanel {
             }
         });
     }
-    
+
     private void deleteentry(int entry) {
-        
-        blogPosts.remove(entry-1);
-        artist.setBlogPosts(blogPosts);
-        
+
+        blog.remove(entry - 1);
+        artist.setBlog(blog);
+
         artistInfo.save(artist, new AsyncCallback<Void>() {
 
             @Override
@@ -207,5 +203,4 @@ public class BlogWidget extends VerticalPanel {
             }
         });
     }
-    
 }
