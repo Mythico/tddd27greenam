@@ -51,7 +51,7 @@ public class RecordServiceImpl extends RemoteServiceServlet implements RecordSer
             list.add(record);
         }
 
-        return ofy.query(Record.class).limit(10).list();
+        return ofy.query(Record.class).limit(20).list();
 
     }
 }

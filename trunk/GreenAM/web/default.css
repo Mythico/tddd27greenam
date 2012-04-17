@@ -89,6 +89,7 @@
     background-color            :   #eee;
     font-size                   :   70%;
     padding                     :   3px;
+    
 }
 
 .gam-RecordListWidgetLink
@@ -106,7 +107,7 @@
     width                       :   600px; 
 }
 
-.gam-CalendarWidgetEvent
+.gam-Box
 {
     width                       :   400px;
     padding                     :   5px;
