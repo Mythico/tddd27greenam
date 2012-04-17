@@ -113,9 +113,8 @@ public class ArtistView extends VerticalPanel {
         add(scrollPanel);
     }
 
-    void setArtist(Long artistId) {
-
-        userInfo.getArtist(artistId, new AsyncCallback<Artist>() {
+    void setArtist(Long artistid) {
+        userInfo.getArtist(artistid, new AsyncCallback<Artist>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -125,14 +124,24 @@ public class ArtistView extends VerticalPanel {
             @Override
             public void onSuccess(Artist result) {
                 artist = result;
+                artistLabel.setText("[" + artist.getId()
+                        + "]Artist: " + artist.getName());
+            }
+        });
+        userInfo.hasAccess(artistid, new AsyncCallback<Boolean>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void onSuccess(Boolean result) {
                 hasAccess = true;
-                artistLabel.setText("[" + artist.getId() + "]Artist: " + artist.getName());
-                showBio.execute(); //TODO: set showMusic as default
             }
         });
 
-        //TODO: add a check
-
+        showMusic.execute();
 
     }
 }

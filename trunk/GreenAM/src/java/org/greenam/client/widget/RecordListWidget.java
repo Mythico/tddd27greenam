@@ -15,10 +15,7 @@ import com.google.gwt.user.client.ui.Label;
 import java.util.*;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Record;
-import org.greenam.client.rpc.ArtistService;
-import org.greenam.client.rpc.ArtistServiceAsync;
-import org.greenam.client.rpc.UserService;
-import org.greenam.client.rpc.UserServiceAsync;
+import org.greenam.client.rpc.*;
 import org.greenam.client.view.ViewController;
 
 /**
@@ -28,22 +25,20 @@ import org.greenam.client.view.ViewController;
 public class RecordListWidget extends ListWidget<Record> {
 
     private Audio audio;
-    private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
-    private final UserServiceAsync userInfo = GWT.create(UserService.class);
-    private final HashMap<Long, Artist> artists = new HashMap<Long, Artist>();
 
     public RecordListWidget(ViewController viewController) {
         super(viewController);
 
         audio = Audio.createIfSupported();
-        audio.addSource("sound/Rondo_Alla_Turka.ogg");
-
+        
         grid.resize(1, 6);
         grid.setText(0, 1, "Title");
         grid.setText(0, 2, "Album");
         grid.setText(0, 3, "Artist");
         grid.setText(0, 4, "Genre");
         grid.setText(0, 5, "Buy");
+        
+        
 
     }
 
@@ -70,7 +65,7 @@ public class RecordListWidget extends ListWidget<Record> {
             buyImg.setSize("20px", "20px");
             Label title = new Label(record.getTitle());
             Label album = new Label("Fetching...");
-            Label artist = new Label("Fetching...");
+            final Label artist = new Label("Fetching...");
 
             for (Long id : record.getArtistIds()) {
                 afo.addLabel(id, artist);
@@ -89,6 +84,8 @@ public class RecordListWidget extends ListWidget<Record> {
 
                 @Override
                 public void onClick(ClickEvent event) {
+                    Window.alert("Playing: " + record.getAudioUrl());
+                    audio.setSrc(record.getAudioUrl());
                     audio.play();
                 }
             });
@@ -109,6 +106,7 @@ public class RecordListWidget extends ListWidget<Record> {
                         viewController.setArtistView(id);
                     } else {
                         //TODO: add a popup with choises for selecting an artist.
+                        Window.alert("Multiple artist is not yet supported");
                     }
 
                 }
@@ -137,9 +135,9 @@ public class RecordListWidget extends ListWidget<Record> {
         }
 
         afo.clear();
-        afo.fetch();
         setSize("600px", "600px");
 
+        afo.fetch();
     }
 }
 
@@ -149,7 +147,7 @@ abstract class FetchObject {
 
     public void addLabel(Long id, Label label) {
         List<Label> list = map.get(id);
-        if(list == null){
+        if (list == null) {
             list = new LinkedList<Label>();
         }
         list.add(label);
@@ -179,7 +177,6 @@ class ArtistFetchObject extends FetchObject {
             @Override
             public void onFailure(Throwable caught) {
                 Window.alert("Failed to fetch artists.\n" + caught);
-                caught.printStackTrace();
             }
 
             @Override

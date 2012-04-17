@@ -76,4 +76,6 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         Objectify ofy = ObjectifyService.begin();
         return new HashMap<Long, Artist>(ofy.get(Artist.class, ids));
     }
+    
+    
 }

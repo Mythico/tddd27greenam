@@ -4,13 +4,19 @@
  */
 package org.greenam.server.rpc;
 
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Query;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.greenam.client.domain.*;
 
 import org.greenam.client.rpc.RecordService;
@@ -22,7 +28,7 @@ import org.greenam.client.rpc.RecordService;
 public class RecordServiceImpl extends RemoteServiceServlet implements RecordService {
 
     //TODO: Temp for creating starting records.
-    private boolean createArtist = true;
+    private boolean createArtist = false;
 
     @Override
     public List<Record> search(String s) {
@@ -39,19 +45,33 @@ public class RecordServiceImpl extends RemoteServiceServlet implements RecordSer
                 ofy.put(new Artist(user.getId(), user.getName()));
                 //Note: The artist name dosn't have to be the same as the user name.
             }
+            Query<Artist> alist = ofy.query(Artist.class).limit(10);
+
+            for (Artist a : alist) {
+                List<Long> al = new LinkedList<Long>();
+                al.add(a.getId());
+                list.add(new Record("Alban", al, 0, "sound/Rondo_Alla_Turka.ogg"));
+            }
             createArtist = false;
         }
-        Query<Artist> alist = ofy.query(Artist.class).limit(10);
+        return ofy.query(Record.class).list();
+        
+    }
 
-        for (Artist a : alist) {
-            List<Long> al = new LinkedList<Long>();
-            al.add(a.getId());
-            Record record = new Record("Alban", al, 0, "sound/Rondo_Alla_Turka.ogg");
-            ofy.put(record);
-            list.add(record);
-        }
+    //Generate a Blobstore Upload URL from the GAE BlobstoreService
+    @Override
+    public String getBlobStoreUploadUrl() {
+        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        //Map the UploadURL to the uploadservice which will be called by
+        //submitting the FormPanel
+        return blobstoreService.createUploadUrl("/http/fileupload");
+    }
 
-        return ofy.query(Record.class).limit(20).list();
+    @Override
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        BlobKey blobKey = new BlobKey(req.getParameter("blob-key"));
 
+        blobstoreService.serve(blobKey, resp);
     }
 }

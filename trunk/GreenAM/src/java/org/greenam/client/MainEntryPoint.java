@@ -35,7 +35,7 @@ public class MainEntryPoint implements EntryPoint {
 
         final Image logo = new Image("img/logo.png");
         
-        grid.setWidget(0, 0, new LoginWidget());
+        grid.setWidget(0, 0, new LoginWidget(viewController));
         grid.setWidget(0, 1, logo);
         
         grid.setWidget(0, 2, new SearchWidget(viewController));

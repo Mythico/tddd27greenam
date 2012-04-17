@@ -17,4 +17,6 @@ import org.greenam.client.domain.Record;
 public interface RecordService extends RemoteService {
 
     public List<Record> search(String s);
+
+    String getBlobStoreUploadUrl();
 }
