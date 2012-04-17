@@ -5,6 +5,7 @@
 package org.greenam.client.domain;
 
 import com.googlecode.objectify.annotation.Entity;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ import java.util.Set;
  * @author Emil
  */
 @Entity
-public class Artist extends DatastoreObject {
+public class Artist extends DatastoreObject{
 
     private Long userId;
     private String name;
@@ -29,7 +30,7 @@ public class Artist extends DatastoreObject {
         this.userId = userId;
         this.name = name;
         this.biography = "";
-        this.blogs = blogs;
+        
         //this.events = events;
     }
 

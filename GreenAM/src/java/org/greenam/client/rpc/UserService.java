@@ -31,4 +31,5 @@ public interface UserService extends RemoteService {
     public User getCurrentUser();
     
     public HashMap<Long,Artist> getArtists(HashSet<Long> ids);
+    
 }

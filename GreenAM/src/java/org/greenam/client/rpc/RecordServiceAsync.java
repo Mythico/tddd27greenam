@@ -15,4 +15,7 @@ import org.greenam.client.domain.Record;
 public interface RecordServiceAsync {
 
     void search(String s, AsyncCallback<List<Record>> callback);
+
+    void getBlobStoreUploadUrl(AsyncCallback<String> callback);
+    
 }

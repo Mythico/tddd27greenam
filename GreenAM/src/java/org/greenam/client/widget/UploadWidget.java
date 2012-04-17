@@ -4,77 +4,83 @@
  */
 package org.greenam.client.widget;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.TextBox;
+import org.greenam.client.rpc.RecordService;
+import org.greenam.client.rpc.RecordServiceAsync;
+
 
 /**
  *
  * @author Emil
  */
-public class UploadWidget extends FormPanel{
-
+public class UploadWidget extends FormPanel {
+    private final RecordServiceAsync recordInfo = GWT.create(RecordService.class);
     private FileUpload fileUpload = new FileUpload();
+    private TextBox artistsBox = new TextBox();
     private TextBox recordBox = new TextBox();
     private TextBox albumBox = new TextBox();
     private TextBox genreBox = new TextBox();
     private TextBox priceBox = new TextBox();
-    
     private Button uploadButton = new Button("Upload");
-    
-    private Grid grid = new Grid(5, 2);
-    
+    private Grid grid = new Grid(6, 2);
+
     public UploadWidget() {
         setEncoding(FormPanel.ENCODING_MULTIPART);
         setMethod(FormPanel.METHOD_POST);
-        
-        
-        setAction("fileupload");
-        
-        grid.setHTML(0, 0, "Record:");
-        grid.setHTML(1, 0, "Album:");
-        grid.setHTML(2, 0, "Genre:");
-        grid.setHTML(3, 0, "Price:");
-        grid.setWidget(4, 0, uploadButton);
-        
-        grid.setWidget(0, 1, recordBox);
-        grid.setWidget(1, 1, albumBox);
-        grid.setWidget(2, 1, genreBox);
-        grid.setWidget(3, 1, priceBox);
-        grid.setWidget(4, 1, fileUpload);
-        
+
+
+
+        grid.setHTML(0, 0, "Artists:");
+        grid.setHTML(1, 0, "Record:");
+        grid.setHTML(2, 0, "Album:");
+        grid.setHTML(3, 0, "Genre:");
+        grid.setHTML(4, 0, "Price:");
+        grid.setWidget(5, 0, uploadButton);
+
+        grid.setWidget(0, 1, artistsBox);
+        grid.setWidget(1, 1, recordBox);
+        grid.setWidget(2, 1, albumBox);
+        grid.setWidget(3, 1, genreBox);
+        grid.setWidget(4, 1, priceBox);
+        grid.setWidget(5, 1, fileUpload);
+
         genreBox.setEnabled(false);
-        
+        albumBox.setEnabled(false);
+
+        recordBox.setName("titleBox");
+        artistsBox.setName("artistBox");
         fileUpload.setName("upload");
-        
+
         uploadButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                submit();
-            }
-        });
-        
-        addSubmitCompleteHandler(new SubmitCompleteHandler() {
+                recordInfo.getBlobStoreUploadUrl(new AsyncCallback<String>() {
 
-            @Override
-            public void onSubmitComplete(SubmitCompleteEvent event) {
-                Window.alert("Done " + event.getResults());
-            }
-        });
-        
-        addSubmitHandler(new SubmitHandler() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
 
-            @Override
-            public void onSubmit(SubmitEvent event) {
-                Window.alert("Uploading: " + event.toDebugString());
+                    @Override
+                    public void onSuccess(String result) {
+                        setAction(result);
+                        submit();
+                        reset();
+                    }
+                });
             }
         });
-        
+
         add(grid);
     }
-    
-    
-    
 }

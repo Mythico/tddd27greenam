@@ -29,4 +29,5 @@ public interface UserServiceAsync {
     public void getCurrentUser(AsyncCallback<User> callback);
     
     public void getArtists(HashSet<Long> ids, AsyncCallback<HashMap<Long,Artist>> callback);
+    
 }
