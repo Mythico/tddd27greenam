@@ -5,6 +5,8 @@
 package org.greenam.client.domain;
 
 import com.googlecode.objectify.annotation.Entity;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,25 +17,24 @@ import java.util.Set;
 public class Album extends DatastoreObject {
 
     private String title;
-    private Set<Long> artistIds;
-    private Set<Long> recordIds;
+    private List<Long> artistIds;
+    private List<Long> recordIds;
 
     public Album() {
     }
       
     
     
-    public Album(String title, Set<Long> artistIds, Set<Long> recordIds) {
+    public Album(String title, List<Long> artistIds) {
         this.title = title;
         this.artistIds = artistIds;
-        this.recordIds = recordIds;
     }
 
-    public Set<Long> getArtistIds() {
+    public List<Long> getArtistIds() {
         return artistIds;
     }
 
-    public void setArtistIds(Set<Long> artistIds) {
+    public void setArtistIds(List<Long> artistIds) {
         this.artistIds = artistIds;
     }
 
@@ -45,12 +46,19 @@ public class Album extends DatastoreObject {
         this.title = title;
     }
 
-    public Set<Long> getRecordIds() {
+    public List<Long> getRecordIds() {
         return recordIds;
     }
 
-    public void setRecordIds(Set<Long> recordIds) {
+    public void setRecordIds(List<Long> recordIds) {
         this.recordIds = recordIds;
+    }
+
+    public void addRecord(Long id) {
+        if(recordIds == null){
+            recordIds = new LinkedList<Long>();
+        }
+        recordIds.add(id);
     }
     
     

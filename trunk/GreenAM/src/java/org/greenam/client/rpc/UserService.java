@@ -6,9 +6,9 @@ package org.greenam.client.rpc;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import org.greenam.client.domain.Artist;
+import org.greenam.client.domain.LinkObject;
 import org.greenam.client.domain.User;
 
 /**
@@ -29,7 +29,8 @@ public interface UserService extends RemoteService {
     public Artist getArtist(Long artistId);
 
     public User getCurrentUser();
-    
-    public HashMap<Long,Artist> getArtists(HashSet<Long> ids);
-    
+
+    public List<LinkObject<String>> getArtistNames(List<Long> ids);
+
+    public Long getAsArtist(User user);
 }

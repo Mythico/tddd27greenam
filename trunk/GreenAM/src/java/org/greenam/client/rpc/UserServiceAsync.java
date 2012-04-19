@@ -5,9 +5,9 @@
 package org.greenam.client.rpc;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import org.greenam.client.domain.Artist;
+import org.greenam.client.domain.LinkObject;
 import org.greenam.client.domain.User;
 
 /**
@@ -28,6 +28,7 @@ public interface UserServiceAsync {
 
     public void getCurrentUser(AsyncCallback<User> callback);
     
-    public void getArtists(HashSet<Long> ids, AsyncCallback<HashMap<Long,Artist>> callback);
+    public void getArtistNames(List<Long> ids, AsyncCallback<List<LinkObject<String>>> callback);
     
+    public void getAsArtist(User user, AsyncCallback<Long> callback);
 }

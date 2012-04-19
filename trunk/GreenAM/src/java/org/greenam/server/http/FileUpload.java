@@ -7,6 +7,7 @@ package org.greenam.server.http;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.greenam.client.domain.Album;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Record;
 
@@ -32,14 +34,23 @@ public class FileUpload extends HttpServlet {
         BlobKey blobKey = blobs.get("upload");
 
         //Get the paramters from the request to populate the Record object
-        String title = req.getParameter("titleBox");
+        String recordTitle = req.getParameter("albumBox");
+        String albumTitle = req.getParameter("albumBox");
         List<Long> artists = parseStringToArtists(req.getParameter("artistBox"));
         int genre = -1; //TODO: Add genre
         String url = "/rpc/recordservice?blob-key=" + blobKey.getKeyString();
-        Record record = new Record(title, artists, genre, url);
+        Record record = new Record(recordTitle, artists, genre, url);
+        Long recordId = ofy.put(record).getId();
+        
+        
+        Album album = ofy.query(Album.class).filter("title", albumTitle).get();
+        if(album == null){
+            album = new Album(albumTitle, artists);
+        }
+        album.addRecord(recordId);
         
 
-        ofy.put(record);
+        ofy.put(album);
 
         //Redirect recursively to this servlet (calls doGet)
         res.sendRedirect("/http/fileupload?id=" + record.getId());
@@ -57,7 +68,6 @@ public class FileUpload extends HttpServlet {
     }
     
     private List<Long> parseStringToArtists(String artists){
-        
         Objectify ofy = ObjectifyService.begin();
         //TODO: add support for more then one artist.
         Artist get = ofy.query(Artist.class).filter("name", artists).get();
