@@ -29,7 +29,7 @@ public class LoginWidget extends HorizontalPanel {
     private final Label loggedInLabel = new Label();
     private final ViewController viewController;
 
-    public LoginWidget(ViewController viewController) {
+    public LoginWidget(final ViewController viewController) {
         this.viewController = viewController;
         loginButton.addClickHandler(new ClickHandler() {
 
@@ -62,7 +62,7 @@ public class LoginWidget extends HorizontalPanel {
 
                         @Override
                         public void onClick(ClickEvent event) {
-                            async.makeArtist(result.getId(), result.getName(), openArtistPage);
+                            viewController.setUserView(result);
                         }
                     });
                 }

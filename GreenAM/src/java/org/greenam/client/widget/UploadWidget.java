@@ -54,9 +54,9 @@ public class UploadWidget extends FormPanel {
         grid.setWidget(5, 1, fileUpload);
 
         genreBox.setEnabled(false);
-        albumBox.setEnabled(false);
 
-        recordBox.setName("titleBox");
+        recordBox.setName("recordBox");
+        albumBox.setName("albumBox");
         artistsBox.setName("artistBox");
         fileUpload.setName("upload");
 
