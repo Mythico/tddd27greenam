@@ -20,7 +20,6 @@ import org.greenam.client.rpc.UserServiceAsync;
 public class UserView extends VerticalPanel {
 
     private final UserServiceAsync userInfo = GWT.create(UserService.class);
-        
     private final Label userLabel = new Label("Unknown");
     private final Label moneyLabel = new Label("Unknown");
     private final Button artistPageButton = new Button("Go to artist Page");
@@ -34,25 +33,48 @@ public class UserView extends VerticalPanel {
         add(userLabel);
         add(moneyLabel);
         add(artistPageButton);
-        
+
         artistPageButton.setVisible(false);
         artistPageButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                if(artistId != null){
+                if (artistId != null) {
                     viewController.setArtistView(artistId);
                 }
             }
         });
+
+
+        //TODO: Temp until a real admin gui is implemented.
+        Button b = new Button("TEMP: Make me an artist, don't click me if im an artist.");
+        b.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                userInfo.makeArtist(user.getId(), user.getName(), new AsyncCallback<Long>() {
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public void onSuccess(Long result) {
+                        viewController.setArtistView(result);
+                    }
+                });
+            }
+        });
+        add(b);
     }
-    
-    public void setUser(User user){
+
+    public void setUser(User user) {
         this.user = user;
-        
+
         userLabel.setText(user.getName());
         moneyLabel.setText("$" + user.getMoney());
-        
+
         userInfo.getAsArtist(user, new AsyncCallback<Long>() {
 
             @Override
@@ -66,8 +88,6 @@ public class UserView extends VerticalPanel {
                 artistPageButton.setVisible(artistId != null);
             }
         });
-        
-    }
 
-    
+    }
 }
