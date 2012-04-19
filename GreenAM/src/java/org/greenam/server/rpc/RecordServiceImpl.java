@@ -13,6 +13,8 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Query;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -27,35 +29,51 @@ import org.greenam.client.rpc.RecordService;
  */
 public class RecordServiceImpl extends RemoteServiceServlet implements RecordService {
 
-    //TODO: Temp for creating starting records.
-    private boolean createArtist = false;
-
     @Override
     public List<Record> search(String s) {
         LinkedList<Record> list = new LinkedList<Record>();
 
         Objectify ofy = ObjectifyService.begin();
 
-        if (createArtist) {
-            ofy.delete(User.class, "1");
-            ofy.put(new User("1", "1"));
-            List<User> userList = ofy.query(User.class).list();
-            for (User user : userList) {
-                ofy.delete(Artist.class, user.getId());
-                ofy.put(new Artist(user.getId(), user.getName()));
-                //Note: The artist name dosn't have to be the same as the user name.
+        List<Record> records = new LinkedList<Record>();
+        String[] queries = s.split(",");
+        for (String query : queries) {
+            String[] parts = query.trim().split(":", 2);
+            if (parts.length == 1) {
+                records.addAll(searchTitle(parts[0].trim()));
+            } else if (parts[0].equalsIgnoreCase("artistId")) {
+                records.addAll(searchArtist(Long.parseLong(parts[1].trim())));
+            } else if (parts[0].equalsIgnoreCase("artist")) {
+                records.addAll(searchArtist(parts[1].trim()));
             }
-            Query<Artist> alist = ofy.query(Artist.class).limit(10);
-
-            for (Artist a : alist) {
-                List<Long> al = new LinkedList<Long>();
-                al.add(a.getId());
-                list.add(new Record("Alban", al, 0, "sound/Rondo_Alla_Turka.ogg"));
-            }
-            createArtist = false;
         }
-        return ofy.query(Record.class).list();
-        
+
+        return records;
+
+    }
+
+    private List<Record> searchTitle(String s) {
+
+        Objectify ofy = ObjectifyService.begin();
+        return ofy.query(Record.class).filter("title", s).list();
+    }
+
+    private List<Record> searchArtist(String s) {
+
+        Objectify ofy = ObjectifyService.begin();
+        List<Record> records = new LinkedList<Record>();
+        for (Artist artist : ofy.query(Artist.class).filter("name", s)) {
+            records.addAll(ofy.query(Record.class).filter("artistId", artist).list());
+        }
+        return records;
+    }
+
+    private List<Record> searchArtist(Long artistId) {
+
+        Objectify ofy = ObjectifyService.begin();
+        List<Record> records = new LinkedList<Record>();
+        records.addAll(ofy.query(Record.class).filter("artistIds", artistId).list());
+        return records;
     }
 
     //Generate a Blobstore Upload URL from the GAE BlobstoreService
@@ -65,6 +83,27 @@ public class RecordServiceImpl extends RemoteServiceServlet implements RecordSer
         //Map the UploadURL to the uploadservice which will be called by
         //submitting the FormPanel
         return blobstoreService.createUploadUrl("/http/fileupload");
+    }
+
+    @Override
+    public List<Album> getAlbums(Artist artist) {
+        Objectify ofy = ObjectifyService.begin();
+        List<Album> list = ofy.query(Album.class).filter("artistIds in", artist.getId()).list();
+        return list;
+    }
+
+    @Override
+    public List<LinkObject<String>> getAlbumNamesFromRecords(List<Long> recordIds) {
+
+        Objectify ofy = ObjectifyService.begin();
+        List<LinkObject<String>> list = new LinkedList<LinkObject<String>>();
+
+        for (Long id : recordIds) {
+            for (Album album : ofy.query(Album.class).filter("recordIds", id)) {
+                list.add(new LinkObject<String>(id, album.getId(), album.getTitle()));
+            }
+        }
+        return list;
     }
 
     @Override
