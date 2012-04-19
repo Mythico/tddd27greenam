@@ -54,8 +54,17 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
             return; //TODO: Throw exception?
         }*/
         Objectify ofy = ObjectifyService.begin();
-        System.out.println("JAG SPARAR " + blog.getEntry());
         ofy.put(blog);
+    }
+    
+    @Override
+    public void deleteBlog(Artist artist) {
+        /*if (!hasAccess(blog.artistId)) {
+            return; //TODO: Throw exception?
+        }*/
+        Objectify ofy = ObjectifyService.begin();
+        List<Blog> blog = ofy.query(Blog.class).filter("artistId", artist.getId()).list();
+        ofy.delete(blog);
     }
 
     @Override

@@ -26,14 +26,12 @@ public class BlogWidget extends VerticalPanel {
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     private final Button newentryButton = new Button("Add a blog entry");
     private final Button clearblogButton = new Button("Clear your blog");
-    private final Button deleteentryButton = new Button("Delete entry");
     private final VerticalPanel blogArea = new VerticalPanel();
     private final ScrollPanel scrollArea = new ScrollPanel(blogArea);
     private final RichTextArea newentryArea = new RichTextArea();
     private final HorizontalPanel buttonPanel = new HorizontalPanel();
     private final ListBox lb = new ListBox();
     private final Blog newblogentry = new Blog();
-    private ArrayList<Blog> blog;
     private Date date = new Date();
     private Artist artist;
 
@@ -43,18 +41,11 @@ public class BlogWidget extends VerticalPanel {
         newentryArea.setText("Add your new blog entry here!");
         newentryArea.setVisible(false);
 
-        lb.setVisible(false);
-        lb.setVisibleItemCount(1);
-        lb.clear();
-        lb.addItem("Entry to delete: ");
-
         add(scrollArea);
         add(newentryArea);
         add(buttonPanel);
 
         buttonPanel.add(newentryButton);
-        buttonPanel.add(lb);
-        buttonPanel.add(deleteentryButton);
         buttonPanel.add(clearblogButton);
 
         newentryButton.addClickHandler(new ClickHandler() {
@@ -71,18 +62,7 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onClick(ClickEvent event) {
-                clearblog();
-            }
-        });
-
-        deleteentryButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                int entrytodelete = lb.getSelectedIndex();
-                if (entrytodelete != 0) {
-                    deleteentry(entrytodelete);
-                }
+                deleteBlog();
             }
         });
 
@@ -99,8 +79,6 @@ public class BlogWidget extends VerticalPanel {
                 newentryArea.setVisible(result);
                 newentryButton.setVisible(result);
                 clearblogButton.setVisible(result);
-                deleteentryButton.setVisible(result);
-                lb.setVisible(result);
             }
         });
     }
@@ -129,7 +107,8 @@ public class BlogWidget extends VerticalPanel {
             }
         });
     }
-
+    
+    //Gets the blog and shows it
     private void load() {
         blogArea.clear();
         artistInfo.getBlog(artist, new AsyncCallback<ArrayList<Blog>>() {
@@ -142,9 +121,7 @@ public class BlogWidget extends VerticalPanel {
             @Override
             public void onSuccess(ArrayList<Blog> blog) {
                 //Clear and print the blog
-                //blogArea.setHTML("");
                 for (int i = 0; i < blog.size(); i++) {
-                    //blogArea.setHTML(blogArea.getHTML() + "This is entry " + (i+1) + " and was posted " + blog.get(i).getDate() + "<br>" + blog.get(i).getEntry() + "<br>" + "<br>");
                     addBlog(blog.get(i), i);
                 }
                 newentryArea.setText("Add your new blog entry here!");
@@ -172,41 +149,34 @@ public class BlogWidget extends VerticalPanel {
         scrollArea.setHeight("400px");
     }
 
-    private void clearblog() {
+    //Just here if i will try to make a deleteEntry function later on
+   /* private void deleteEntry() {
 
-        blog.clear();
-        lb.clear();
-        lb.addItem("Entry to delete:");
-        artist.setBlog(blog);
-
-        artistInfo.save(artist, new AsyncCallback<Void>() {
+        artistInfo.deleteBlogEntry(artist, new AsyncCallback<Void>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                Window.alert("BlogWidget failed RPC on save.\n" + caught);
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
             public void onSuccess(Void result) {
-                //blogArea.setHTML("This blog is currently empty.");
+                
             }
         });
-    }
+    }*/
 
-    private void deleteentry(int entry) {
+    private void deleteBlog() {
 
-        blog.remove(entry - 1);
-        artist.setBlog(blog);
-
-        artistInfo.save(artist, new AsyncCallback<Void>() {
+        artistInfo.deleteBlog(artist, new AsyncCallback() {
 
             @Override
             public void onFailure(Throwable caught) {
-                Window.alert("BlogWidget failed RPC on save.\n" + caught);
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
-            public void onSuccess(Void result) {
+            public void onSuccess(Object result) {
                 load();
             }
         });
