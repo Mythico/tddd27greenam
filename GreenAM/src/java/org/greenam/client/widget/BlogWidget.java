@@ -66,7 +66,7 @@ public class BlogWidget extends VerticalPanel {
             }
         });
 
-        userInfo.hasAccess(new AsyncCallback<Boolean>() {
+        userInfo.isLogin(new AsyncCallback<Boolean>() {
 
             @Override
             public void onFailure(Throwable caught) {

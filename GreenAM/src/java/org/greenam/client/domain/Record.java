@@ -21,17 +21,19 @@ public class Record extends DatastoreObject {
     //@Persistent
     //private int[] tags;
     private String audioUrl;
+    private int price;
 
     public Record() {
     }
   
     public Record(String title,
             List<Long> artistIds, int genre/*, int[] tags*/,
-            String audioUrl) {
+            int price, String audioUrl) {
         this.title = title;
         this.artistIds = artistIds;
 //        this.genre = genre;
 //        this.tags = tags;
+        this.price = price;
         this.audioUrl = audioUrl;
     }
 
@@ -41,6 +43,10 @@ public class Record extends DatastoreObject {
 
     public int getGenre() {
         return genre;
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     //public int[] getTags() {

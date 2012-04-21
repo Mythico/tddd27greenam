@@ -28,8 +28,23 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
         ObjectifyService.register(User.class);
     }
 
+    /**
+     * Checks if there is a user that is login.
+     * @return True if a user has login, otherwise false.
+     */
+    protected boolean isLogin() {
+        return userService.isUserLoggedIn();
+    }
+    
+    /**
+     * Checks if the current user has access to pages that requires 
+     * artist-access.
+     * @param artistId
+     * @return False if the current user doesn't have access or that there is no
+     * user login, otherwise true.
+     */
     protected boolean hasAccess(Long artistId) {
-        if (!userService.isUserLoggedIn()) {
+        if (!isLogin()) {
             return false;
         }
         //Create an useraccount if the user dosn't allready have one.
@@ -50,7 +65,7 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
      * it will create one.
      *
      * @param fid
-     * @return A userid.
+     * @return A user.
      */
     protected User getOrCreateUser(String fid) {
         Objectify ofy = ObjectifyService.begin();
@@ -58,7 +73,7 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
         
         User user = ofy.query(User.class).filter("federatedId", fid).get();
         if (user == null) {//First time user.
-            user = new User(fid, userService.getCurrentUser().getEmail()); //TODO: add so user can specify their name
+            user = new User(fid, userService.getCurrentUser().getEmail());
             ofy.put(user);
         }
 
@@ -72,4 +87,26 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
         }
         return fid;
     }
+    
+    /**
+     * Fetches the current user.
+     * @return Returns a user or null if no one has login.
+     */
+    protected User getCurrentUser(){
+        
+        Objectify ofy = ObjectifyService.begin();
+        String fid = getFederatedId();
+        User user = ofy.query(User.class).filter("federatedId", fid).get();
+        return user;
+    }
+    
+    protected void save(User user){        
+        Objectify ofy = ObjectifyService.begin();
+        ofy.put(user);
+    }  
+    
+    protected void save(Artist artist){        
+        Objectify ofy = ObjectifyService.begin();
+        ofy.put(artist);
+    }    
 }

@@ -6,10 +6,7 @@ package org.greenam.client.rpc;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import java.util.List;
-import org.greenam.client.domain.Album;
-import org.greenam.client.domain.Artist;
-import org.greenam.client.domain.LinkObject;
-import org.greenam.client.domain.Record;
+import org.greenam.client.domain.*;
 
 /**
  *
@@ -24,4 +21,6 @@ public interface RecordServiceAsync {
     void getAlbums(Artist artist, AsyncCallback<List<Album>> callback);
     
      void getAlbumNamesFromRecords(List<Long> recordIds, AsyncCallback<List<LinkObject<String>>> albumsSet);
+     
+     void buyRecord(Record record, AsyncCallback callback);
 }

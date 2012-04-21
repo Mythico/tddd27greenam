@@ -4,11 +4,14 @@
  */
 package org.greenam.client.widget;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import java.util.List;
+import org.greenam.client.rpc.RecordService;
+import org.greenam.client.rpc.RecordServiceAsync;
 import org.greenam.client.view.ViewController;
 
 /**
@@ -17,6 +20,7 @@ import org.greenam.client.view.ViewController;
  */
 public abstract class ListWidget<T> extends ScrollPanel {
 
+    protected final RecordServiceAsync recordInfo = GWT.create(RecordService.class);
     protected final ViewController viewController;
     protected final Grid grid = new Grid();
     public final AsyncCallback<List<T>> callback = new AsyncCallback<List<T>>() {

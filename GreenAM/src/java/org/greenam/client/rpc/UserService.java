@@ -18,7 +18,7 @@ import org.greenam.client.domain.User;
 @RemoteServiceRelativePath("rpc/userservice")
 public interface UserService extends RemoteService {
 
-    public boolean hasAccess();
+    public boolean isLogin();
 
     public boolean hasAccess(Long userId);
 
@@ -33,4 +33,6 @@ public interface UserService extends RemoteService {
     public List<LinkObject<String>> getArtistNames(List<Long> ids);
 
     public Artist getAsArtist(User user);
+    
+    public User addMoney(int amount);
 }

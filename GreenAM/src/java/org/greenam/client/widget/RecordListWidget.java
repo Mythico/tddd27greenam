@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Label;
 import java.util.*;
 import org.greenam.client.domain.LinkObject;
 import org.greenam.client.domain.Record;
+import org.greenam.client.domain.User;
 import org.greenam.client.rpc.*;
 import org.greenam.client.view.ViewController;
 
@@ -68,19 +69,6 @@ public class RecordListWidget extends ListWidget<Record> {
             albumFetch.addPanel(record.getId(), albumPanel);
 
 
-            /*
-             * HorizontalPanel albumPanel = new HorizontalPanel(); for (final
-             * Long id : record.get()) { final Label album = new
-             * Label("Fetching...");
-             * album.setStyleName("gam-RecordListWidgetLink");
-             * album.addClickHandler(new ClickHandler() {
-             *
-             * @Override public void onClick(ClickEvent event) {
-             * viewController.setArtistView(id);
-             *
-             * }
-             * }); afo.addLabel(id, album); }
-             */
 //            Label genre = new Label(genreToString(record.getGenre()));
 
             playImg.setStyleName("gam-RecordListWidgetLink");
@@ -103,6 +91,25 @@ public class RecordListWidget extends ListWidget<Record> {
                 @Override
                 public void onClick(ClickEvent event) {
                     //viewController.setSearchTitleView(record.titleId);
+                }
+            });
+            
+            buyImg.addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    recordInfo.buyRecord(record, new AsyncCallback<User>() {
+
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Window.alert("Buying of record failed!\n\n" + caught);
+                        }
+
+                        @Override
+                        public void onSuccess(User result) {
+                            Window.alert("Buying of record " + ((result == null) ? "failed!" : "succeded!"));
+                        }
+                    });
                 }
             });
 

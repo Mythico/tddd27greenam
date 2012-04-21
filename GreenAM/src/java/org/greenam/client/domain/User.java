@@ -5,6 +5,8 @@
 package org.greenam.client.domain;
 
 import com.googlecode.objectify.annotation.Entity;
+import java.util.LinkedList;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -19,7 +21,9 @@ public class User extends DatastoreObject {
     @NotNull
     private String name;
     @NotNull
-    private Long money;
+    private int money;
+    @NotNull
+    private List<Record> boughtRecords;
 
     public User() {
     }
@@ -27,7 +31,6 @@ public class User extends DatastoreObject {
     public User(String federatedId, String name) {
         this.federatedId = federatedId;
         this.name = name;
-        this.money = 0l;
     }
 
     public String getFederatedId() {
@@ -42,11 +45,22 @@ public class User extends DatastoreObject {
         this.name = name;
     }
     
-    public void addMoney(Long diff){
+    public void addMoney(int diff){
         money += diff;        
     }
     
-    public Long getMoney(){
+    public int getMoney(){
         return money;
+    }
+    
+    public List<Record> getBoughtRecords(){
+        return boughtRecords;
+    }
+    
+    public void addBoughtRecord(Record record){
+        if(boughtRecords == null){
+            boughtRecords = new LinkedList<Record>();
+        }
+        boughtRecords.add(record);
     }
 }

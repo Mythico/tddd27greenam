@@ -34,7 +34,7 @@ public class UploadWidget extends FormPanel {
     private Grid grid = new Grid(6, 2);
     private final ViewController viewController;
 
-    public UploadWidget(ViewController viewController) {
+    public UploadWidget(final ViewController viewController) {
         
         this.viewController = viewController;
         
@@ -43,7 +43,7 @@ public class UploadWidget extends FormPanel {
 
 
 
-        grid.setHTML(0, 0, "Artists:");
+        grid.setHTML(0, 0, "Additional artists:");
         grid.setHTML(1, 0, "Record:");
         grid.setHTML(2, 0, "Album:");
         grid.setHTML(3, 0, "Genre:");
@@ -62,6 +62,7 @@ public class UploadWidget extends FormPanel {
         recordBox.setName("recordBox");
         albumBox.setName("albumBox");
         artistsBox.setName("artistBox");
+        priceBox.setName("priceBox");
         fileUpload.setName("upload");
 
         uploadButton.addClickHandler(new ClickHandler() {
@@ -77,6 +78,9 @@ public class UploadWidget extends FormPanel {
 
                     @Override
                     public void onSuccess(String result) {
+                        String name = viewController.getArtist().getName();
+                        String additionalNames = artistsBox.getText();
+                        artistsBox.setName(name + "," + additionalNames);
                         setAction(result);
                         submit();
                         reset();
