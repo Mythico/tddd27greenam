@@ -4,13 +4,9 @@
  */
 package org.greenam.client.view;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import org.greenam.client.domain.Artist;
-import org.greenam.client.rpc.UserService;
-import org.greenam.client.rpc.UserServiceAsync;
 import org.greenam.client.widget.AlbumListWidget;
 import org.greenam.client.widget.BiographyWidget;
 import org.greenam.client.widget.BlogWidget;
@@ -23,9 +19,7 @@ import org.greenam.client.widget.UploadWidget;
  */
 public class ArtistView extends VerticalPanel {
 
-    private final UserServiceAsync userInfo = GWT.create(UserService.class);
-    private Artist artist;
-    private boolean hasAccess = false;
+    private final ViewController viewController;
     //Constant used by the deckpanel
     private final int ALBUM_LIST = 0;
     private final int BIOGRAPHY = 1;
@@ -50,7 +44,6 @@ public class ArtistView extends VerticalPanel {
 
         @Override
         public void execute() {
-            bioPane.setArtist(artist);
             deckPanel.showWidget(BIOGRAPHY);
         }
     };
@@ -58,7 +51,7 @@ public class ArtistView extends VerticalPanel {
 
         @Override
         public void execute() {
-            blogPane.setArtist(artist);
+            blogPane.setArtist(viewController.getArtist());
             deckPanel.showWidget(BLOG);
         }
     };
@@ -66,7 +59,6 @@ public class ArtistView extends VerticalPanel {
 
         @Override
         public void execute() {
-            eventPane.setArtist(artist, hasAccess);
             deckPanel.showWidget(EVENT_CALENDER);
         }
     };
@@ -85,15 +77,20 @@ public class ArtistView extends VerticalPanel {
     private final MenuItem eventItem = new MenuItem("Event Calender", showEvent);
     private final MenuItem uploadItem = new MenuItem("Upload", uploadEvent);
     private final AlbumListWidget albumListWidget;
-    private final BiographyWidget bioPane = new BiographyWidget();
+    private final BiographyWidget bioPane;
     private final BlogWidget blogPane = new BlogWidget();
-    private final CalendarWidget eventPane = new CalendarWidget();
-    private final UploadWidget uploadPane = new UploadWidget();
+    private final CalendarWidget eventPane;
+    private final UploadWidget uploadPane;
 
     public ArtistView(ViewController viewController) {
         setStyleName("gam-ContentView");
 
+        this.viewController = viewController;
+
         albumListWidget = new AlbumListWidget(viewController);
+        bioPane = new BiographyWidget(viewController);
+        eventPane = new CalendarWidget(viewController);
+        uploadPane = new UploadWidget(viewController);
 
         menuBar.setStyleName("demo-MenuBar");
         menuBar.addItem(musicItem);
@@ -113,35 +110,15 @@ public class ArtistView extends VerticalPanel {
         add(scrollPanel);
     }
 
-    void setArtist(Long artistid) {
-        userInfo.getArtist(artistid, new AsyncCallback<Artist>() {
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
 
-            @Override
-            public void onFailure(Throwable caught) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void onSuccess(Artist result) {
-                artist = result;
-                artistLabel.setText("[" + artist.getId()
-                        + "]Artist: " + artist.getName());
-            }
-        });
-        userInfo.hasAccess(artistid, new AsyncCallback<Boolean>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void onSuccess(Boolean result) {
-                hasAccess = true;
-            }
-        });
-
-        showMusic.execute();
-
+        if (visible) {
+            Artist artist = viewController.getArtist();
+            artistLabel.setText("[" + artist.getId()
+                    + "]Artist: " + artist.getName());
+            showMusic.execute();
+        }
     }
 }

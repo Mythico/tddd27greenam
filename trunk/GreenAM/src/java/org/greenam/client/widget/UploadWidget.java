@@ -7,7 +7,6 @@ package org.greenam.client.widget;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -16,6 +15,7 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.TextBox;
 import org.greenam.client.rpc.RecordService;
 import org.greenam.client.rpc.RecordServiceAsync;
+import org.greenam.client.view.ViewController;
 
 
 /**
@@ -32,8 +32,12 @@ public class UploadWidget extends FormPanel {
     private TextBox priceBox = new TextBox();
     private Button uploadButton = new Button("Upload");
     private Grid grid = new Grid(6, 2);
+    private final ViewController viewController;
 
-    public UploadWidget() {
+    public UploadWidget(ViewController viewController) {
+        
+        this.viewController = viewController;
+        
         setEncoding(FormPanel.ENCODING_MULTIPART);
         setMethod(FormPanel.METHOD_POST);
 

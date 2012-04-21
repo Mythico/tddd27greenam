@@ -30,5 +30,5 @@ public interface UserServiceAsync {
     
     public void getArtistNames(List<Long> ids, AsyncCallback<List<LinkObject<String>>> callback);
     
-    public void getAsArtist(User user, AsyncCallback<Long> callback);
+    public void getAsArtist(User user, AsyncCallback<Artist> callback);
 }

@@ -15,6 +15,7 @@ import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
 import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
+import org.greenam.client.view.ViewController;
 
 /**
  *
@@ -25,15 +26,16 @@ public class BiographyWidget extends VerticalPanel {
     private final RichTextArea textArea = new RichTextArea();
     private final HorizontalPanel editPane = new HorizontalPanel();
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
-    private final UserServiceAsync userInfo = GWT.create(UserService.class);
-    private Artist artist;
     private final Button saveButton = new Button("Edit");
+    private final Button cancelButton = new Button("Cancel");
+    private final ViewController viewController;
 
-    public BiographyWidget() {
+    public BiographyWidget(final ViewController viewController) {
         setSize("100%", "100%");
-        textArea.setEnabled(false);
 
-        final Button cancelButton = new Button("Cancel");
+        this.viewController = viewController;
+
+        textArea.setEnabled(false);
         cancelButton.setVisible(false);
 
         saveButton.addClickHandler(new ClickHandler() {
@@ -56,8 +58,9 @@ public class BiographyWidget extends VerticalPanel {
 
             @Override
             public void onClick(ClickEvent event) {
-                load();
                 saveButton.setText("Edit");
+
+                textArea.setHTML(viewController.getArtist().getBiography());
                 textArea.setEnabled(false);
                 cancelButton.setVisible(false);
             }
@@ -74,26 +77,13 @@ public class BiographyWidget extends VerticalPanel {
     }
 
     private void save() {
-        //TODO: Mabey add something to the constructor so we can reuse this Widget.
-
-        //Check if current login user has access to edit this page.
-        /*
-         * accessAsync.hasAccess(artistId, new AsyncCallback<Boolean>() {
-         *
-         * @Override public void onFailure(Throwable caught) { throw new
-         * UnsupportedOperationException("Not supported yet."); }
-         *
-         * @Override public void onSuccess(Boolean result) { save(result); } });
-         */
-        save(true);
-    }
-
-    private void save(boolean b) {
-        if (!b) {
+        if (!viewController.hasAccess()) {
+            Window.alert("You are trying to save an artist biography without"
+                    + " having the correct access.");
             return;
         }
 
-
+        Artist artist = viewController.getArtist();
         artist.setBiography(textArea.getHTML());
 
         artistInfo.save(artist, new AsyncCallback<Void>() {
@@ -110,44 +100,16 @@ public class BiographyWidget extends VerticalPanel {
         });
     }
 
-    private void load() {
-
-
-        artistInfo.update(artist, new AsyncCallback<Artist>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Window.alert("BiographyWidget failed RPC on load.\n" + caught);
-            }
-
-            @Override
-            public void onSuccess(Artist result) {
-                artist = result;
-                textArea.setHTML(artist.getBiography());
-            }
-        });
-    }
-
-    public void setArtist(Artist artist) {
-        this.artist = artist;
-        saveButton.setText("Edit");
-
-        //Check if current login user has access to edit this page.
-        editPane.setVisible(false);
-        userInfo.hasAccess(artist.getId(), new AsyncCallback<Boolean>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Window.alert("Has access failed in BiographWidget.\n" + caught);
-            }
-
-            @Override
-            public void onSuccess(Boolean result) {
-                editPane.setVisible(result);
-            }
-        });
-
-
-        load();
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            editPane.setVisible(viewController.hasAccess());
+            saveButton.setText("Edit");
+            textArea.setHTML(viewController.getArtist().getBiography());
+            textArea.setEnabled(false);
+            cancelButton.setVisible(false);
+            textArea.setHTML(viewController.getArtist().getBiography());
+        }
     }
 }

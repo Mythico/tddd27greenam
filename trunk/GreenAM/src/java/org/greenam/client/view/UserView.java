@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.User;
 import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
@@ -23,12 +24,12 @@ public class UserView extends VerticalPanel {
     private final Label userLabel = new Label("Unknown");
     private final Label moneyLabel = new Label("Unknown");
     private final Button artistPageButton = new Button("Go to artist Page");
-    private User user;
-    private Long artistId = null;
+    private final ViewController viewController;
 
     public UserView(final ViewController viewController) {
         setStyleName("gam-ContentView");
 
+        this.viewController = viewController;
 
         add(userLabel);
         add(moneyLabel);
@@ -39,8 +40,9 @@ public class UserView extends VerticalPanel {
 
             @Override
             public void onClick(ClickEvent event) {
-                if (artistId != null) {
-                    viewController.setArtistView(artistId);
+                Artist artist = viewController.getArtist();
+                if (artist != null) {
+                    viewController.setArtistView(artist.getId());
                 }
             }
         });
@@ -52,6 +54,7 @@ public class UserView extends VerticalPanel {
 
             @Override
             public void onClick(ClickEvent event) {
+                User user = viewController.getUser();
                 userInfo.makeArtist(user.getId(), user.getName(), new AsyncCallback<Long>() {
 
                     @Override
@@ -69,25 +72,16 @@ public class UserView extends VerticalPanel {
         add(b);
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
 
-        userLabel.setText(user.getName());
-        moneyLabel.setText("$" + user.getMoney());
-
-        userInfo.getAsArtist(user, new AsyncCallback<Long>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void onSuccess(Long result) {
-                artistId = result;
-                artistPageButton.setVisible(artistId != null);
-            }
-        });
+        if (visible) {
+            User user = viewController.getUser();
+            moneyLabel.setText("$" + user.getMoney());            
+            artistPageButton.setVisible(viewController.getArtist() != null);
+            userLabel.setText(user.getName());
+        }
 
     }
 }
