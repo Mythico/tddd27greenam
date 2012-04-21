@@ -94,15 +94,14 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
     
     /**
      * Takes a user and look if that user is also an artist. If so it will 
-     * return the artist id, otherwise it will return null.
+     * return the artist, otherwise it will return null.
      * @param user A user.
-     * @return An artistId or null if no artist
-    public Long getAsArtist(User user){t was found
+     * @return An artistId or null if no artist was found.
      */
     @Override
-    public Long getAsArtist(User user){
+    public Artist getAsArtist(User user){
         Objectify ofy = ObjectifyService.begin();
         Artist a = ofy.query(Artist.class).filter("userId", user.getId()).get();
-        return (a == null) ? null : a.getId();
+        return a;
     }
 }

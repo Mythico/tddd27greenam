@@ -19,6 +19,7 @@ import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Event;
 import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
+import org.greenam.client.view.ViewController;
 
 //TODO: Add some better Date handler.
 /**
@@ -29,15 +30,20 @@ public class CalendarWidget extends HorizontalPanel {
 
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     VerticalPanel eventPanel = new VerticalPanel();
-    
-    private NewEventWidget newEventWidget = new NewEventWidget();
+    private NewEventWidget newEventWidget;
+    private final ViewController viewController;
 
-    public CalendarWidget() {
+    public CalendarWidget(ViewController viewController) {
         setStyleName("gam-CalendarWidget");
+
+        this.viewController = viewController;
+        newEventWidget = new NewEventWidget(viewController);
         eventPanel.setSize("400px", "100%");
         newEventWidget.setSize("200px", "100%");
         add(eventPanel);
         add(newEventWidget);
+
+
     }
     private AsyncCallback<List<Event>> loadCallback = new AsyncCallback<List<Event>>() {
 
@@ -55,16 +61,21 @@ public class CalendarWidget extends HorizontalPanel {
         }
     };
 
-    public void setArtist(Artist artist, boolean hasAccess) {
-        artistInfo.getEvents(artist, loadCallback);
-        newEventWidget.setArtist(artist, hasAccess);
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+
+        if (visible) {
+            artistInfo.getEvents(viewController.getArtist(), loadCallback);
+        }
     }
-    
-    private void addEvent(Event e){
+
+
+    private void addEvent(Event e) {
         VerticalPanel panel = new VerticalPanel();
         Label date = new Label(e.getDate().toString());
         Label msg = new Label(e.getMessage());
-        
+
         panel.setStyleName("gam-Box");
         panel.add(date);
         panel.add(msg);
@@ -82,9 +93,10 @@ class NewEventWidget extends VerticalPanel {
     private final Button addEventButton = new Button("Add");
     private final HorizontalPanel messagePanel = new HorizontalPanel();
     private Artist artist;
+    private final ViewController viewController;
 
-    public NewEventWidget() {
-
+    public NewEventWidget(ViewController viewController) {
+        this.viewController = viewController;        
         addEventButton.addClickHandler(addEvent);
         errorLabel.setStyleName("gam-error-string");
         errorLabel.setVisible(false);
@@ -98,10 +110,13 @@ class NewEventWidget extends VerticalPanel {
 
     }
 
-    public void setArtist(Artist artist, boolean hasAccess) {
-        this.artist = artist;
-        setVisible(hasAccess);
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible && viewController.hasAccess());
     }
+    
+    
+
     private ClickHandler addEvent = new ClickHandler() {
 
         @Override

@@ -32,5 +32,5 @@ public interface UserService extends RemoteService {
 
     public List<LinkObject<String>> getArtistNames(List<Long> ids);
 
-    public Long getAsArtist(User user);
+    public Artist getAsArtist(User user);
 }
