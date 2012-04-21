@@ -6,13 +6,8 @@ package org.greenam.client.rpc;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import org.greenam.client.domain.Album;
-import org.greenam.client.domain.Artist;
-import org.greenam.client.domain.LinkObject;
-import org.greenam.client.domain.Record;
+import org.greenam.client.domain.*;
 
 /**
  *
@@ -27,4 +22,6 @@ public interface RecordService extends RemoteService {
     
     List<Album> getAlbums(Artist artist);
     List<LinkObject<String>> getAlbumNamesFromRecords(List<Long> recordIds);
+    
+    void buyRecord(Record record);
 }

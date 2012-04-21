@@ -29,7 +29,7 @@ public class FileUpload extends HttpServlet {
             throws ServletException, IOException {
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         Objectify ofy = ObjectifyService.begin();
-        
+
         Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
         BlobKey blobKey = blobs.get("upload");
 
@@ -37,18 +37,19 @@ public class FileUpload extends HttpServlet {
         String recordTitle = req.getParameter("albumBox");
         String albumTitle = req.getParameter("albumBox");
         List<Long> artists = parseStringToArtists(req.getParameter("artistBox"));
+        int price = Integer.parseInt(req.getParameter("priceBox"));
         int genre = -1; //TODO: Add genre
         String url = "/rpc/recordservice?blob-key=" + blobKey.getKeyString();
-        Record record = new Record(recordTitle, artists, genre, url);
+        Record record = new Record(recordTitle, artists, genre, price, url);
         Long recordId = ofy.put(record).getId();
-        
-        
+
+
         Album album = ofy.query(Album.class).filter("title", albumTitle).get();
-        if(album == null){
+        if (album == null) {
             album = new Album(albumTitle, artists);
         }
         album.addRecord(recordId);
-        
+
 
         ofy.put(album);
 
@@ -66,13 +67,18 @@ public class FileUpload extends HttpServlet {
         resp.getWriter().println(id);
 
     }
-    
-    private List<Long> parseStringToArtists(String artists){
+
+    private List<Long> parseStringToArtists(String artists) {
         Objectify ofy = ObjectifyService.begin();
-        //TODO: add support for more then one artist.
-        Artist get = ofy.query(Artist.class).filter("name", artists).get();
+
         List<Long> list = new LinkedList<Long>();
-        list.add(get.getId());
+        for (String artist : artists.split(",")) {
+            Artist get = ofy.query(Artist.class)
+                    .filter("name", artist.trim()).get();
+            //TODO: throw error if no artist was found.
+            list.add(get.getId());
+        }
+
         return list;
     }
 }

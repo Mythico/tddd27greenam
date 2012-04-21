@@ -27,7 +27,7 @@ import org.greenam.client.rpc.RecordService;
  *
  * @author Emil
  */
-public class RecordServiceImpl extends RemoteServiceServlet implements RecordService {
+public class RecordServiceImpl extends ServiceImpl implements RecordService {
 
     @Override
     public List<Record> search(String s) {
@@ -112,5 +112,34 @@ public class RecordServiceImpl extends RemoteServiceServlet implements RecordSer
         BlobKey blobKey = new BlobKey(req.getParameter("blob-key"));
 
         blobstoreService.serve(blobKey, resp);
+    }
+
+    /**
+     * Tries to buy a record for the current user. It will throw an error if the
+     * user doesn't have enough money.
+     *
+     * @param record A record to be bought.
+     */
+    @Override
+    public void buyRecord(Record record) {
+        Objectify ofy = ObjectifyService.begin();
+        User user = getCurrentUser();
+        int price = record.getPrice();
+        if (user.getMoney() < price) {
+            //TODO: Add an error instead of returning null, not enough money
+            return;
+        }
+
+        user.addMoney(-price);
+        user.addBoughtRecord(record);
+        save(user);
+        
+        List<Long> artistIds = record.getArtistIds();
+        for (Artist artist : ofy.get(Artist.class, artistIds).values()) {
+            user = ofy.get(User.class,artist.getUserId());
+            user.addMoney(price / artistIds.size());
+            save(user);
+        }
+
     }
 }

@@ -16,7 +16,7 @@ import org.greenam.client.domain.User;
  */
 public interface UserServiceAsync {
     
-    public void hasAccess(AsyncCallback<Boolean> callback);
+    public void isLogin(AsyncCallback<Boolean> callback);
 
     public void hasAccess(Long userId, AsyncCallback<Boolean> callback);
 
@@ -31,4 +31,6 @@ public interface UserServiceAsync {
     public void getArtistNames(List<Long> ids, AsyncCallback<List<LinkObject<String>>> callback);
     
     public void getAsArtist(User user, AsyncCallback<Artist> callback);
+    
+    public void addMoney(int amount, AsyncCallback<User> callback);
 }

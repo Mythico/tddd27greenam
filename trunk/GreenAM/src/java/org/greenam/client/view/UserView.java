@@ -24,6 +24,7 @@ public class UserView extends VerticalPanel {
     private final Label userLabel = new Label("Unknown");
     private final Label moneyLabel = new Label("Unknown");
     private final Button artistPageButton = new Button("Go to artist Page");
+    private final Button addMoneyButton = new Button("Add 100$");
     private final ViewController viewController;
 
     public UserView(final ViewController viewController) {
@@ -46,6 +47,26 @@ public class UserView extends VerticalPanel {
                 }
             }
         });
+        
+        addMoneyButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                userInfo.addMoney(100, new AsyncCallback<User>() {
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public void onSuccess(User result) {
+                        viewController.setUserView(result);
+                    }
+                });
+            }
+        });
+        add(addMoneyButton);
 
 
         //TODO: Temp until a real admin gui is implemented.

@@ -6,8 +6,6 @@ package org.greenam.server.rpc;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.Query;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import org.greenam.client.domain.*;
@@ -21,7 +19,7 @@ import org.greenam.client.rpc.UserService;
 public class UserServiceImpl extends ServiceImpl implements UserService {
 
     @Override
-    public boolean hasAccess() {
+    public boolean isLogin() {
         if (!userService.isUserLoggedIn()) {
             return false;
         }
@@ -103,5 +101,13 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         Objectify ofy = ObjectifyService.begin();
         Artist a = ofy.query(Artist.class).filter("userId", user.getId()).get();
         return a;
+    }
+
+    @Override
+    public User addMoney(int amount) {
+        User user = getCurrentUser();
+        user.addMoney(amount);
+        save(user);
+        return user;
     }
 }
