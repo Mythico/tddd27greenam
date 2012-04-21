@@ -139,4 +139,11 @@ public final class ViewController extends DeckPanel {
 
         return user.getId() == artist.getUserId();
     }
+
+    /**
+     * Removes all access that requires a user to be login.
+     */
+    public void logout() {
+        user = null;
+    }
 }

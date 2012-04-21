@@ -55,6 +55,7 @@ public class LoginWidget extends HorizontalPanel {
                 if (result == null) { //No user is loggin
                     loginButton.setText("Login");
                     loggedInLabel.setText("");
+                    viewController.logout();
                 } else {
                     loginButton.setText("Logout");
                     loggedInLabel.setText(result.getName());
