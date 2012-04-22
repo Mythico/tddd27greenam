@@ -27,6 +27,10 @@ public class Blog extends DatastoreObject {
         return entry;
     }
     
+    public Long getArtistId() {
+        return artistId;
+    }
+    
     public Date getDate() {
         return date;
     }
