@@ -52,7 +52,7 @@ public class UploadWidget extends FormPanel {
         grid.setWidget(1, 1, recordBox);
         grid.setWidget(2, 1, albumBox);
         grid.setWidget(3, 1, priceBox);
-        grid.setWidget(5, 1, fileUpload);
+        grid.setWidget(4, 1, fileUpload);
 
         recordBox.setName("recordBox");
         albumBox.setName("albumBox");
