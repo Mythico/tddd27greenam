@@ -73,13 +73,73 @@ public class CalendarWidget extends HorizontalPanel {
 
     private void addEvent(Event e) {
         VerticalPanel panel = new VerticalPanel();
-        Label date = new Label(e.getDate().toString());
+        Date date = e.getDate();
+        Label dateLabel = new Label(getDay(date.getDay()) + ", " + date.getDate() + " " + getMonth(date.getMonth()));
+        //Label date = new Label(e.getDate().toString());
         Label msg = new Label(e.getMessage());
 
         panel.setStyleName("gam-Box");
-        panel.add(date);
+        panel.add(dateLabel);
         panel.add(msg);
         eventPanel.add(panel);
+    }
+    
+    private String getMonth(int month)
+    {
+        String monthString;
+        switch (month) {
+            case 0:  monthString = "January";
+                     break;
+            case 1:  monthString = "February";
+                     break;
+            case 2:  monthString = "March";
+                     break;
+            case 3:  monthString = "April";
+                     break;
+            case 4:  monthString = "May";
+                     break;
+            case 5:  monthString = "June";
+                     break;
+            case 6:  monthString = "July";
+                     break;
+            case 7:  monthString = "August";
+                     break;
+            case 8:  monthString = "September";
+                     break;
+            case 9:  monthString = "October";
+                     break;
+            case 10: monthString = "November";
+                     break;
+            case 11: monthString = "December";
+                     break;
+            default: monthString = "Invalid month";
+                     break;
+        }
+        return monthString;
+    }
+    
+    private String getDay(int day)
+    {
+        String dayString;
+        switch (day) {
+            case 0:  dayString = "Sunday";
+                     break;
+            case 1:  dayString = "Monday";
+                     break;
+            case 2:  dayString = "Tuesday";
+                     break;
+            case 3:  dayString = "Wednesday";
+                     break;
+            case 4:  dayString = "Thursday";
+                     break;
+            case 5:  dayString = "Friday";
+                     break;
+            case 6:  dayString = "Saturday";
+                     break;
+            default: dayString = "Invalid day";
+                     break;
+        }
+        return dayString;
     }
 }
 
