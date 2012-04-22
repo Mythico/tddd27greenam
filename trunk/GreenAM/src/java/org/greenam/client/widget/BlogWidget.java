@@ -84,21 +84,24 @@ public class BlogWidget extends VerticalPanel {
             }
         });
 
-        userInfo.isLogin(new AsyncCallback<Boolean>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Window.alert("Has access failed in BlogWidget.\n" + caught);
-            }
-
-            @Override
-            public void onSuccess(Boolean result) {
-                newentryArea.setEnabled(result);
-                newentryArea.setVisible(result);
-                newentryButton.setVisible(result);
-                clearblogButton.setVisible(result);
-            }
-        });
+        if(viewController.hasAccess())
+        {
+            newentryArea.setEnabled(true);
+            newentryArea.setVisible(true);
+            newentryButton.setVisible(true);
+            clearblogButton.setVisible(true);
+            lb.setVisible(true);
+            deleteentryButton.setVisible(true);
+        }
+        else
+        {
+            newentryArea.setEnabled(false);
+            newentryArea.setVisible(false);
+            newentryButton.setVisible(false);
+            clearblogButton.setVisible(false);
+            lb.setVisible(false);
+            deleteentryButton.setVisible(false);
+        }
     }
 
     private void save() {
