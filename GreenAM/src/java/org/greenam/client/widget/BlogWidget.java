@@ -27,10 +27,13 @@ public class BlogWidget extends VerticalPanel {
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     private final Button newentryButton = new Button("Add a blog entry");
     private final Button clearblogButton = new Button("Clear your blog");
+    private final Button deleteentryButton = new Button("Delete Entry");
     private final VerticalPanel blogArea = new VerticalPanel();
     private final ScrollPanel scrollArea = new ScrollPanel(blogArea);
     private final RichTextArea newentryArea = new RichTextArea();
     private final HorizontalPanel buttonPanel = new HorizontalPanel();
+    private Blog blogtodelete = new Blog();
+    private ArrayList<Blog> entireblog = new ArrayList();
     private final ListBox lb = new ListBox();
     private final Blog newblogentry = new Blog();
     private Date date = new Date();
@@ -51,6 +54,8 @@ public class BlogWidget extends VerticalPanel {
 
         buttonPanel.add(newentryButton);
         buttonPanel.add(clearblogButton);
+        buttonPanel.add(lb);
+        buttonPanel.add(deleteentryButton);
 
         newentryButton.addClickHandler(new ClickHandler() {
 
@@ -67,6 +72,14 @@ public class BlogWidget extends VerticalPanel {
             @Override
             public void onClick(ClickEvent event) {
                 deleteBlog();
+            }
+        });
+        
+        deleteentryButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                deleteEntry();
             }
         });
 
@@ -122,6 +135,7 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onSuccess(ArrayList<Blog> blog) {
+                entireblog = blog;
                 //Clear and print the blog
                 for (int i = 0; i < blog.size(); i++) {
                     addBlog(blog.get(i), i);
@@ -151,10 +165,12 @@ public class BlogWidget extends VerticalPanel {
         scrollArea.setHeight("400px");
     }
 
-    //Just here if i will try to make a deleteEntry function later on
-   /* private void deleteEntry() {
-
-        artistInfo.deleteBlogEntry(artist, new AsyncCallback<Void>() {
+    
+    private void deleteEntry() {
+        
+        blogtodelete = entireblog.get((lb.getSelectedIndex()-1));
+        
+        artistInfo.deleteBlog(blogtodelete, new AsyncCallback<Void>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -163,10 +179,10 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onSuccess(Void result) {
-                
+                load();
             }
         });
-    }*/
+    }
 
     private void deleteBlog() {
 
