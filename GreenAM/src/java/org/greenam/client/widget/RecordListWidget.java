@@ -37,7 +37,7 @@ public class RecordListWidget extends ListWidget<Record> {
         grid.setText(0, 1, "Title");
         grid.setText(0, 2, "Album");
         grid.setText(0, 3, "Artist");
-        grid.setText(0, 4, "Genre");
+        grid.setText(0, 4, "Price");
         grid.setText(0, 5, "Buy");
 
 
@@ -59,6 +59,7 @@ public class RecordListWidget extends ListWidget<Record> {
             Image buyImg = new Image("img/buy.png");
             buyImg.setSize("20px", "20px");
             Label title = new Label(record.getTitle());
+            Label price = new Label("$" + record.getPrice());
 
             HorizontalPanel artistsPanel = new HorizontalPanel();
             for (final Long id : record.getArtistIds()) {
@@ -69,12 +70,10 @@ public class RecordListWidget extends ListWidget<Record> {
             albumFetch.addPanel(record.getId(), albumPanel);
 
 
-//            Label genre = new Label(genreToString(record.getGenre()));
 
-            playImg.setStyleName("gam-RecordListWidgetLink");
-            buyImg.setStyleName("gam-RecordListWidgetLink");
-            title.setStyleName("gam-RecordListWidgetLink");
-            // genre.setStyleName("gam-RecordListWidgetLink");
+            playImg.addStyleName("gam-Link");
+            buyImg.addStyleName("gam-Link");
+            title.addStyleName("gam-Link");
 
             //Click handlers
             playImg.addClickHandler(new ClickHandler() {
@@ -84,13 +83,6 @@ public class RecordListWidget extends ListWidget<Record> {
                     Window.alert("Playing: " + record.getAudioUrl());
                     audio.setSrc(record.getAudioUrl());
                     audio.play();
-                }
-            });
-            title.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    //viewController.setSearchTitleView(record.titleId);
                 }
             });
             
@@ -113,18 +105,11 @@ public class RecordListWidget extends ListWidget<Record> {
                 }
             });
 
-            /*
-             * genre.addClickHandler(new ClickHandler() {
-             *
-             * @Override public void onClick(ClickEvent event) {
-             * //viewController.setSearchGenreView(record.getGenre()); } });
-             */
-
             grid.setWidget(i, 0, playImg);
             grid.setWidget(i, 1, title);
             grid.setWidget(i, 2, albumPanel);
             grid.setWidget(i, 3, artistsPanel);
-            //grid.setWidget(i, 4, genre);
+            grid.setWidget(i, 4, price);
             grid.setWidget(i, 5, buyImg);
             i++;
         }
