@@ -61,6 +61,14 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
     }
     
     /**
+     * Checks if the current user is an administrator.
+     * @return True if the user is an administrator, otherwise false.
+     */
+    protected boolean isAdmin(){
+        return userService.isUserAdmin();
+    }
+    
+    /**
      * Fetches the internal userid for a federatedId. If there is no internal id
      * it will create one.
      *

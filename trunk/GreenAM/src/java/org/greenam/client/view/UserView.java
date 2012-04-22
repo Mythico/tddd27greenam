@@ -9,7 +9,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import java.util.List;
+import org.greenam.client.domain.Album;
 import org.greenam.client.domain.Artist;
+import org.greenam.client.domain.Record;
 import org.greenam.client.domain.User;
 import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
@@ -25,12 +28,14 @@ public class UserView extends VerticalPanel {
     private final Label moneyLabel = new Label("Unknown");
     private final Button artistPageButton = new Button("Go to artist Page");
     private final Button addMoneyButton = new Button("Add 100$");
+    private final AdminPanel adminPanel;
     private final ViewController viewController;
 
     public UserView(final ViewController viewController) {
         setStyleName("gam-ContentView");
 
         this.viewController = viewController;
+        adminPanel = new AdminPanel(viewController);
 
         add(userLabel);
         add(moneyLabel);
@@ -47,7 +52,7 @@ public class UserView extends VerticalPanel {
                 }
             }
         });
-        
+
         addMoneyButton.addClickHandler(new ClickHandler() {
 
             @Override
@@ -61,7 +66,7 @@ public class UserView extends VerticalPanel {
 
                     @Override
                     public void onSuccess(User result) {
-                        viewController.setUserView(result);
+                        viewController.getUser().addMoney(100);
                     }
                 });
             }
@@ -91,18 +96,83 @@ public class UserView extends VerticalPanel {
             }
         });
         add(b);
+        add(adminPanel);
     }
 
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
+        adminPanel.setVisible(visible);
 
         if (visible) {
             User user = viewController.getUser();
-            moneyLabel.setText("$" + user.getMoney());            
+            moneyLabel.setText("$" + user.getMoney());
             artistPageButton.setVisible(viewController.getArtist() != null);
             userLabel.setText(user.getName());
         }
 
     }
+}
+
+class AdminPanel extends HorizontalPanel {
+
+    private final UserServiceAsync userInfo = GWT.create(UserService.class);
+    private final ViewController viewController;
+    private final VerticalPanel artistPanel = new VerticalPanel();
+
+    public AdminPanel(ViewController viewController) {
+        this.viewController = viewController;
+        add(artistPanel);
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible && viewController.isAdmin());
+
+        if (visible && viewController.isAdmin()) {
+            artistPanel.clear();
+            artistPanel.add(new Label("Artists"));
+            userInfo.getAllArtists(getArtistList);
+        }
+    }
+    AsyncCallback<List<Artist>> getArtistList = new AsyncCallback<List<Artist>>() {
+
+        @Override
+        public void onFailure(Throwable caught) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void onSuccess(List<Artist> result) {
+            for (final Artist artist : result) {
+                final HorizontalPanel hp = new HorizontalPanel();
+                Label l = new Label("[" + artist.getId() + "] " + artist.getName());
+                Button remove = new Button("X");
+                remove.addClickHandler(new ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        userInfo.deleteArtist(artist, new AsyncCallback() {
+
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                throw new UnsupportedOperationException("Not supported yet.");
+                            }
+
+                            @Override
+                            public void onSuccess(Object result) {
+                                artistPanel.remove(hp);
+                            }
+                        });
+                    }
+                });
+                hp.add(remove);
+                hp.add(l);
+                artistPanel.add(hp);
+            }
+        }
+    };
+    
+    AsyncCallback<List<Record>> getRecordList;
+    AsyncCallback<List<Album>> getAlbumList;
 }

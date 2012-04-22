@@ -19,12 +19,16 @@ public interface UserServiceAsync {
     public void isLogin(AsyncCallback<Boolean> callback);
 
     public void hasAccess(Long userId, AsyncCallback<Boolean> callback);
+    
+    public void isAdmin(AsyncCallback<Boolean> callback);
 
     public void makeArtist(Long userId, String name, AsyncCallback<Long> callback);
 
-    public void deleteArtist(Long artistId, AsyncCallback callback);
+    public void deleteArtist(Artist artist, AsyncCallback callback);
 
     public void getArtist(Long artistId, AsyncCallback<Artist> callback);
+    
+    public void getAllArtists(AsyncCallback<List<Artist>> callback);
 
     public void getCurrentUser(AsyncCallback<User> callback);
     

@@ -16,7 +16,7 @@ import org.greenam.client.rpc.UserServiceAsync;
  *
  * @author Emil
  */
-public final class ViewController extends DeckPanel {
+public final class ViewController extends DeckPanel{
 
     private final UserServiceAsync userInfo = GWT.create(UserService.class);
     public final int SEARCH_RESULT = 0;
@@ -29,8 +29,10 @@ public final class ViewController extends DeckPanel {
     private final AlbumView albumView = new AlbumView(this);
     private Artist artist;
     private User user;
+    private boolean isAdmin;
 
     public ViewController() {
+        this.user = user;
         insert(searchResultView, SEARCH_RESULT);
         insert(artistView, ARTIST);
         insert(userView, USER);
@@ -39,6 +41,34 @@ public final class ViewController extends DeckPanel {
         //Set the default view.
         showWidget(SEARCH_RESULT);
 
+        setVisible(false);
+
+        userInfo.getCurrentUser(new AsyncCallback<User>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void onSuccess(User result) {
+                user = result;
+            }
+        });
+
+        userInfo.isAdmin(new AsyncCallback<Boolean>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void onSuccess(Boolean result) {
+                isAdmin = result;
+                setVisible(true);
+            }
+        });
 
     }
 
@@ -60,22 +90,6 @@ public final class ViewController extends DeckPanel {
     }
 
     public void setUserView() {
-        userInfo.getCurrentUser(new AsyncCallback<User>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void onSuccess(User result) {
-                setUserView(result);
-            }
-        });
-    }
-
-    public void setUserView(User result) {
-        user = result;
         userInfo.getAsArtist(user, new AsyncCallback<Artist>() {
 
             @Override
@@ -102,6 +116,7 @@ public final class ViewController extends DeckPanel {
 
     /**
      * Gets the selected artist.
+     *
      * @return Returns an Artist or null if none is selected.
      */
     public Artist getArtist() {
@@ -110,6 +125,7 @@ public final class ViewController extends DeckPanel {
 
     /**
      * Gets the current user.
+     *
      * @return Returns a User or null if no one is login.
      */
     public User getUser() {
@@ -145,5 +161,9 @@ public final class ViewController extends DeckPanel {
      */
     public void logout() {
         user = null;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
     }
 }

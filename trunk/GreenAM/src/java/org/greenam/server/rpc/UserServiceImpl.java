@@ -4,6 +4,7 @@
  */
 package org.greenam.server.rpc;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import java.util.LinkedList;
@@ -35,6 +36,13 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         return super.hasAccess(artistId);
     }
 
+    
+    @Override
+    public boolean isAdmin() {
+        System.out.println("IsAdmin: " + super.isAdmin());
+        return super.isAdmin();
+    }
+
     @Override
     public long makeArtist(Long userId, String name) {
         //TODO: Check for moderator or admin status
@@ -50,8 +58,37 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteArtist(Long artistId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void deleteArtist(Artist artist) {
+        if(!isAdmin()){
+            throw new AccessException("You have to be an admin to delete artists.");
+        }
+        
+        Objectify ofy = ObjectifyService.begin();
+        ofy.delete(Artist.class, artist.getId());
+        
+        //Remove blogs and events owned by an artist.
+        List<Key<Event>> evtKeys = ofy.query(Event.class)
+                .filter("artistId", artist.getId()).listKeys();
+        ofy.delete(evtKeys);
+        
+        List<Key<Blog>> blogKeys = ofy.query(Blog.class)
+                .filter("artistId", artist.getId()).listKeys();
+        ofy.delete(blogKeys);
+        
+        //Remove all referenses to artist.
+        for(Record record : ofy.query(Record.class)
+                .filter("artistId", artist.getId())){
+            List<Long> artistIds = record.getArtistIds();
+            artistIds.remove(artist.getId());
+            ofy.put(record);
+        }
+        
+        for(Album album : ofy.query(Album.class)
+                .filter("artistId", artist.getId())){
+            List<Long> artistIds = album.getArtistIds();
+            artistIds.remove(artist.getId());
+            ofy.put(album);
+        }
     }
 
     @Override
@@ -60,6 +97,16 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
 
         Artist artist = ofy.get(Artist.class, artistId);
         return artist;
+    }
+    
+    @Override
+    public List<Artist> getAllArtists() {
+        if(!isAdmin()){
+            throw new AccessException("You have to be an admin to fetch all artists.");
+        }
+        
+        Objectify ofy = ObjectifyService.begin();
+        return ofy.query(Artist.class).list();
     }
 
     @Override
@@ -110,4 +157,5 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         save(user);
         return user;
     }
+
 }
