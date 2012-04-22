@@ -14,13 +14,18 @@ import java.util.Date;
 @Entity
 public class Blog extends DatastoreObject {
      
-    public String entry;
-    public Long artistId;
+    private String entry;
+    private Long artistId;
     private Date date;
     
-    public Blog() {
-        this.entry = "";
-        this.date = null;
+    public Blog(){
+        
+    }
+    
+    public Blog(String entry, Artist artist) {
+        this.entry = entry;
+        this.date = new Date();
+        artistId = artist.getId();
     }
     
     public String getEntry() {
@@ -33,10 +38,5 @@ public class Blog extends DatastoreObject {
     
     public Date getDate() {
         return date;
-    }
-    
-    public void addEntry(String entry, Date date) {
-        this.entry = entry;
-        this.date = date;
-    }
+    }    
 }

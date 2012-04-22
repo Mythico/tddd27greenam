@@ -49,7 +49,7 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
 
     @Override
     public void postBlog(Blog blog) {
-        if (!hasAccess(blog.artistId)) {
+        if (!hasAccess(blog.getArtistId())) {
             throw new AccessException("You don't have access to post on this blog.");
         }
         Objectify ofy = ObjectifyService.begin();

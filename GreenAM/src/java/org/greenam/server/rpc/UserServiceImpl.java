@@ -39,7 +39,6 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
     
     @Override
     public boolean isAdmin() {
-        System.out.println("IsAdmin: " + super.isAdmin());
         return super.isAdmin();
     }
 

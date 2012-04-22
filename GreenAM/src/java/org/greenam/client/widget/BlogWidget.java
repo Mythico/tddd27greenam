@@ -27,16 +27,10 @@ public class BlogWidget extends VerticalPanel {
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     private final Button newentryButton = new Button("Add a blog entry");
     private final Button clearblogButton = new Button("Clear your blog");
-    private final Button deleteentryButton = new Button("Delete Entry");
     private final VerticalPanel blogArea = new VerticalPanel();
     private final ScrollPanel scrollArea = new ScrollPanel(blogArea);
     private final RichTextArea newentryArea = new RichTextArea();
     private final HorizontalPanel buttonPanel = new HorizontalPanel();
-    private Blog blogtodelete = new Blog();
-    private ArrayList<Blog> entireblog = new ArrayList();
-    private final ListBox lb = new ListBox();
-    private final Blog newblogentry = new Blog();
-    private Date date = new Date();
     private final ViewController viewController;
 
     public BlogWidget(final ViewController viewController) {
@@ -54,8 +48,6 @@ public class BlogWidget extends VerticalPanel {
 
         buttonPanel.add(newentryButton);
         buttonPanel.add(clearblogButton);
-        buttonPanel.add(lb);
-        buttonPanel.add(deleteentryButton);
 
         newentryButton.addClickHandler(new ClickHandler() {
 
@@ -71,18 +63,9 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onClick(ClickEvent event) {
-                deleteBlog();
+                clearBlog();
             }
         });
-
-        deleteentryButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                deleteEntry();
-            }
-        });
-
     }
 
     private void save() {
@@ -93,9 +76,8 @@ public class BlogWidget extends VerticalPanel {
         }
 
         Artist artist = viewController.getArtist();
-        newblogentry.addEntry(newentryArea.getText(), date);
-        newblogentry.artistId = artist.getId();
-        artistInfo.postBlog(newblogentry, new AsyncCallback<Void>() {
+        Blog blog = new Blog(newentryArea.getText(), artist);
+        artistInfo.postBlog(blog, new AsyncCallback<Void>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -122,18 +104,11 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onSuccess(ArrayList<Blog> blog) {
-                entireblog = blog;
                 //Clear and print the blog
                 for (int i = 0; i < blog.size(); i++) {
                     addBlog(blog.get(i), i);
                 }
                 newentryArea.setText("Add your new blog entry here!");
-
-                lb.clear();
-                lb.addItem("Entry to delete:");
-                for (int i = 0; i < blog.size(); i++) {
-                    lb.addItem("" + (i + 1));
-                }
             }
         });
     }
@@ -149,18 +124,31 @@ public class BlogWidget extends VerticalPanel {
             newentryArea.setVisible(hasAccess);
             newentryButton.setVisible(hasAccess);
             clearblogButton.setVisible(hasAccess);
-            lb.setVisible(hasAccess);
-            deleteentryButton.setVisible(hasAccess);
         }
     }
 
-    private void addBlog(Blog blog, int i) {
+    private void addBlog(final Blog blog, int i) {
         Date date = blog.getDate();
+        final HorizontalPanel hp = new HorizontalPanel();
         VerticalPanel vp = new VerticalPanel();
         vp.setStyleName("gam-Box");
         vp.add(new Label("This is entry " + (i + 1) + " and was posted on " + getDay(date.getDay()) + ", " + date.getDate() + " " + getMonth(date.getMonth())));
         vp.add(new Label(blog.getEntry()));
-        blogArea.add(vp);
+        hp.add(vp);
+        
+        if(viewController.hasAccess()){
+            Button remove = new Button("X");
+            remove.addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    blogArea.remove(hp);
+                    deleteBlog(blog);
+                }
+            });
+            hp.add(remove);
+        }
+        blogArea.add(hp);
         scrollArea.setHeight("400px");
     }
 
@@ -241,25 +229,7 @@ public class BlogWidget extends VerticalPanel {
         return dayString;
     }
 
-    private void deleteEntry() {
-
-        blogtodelete = entireblog.get((lb.getSelectedIndex() - 1));
-
-        artistInfo.deleteBlog(blogtodelete, new AsyncCallback<Void>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void onSuccess(Void result) {
-                load();
-            }
-        });
-    }
-
-    private void deleteBlog() {
+    private void clearBlog() {
         Artist artist = viewController.getArtist();
         artistInfo.deleteBlog(artist, new AsyncCallback() {
 
@@ -271,6 +241,19 @@ public class BlogWidget extends VerticalPanel {
             @Override
             public void onSuccess(Object result) {
                 load();
+            }
+        });
+    }
+    private void deleteBlog(Blog blog) {
+        artistInfo.deleteBlog(blog, new AsyncCallback() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void onSuccess(Object result) {
             }
         });
     }
