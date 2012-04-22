@@ -159,7 +159,7 @@ abstract class FetchObject {
                                 Label label = new Label(lo.getObject());
                                 panel.add(label);
                                 label.addClickHandler(clickHandler.create(lo.getObjectId()));
-                                label.setStyleName("gam-RecordListWidgetLink");
+                                label.addStyleName("gam-Link");
                             }
                         }
                     }
