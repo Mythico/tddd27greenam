@@ -7,8 +7,10 @@ package org.greenam.server.rpc;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
+import java.util.List;
 import org.greenam.client.domain.*;
 
 /**
@@ -116,5 +118,103 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
     protected void save(Artist artist){        
         Objectify ofy = ObjectifyService.begin();
         ofy.put(artist);
+    }  
+    
+    protected void save(Album album){        
+        Objectify ofy = ObjectifyService.begin();
+        ofy.put(album);
     }    
+    protected void save(Record record){        
+        Objectify ofy = ObjectifyService.begin();
+        ofy.put(record);
+    }    
+    
+    protected void delete(Album album){
+        Objectify ofy = ObjectifyService.begin();
+        ofy.delete(Album.class, album.getId());
+    }
+    
+    protected void delete(Record record) {
+        Objectify ofy = ObjectifyService.begin();
+        
+        ofy.delete(Record.class, record.getId());
+        removeReferenses(record);
+    }
+    
+    protected void delete(Artist artist){        
+        Objectify ofy = ObjectifyService.begin();
+        
+        ofy.delete(Artist.class, artist.getId());
+        
+        //Remove blogs and events owned by an artist.
+        List<Key<Event>> evtKeys = ofy.query(Event.class)
+                .filter("artistId", artist.getId()).listKeys();
+        ofy.delete(evtKeys);
+        
+        List<Key<Blog>> blogKeys = ofy.query(Blog.class)
+                .filter("artistId", artist.getId()).listKeys();
+        ofy.delete(blogKeys);    
+        
+        removeReferenses(artist);
+    }
+    
+    private void removeReferenses(Record record){        
+        Objectify ofy = ObjectifyService.begin();
+        
+        //Remove all referenses to record in albums.
+        for(Album album : ofy.query(Album.class)
+                .filter("recordIds", record.getId())){
+            List<Long> recordIds = album.getRecordIds();
+            recordIds.remove(album.getId());
+            
+            //Remove an album if it doesn't have any records, otherwise save it.
+            if(recordIds.isEmpty()){
+                delete(album);
+            } else {
+                save(album);
+            }
+        }
+        
+        //Remove all referenses to record in user.
+        for(User user : ofy.query(User.class)
+                .filter("recordIds", record.getId())){
+            List<Long> recordIds = user.getBoughtRecords();
+            recordIds.remove(record.getId());            
+            save(user);            
+        }
+    }
+    
+    
+    private void removeReferenses(Artist artist){        
+        Objectify ofy = ObjectifyService.begin();
+        
+        //Remove all referenses to artist in albums.
+        for(Album album : ofy.query(Album.class)
+                .filter("artistIds", artist.getId())){
+            List<Long> recordIds = album.getRecordIds();
+            recordIds.remove(album.getId());
+            
+            //Remove an album if it doesn't have any records, otherwise save it.
+            if(recordIds.isEmpty()){
+                delete(album);
+            } else {
+                save(album);
+            }
+        }
+        
+        //Remove all referenses to artist in record.
+        for(Record record : ofy.query(Record.class)
+                .filter("artistIds", artist.getId())){
+            List<Long> artistIds = record.getArtistIds();
+            artistIds.remove(record.getId());
+            
+            //Remove an album if it doesn't have any records, otherwise save it.
+            if(artistIds.isEmpty()){
+                delete(record);
+            } else {
+                save(record);
+            }
+        }        
+        
+    }
 }
