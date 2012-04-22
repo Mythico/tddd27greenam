@@ -38,9 +38,9 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
             String[] parts = query.trim().split(":", 2);
             if (parts.length == 1) {
                 records.addAll(searchTitle(parts[0].trim()));
-            } else if (parts[0].equalsIgnoreCase("artistId")) {
+            } else if (parts[0].trim().equalsIgnoreCase("artistId")) {
                 records.addAll(searchArtist(Long.parseLong(parts[1].trim())));
-            } else if (parts[0].equalsIgnoreCase("artist")) {
+            } else if (parts[0].trim().equalsIgnoreCase("artist")) {
                 records.addAll(searchArtist(parts[1].trim()));
             }
         }
@@ -52,16 +52,20 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
     private List<Record> searchTitle(String s) {
 
         Objectify ofy = ObjectifyService.begin();
-        return ofy.query(Record.class).filter("title >=", s)
-                .filter("title <", s + "\uFFFD").list();
+        return ofy.query(Record.class).filter("title >=", s).filter("title <", s + "\uFFFD").list();
     }
 
     private List<Record> searchArtist(String s) {
 
         Objectify ofy = ObjectifyService.begin();
         List<Record> records = new LinkedList<Record>();
-        for (Artist artist : ofy.query(Artist.class).filter("name", s)) {
-            records.addAll(ofy.query(Record.class).filter("artistId", artist).list());
+        Query<Artist> query = ofy.query(Artist.class);
+
+        query = query.filter("name >=", s).filter("name <", s + "\uFFFD");
+        for (Artist artist : query) {
+            Query<Record> rq = ofy.query(Record.class);
+            List<Record> result = rq.filter("artistIds", artist.getId()).list();
+            records.addAll(result);
         }
         return records;
     }
@@ -120,10 +124,10 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
      */
     @Override
     public void buyRecord(Record record) {
-        if(!isLogin()){
+        if (!isLogin()) {
             throw new AccessException("You have to login to be able to buy records.");
         }
-        
+
         Objectify ofy = ObjectifyService.begin();
         User user = getCurrentUser();
         System.out.println("User: " + user);
@@ -136,10 +140,10 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         user.addMoney(-price);
         user.addBoughtRecord(record);
         save(user);
-        
+
         List<Long> artistIds = record.getArtistIds();
         for (Artist artist : ofy.get(Artist.class, artistIds).values()) {
-            user = ofy.get(User.class,artist.getUserId());
+            user = ofy.get(User.class, artist.getUserId());
             user.addMoney(price / artistIds.size());
             save(user);
         }
