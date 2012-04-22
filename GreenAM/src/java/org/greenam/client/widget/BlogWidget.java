@@ -47,6 +47,7 @@ public class BlogWidget extends VerticalPanel {
         newentryArea.setEnabled(false);
         newentryArea.setText("Add your new blog entry here!");
         newentryArea.setVisible(false);
+        newentryArea.setStyleName("gam-Textbox");
 
         add(scrollArea);
         add(newentryArea);
