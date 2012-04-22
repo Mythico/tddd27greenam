@@ -61,34 +61,8 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
     public void deleteArtist(Artist artist) {
         if(!isAdmin()){
             throw new AccessException("You have to be an admin to delete artists.");
-        }
-        
-        Objectify ofy = ObjectifyService.begin();
-        ofy.delete(Artist.class, artist.getId());
-        
-        //Remove blogs and events owned by an artist.
-        List<Key<Event>> evtKeys = ofy.query(Event.class)
-                .filter("artistId", artist.getId()).listKeys();
-        ofy.delete(evtKeys);
-        
-        List<Key<Blog>> blogKeys = ofy.query(Blog.class)
-                .filter("artistId", artist.getId()).listKeys();
-        ofy.delete(blogKeys);
-        
-        //Remove all referenses to artist.
-        for(Record record : ofy.query(Record.class)
-                .filter("artistId", artist.getId())){
-            List<Long> artistIds = record.getArtistIds();
-            artistIds.remove(artist.getId());
-            ofy.put(record);
-        }
-        
-        for(Album album : ofy.query(Album.class)
-                .filter("artistId", artist.getId())){
-            List<Long> artistIds = album.getArtistIds();
-            artistIds.remove(artist.getId());
-            ofy.put(album);
-        }
+        }        
+        delete(artist);
     }
 
     @Override
