@@ -7,14 +7,12 @@ package org.greenam.server.rpc;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.googlecode.objectify.Key;
+import com.google.appengine.api.images.ImagesService;
+import com.google.appengine.api.images.ImagesServiceFactory;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Query;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -86,7 +84,7 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         //submitting the FormPanel
         return blobstoreService.createUploadUrl("/http/fileupload");
     }
-
+    
     @Override
     public List<Album> getAlbums(Artist artist) {
         Objectify ofy = ObjectifyService.begin();

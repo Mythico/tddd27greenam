@@ -7,6 +7,7 @@ package org.greenam.client.widget;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -75,7 +76,7 @@ public class UploadWidget extends FormPanel {
                     public void onSuccess(String result) {
                         String name = viewController.getArtist().getName();
                         String additionalNames = artistsBox.getText();
-                        artistsBox.setName(name + "," + additionalNames);
+                        artistsBox.setText(name + "," + additionalNames);
                         setAction(result);
                         submit();
                         reset();

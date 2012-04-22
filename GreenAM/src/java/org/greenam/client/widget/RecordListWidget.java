@@ -80,12 +80,12 @@ public class RecordListWidget extends ListWidget<Record> {
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    Window.alert("Playing: " + record.getAudioUrl());
-                    audio.setSrc(record.getAudioUrl());
+
+                    audio.setSrc("/http/fileupload?blob-key=" + record.getBlobKey());
                     audio.play();
                 }
             });
-            
+
             buyImg.addClickHandler(new ClickHandler() {
 
                 @Override

@@ -32,7 +32,6 @@ public final class ViewController extends DeckPanel{
     private boolean isAdmin;
 
     public ViewController() {
-        this.user = user;
         insert(searchResultView, SEARCH_RESULT);
         insert(artistView, ARTIST);
         insert(userView, USER);
@@ -153,7 +152,7 @@ public final class ViewController extends DeckPanel{
             return false;
         }
 
-        return user.getId() == artist.getUserId();
+        return user.getId().equals(artist.getUserId());
     }
 
     /**

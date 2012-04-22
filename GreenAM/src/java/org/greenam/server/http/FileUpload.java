@@ -24,10 +24,11 @@ import org.greenam.client.domain.Record;
 
 public class FileUpload extends HttpServlet {
 
+    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
-        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         Objectify ofy = ObjectifyService.begin();
 
         Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
@@ -38,8 +39,8 @@ public class FileUpload extends HttpServlet {
         String albumTitle = req.getParameter("albumBox");
         List<Long> artists = parseStringToArtists(req.getParameter("artistBox"));
         int price = Integer.parseInt(req.getParameter("priceBox"));
-        String url = "/rpc/recordservice?blob-key=" + blobKey.getKeyString();
-        Record record = new Record(recordTitle, artists, price, url);
+        String blobKeyString = blobKey.getKeyString();
+        Record record = new Record(recordTitle, artists, price, blobKeyString);
         Long recordId = ofy.put(record).getId();
 
 
@@ -53,18 +54,19 @@ public class FileUpload extends HttpServlet {
         ofy.put(album);
 
         //Redirect recursively to this servlet (calls doGet)
-        res.sendRedirect("/http/fileupload?id=" + record.getId());
+        //res.sendRedirect("/http/fileupload?id=" + record.getId());
+        if (blobKey == null) {
+            res.sendRedirect("/");
+        } else {
+            res.sendRedirect("/http/fileupload?blob-key=" + blobKey.getKeyString());
+        }
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        //Send the meta-data id back to the client in the HttpServletResponse response
-        String id = req.getParameter("id");
-        resp.setHeader("Content-Type", "text/html");
-        resp.getWriter().println(id);
-
+    public void doGet(HttpServletRequest req, HttpServletResponse res)
+            throws IOException {
+        BlobKey blobKey = new BlobKey(req.getParameter("blob-key"));
+        blobstoreService.serve(blobKey, res);
     }
 
     private List<Long> parseStringToArtists(String artists) {
@@ -72,8 +74,7 @@ public class FileUpload extends HttpServlet {
 
         List<Long> list = new LinkedList<Long>();
         for (String artist : artists.split(",")) {
-            Artist get = ofy.query(Artist.class)
-                    .filter("name", artist.trim()).get();
+            Artist get = ofy.query(Artist.class).filter("name", artist.trim()).get();
             //TODO: throw error if no artist was found.
             list.add(get.getId());
         }

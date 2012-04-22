@@ -4,6 +4,9 @@
  */
 package org.greenam.server.rpc;
 
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -139,6 +142,11 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
         
         ofy.delete(Record.class, record.getId());
         removeReferenses(record);
+        
+        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        BlobKey bk = new BlobKey(record.getBlobKey());
+        blobstoreService.delete(bk);
+        //TODO: Remove actual blob
     }
     
     protected void delete(Artist artist){        
