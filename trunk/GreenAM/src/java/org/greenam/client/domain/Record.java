@@ -14,21 +14,21 @@ import java.util.List;
  */
 @Entity
 public class Record extends DatastoreObject {
-    
+
     private String title;
     private List<Long> artistIds;
-    private String audioUrl;
     private int price;
+    private String blobKey;
 
     public Record() {
     }
-  
+
     public Record(String title,
-            List<Long> artistIds, int price, String audioUrl) {
+            List<Long> artistIds, int price, String blobKey) {
         this.title = title;
         this.artistIds = artistIds;
         this.price = price;
-        this.audioUrl = audioUrl;
+        this.blobKey = blobKey;
     }
 
     public List<Long> getArtistIds() {
@@ -43,10 +43,7 @@ public class Record extends DatastoreObject {
         return title;
     }
 
-    public String getAudioUrl() {
-        return audioUrl;
+    public String getBlobKey() {
+        return blobKey;
     }
-    
-    
-    
 }
