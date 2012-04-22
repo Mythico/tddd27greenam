@@ -122,14 +122,20 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
      */
     @Override
     public void buyRecord(Record record) {
+        if(!isLogin()){
+            //TODO: Throw an not login error.
+            return;
+        }
+        
         Objectify ofy = ObjectifyService.begin();
         User user = getCurrentUser();
+        System.out.println("User: " + user);
         int price = record.getPrice();
         if (user.getMoney() < price) {
             //TODO: Add an error instead of returning null, not enough money
             return;
         }
-
+        System.out.println("Records: " + price);
         user.addMoney(-price);
         user.addBoughtRecord(record);
         save(user);

@@ -98,16 +98,16 @@ public class RecordListWidget extends ListWidget<Record> {
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    recordInfo.buyRecord(record, new AsyncCallback<User>() {
+                    recordInfo.buyRecord(record, new AsyncCallback() {
 
                         @Override
                         public void onFailure(Throwable caught) {
-                            Window.alert("Buying of record failed!\n\n" + caught);
+                            Window.alert("TEMP: Failed!\n\n" + caught);
                         }
 
                         @Override
-                        public void onSuccess(User result) {
-                            Window.alert("Buying of record " + ((result == null) ? "failed!" : "succeded!"));
+                        public void onSuccess(Object result) {
+                            Window.alert("TEMP: Done!");
                         }
                     });
                 }
