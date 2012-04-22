@@ -37,13 +37,12 @@ public class BlogWidget extends VerticalPanel {
     private final ListBox lb = new ListBox();
     private final Blog newblogentry = new Blog();
     private Date date = new Date();
-    private Artist artist;
     private final ViewController viewController;
 
     public BlogWidget(final ViewController viewController) {
 
         this.viewController = viewController;
-        
+
         newentryArea.setEnabled(false);
         newentryArea.setText("Add your new blog entry here!");
         newentryArea.setVisible(false);
@@ -75,7 +74,7 @@ public class BlogWidget extends VerticalPanel {
                 deleteBlog();
             }
         });
-        
+
         deleteentryButton.addClickHandler(new ClickHandler() {
 
             @Override
@@ -84,24 +83,6 @@ public class BlogWidget extends VerticalPanel {
             }
         });
 
-        if(viewController.hasAccess())
-        {
-            newentryArea.setEnabled(true);
-            newentryArea.setVisible(true);
-            newentryButton.setVisible(true);
-            clearblogButton.setVisible(true);
-            lb.setVisible(true);
-            deleteentryButton.setVisible(true);
-        }
-        else
-        {
-            newentryArea.setEnabled(false);
-            newentryArea.setVisible(false);
-            newentryButton.setVisible(false);
-            clearblogButton.setVisible(false);
-            lb.setVisible(false);
-            deleteentryButton.setVisible(false);
-        }
     }
 
     private void save() {
@@ -111,6 +92,7 @@ public class BlogWidget extends VerticalPanel {
             return;
         }
 
+        Artist artist = viewController.getArtist();
         newblogentry.addEntry(newentryArea.getText(), date);
         newblogentry.artistId = artist.getId();
         artistInfo.postBlog(newblogentry, new AsyncCallback<Void>() {
@@ -126,10 +108,11 @@ public class BlogWidget extends VerticalPanel {
             }
         });
     }
-    
+
     //Gets the blog and shows it
     private void load() {
         blogArea.clear();
+        Artist artist = viewController.getArtist();
         artistInfo.getBlog(artist, new AsyncCallback<ArrayList<Blog>>() {
 
             @Override
@@ -155,83 +138,113 @@ public class BlogWidget extends VerticalPanel {
         });
     }
 
-    public void setArtist(Artist artist) {
-        this.artist = artist;
-        load();
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+
+        if (visible) {
+            load();
+            boolean hasAccess = viewController.hasAccess();
+            newentryArea.setEnabled(hasAccess);
+            newentryArea.setVisible(hasAccess);
+            newentryButton.setVisible(hasAccess);
+            clearblogButton.setVisible(hasAccess);
+            lb.setVisible(hasAccess);
+            deleteentryButton.setVisible(hasAccess);
+        }
     }
 
     private void addBlog(Blog blog, int i) {
         Date date = blog.getDate();
         VerticalPanel vp = new VerticalPanel();
         vp.setStyleName("gam-Box");
-        vp.add(new Label("This is entry " + (i + 1) + " and was posted on " + getDay(date.getDay()) +  ", " + date.getDate() + " " + getMonth(date.getMonth())));
+        vp.add(new Label("This is entry " + (i + 1) + " and was posted on " + getDay(date.getDay()) + ", " + date.getDate() + " " + getMonth(date.getMonth())));
         vp.add(new Label(blog.getEntry()));
         blogArea.add(vp);
         scrollArea.setHeight("400px");
     }
 
-    private String getMonth(int month)
-    {
+    private String getMonth(int month) {
         String monthString;
         switch (month) {
-            case 0:  monthString = "January";
-                     break;
-            case 1:  monthString = "February";
-                     break;
-            case 2:  monthString = "March";
-                     break;
-            case 3:  monthString = "April";
-                     break;
-            case 4:  monthString = "May";
-                     break;
-            case 5:  monthString = "June";
-                     break;
-            case 6:  monthString = "July";
-                     break;
-            case 7:  monthString = "August";
-                     break;
-            case 8:  monthString = "September";
-                     break;
-            case 9:  monthString = "October";
-                     break;
-            case 10: monthString = "November";
-                     break;
-            case 11: monthString = "December";
-                     break;
-            default: monthString = "Invalid month";
-                     break;
+            case 0:
+                monthString = "January";
+                break;
+            case 1:
+                monthString = "February";
+                break;
+            case 2:
+                monthString = "March";
+                break;
+            case 3:
+                monthString = "April";
+                break;
+            case 4:
+                monthString = "May";
+                break;
+            case 5:
+                monthString = "June";
+                break;
+            case 6:
+                monthString = "July";
+                break;
+            case 7:
+                monthString = "August";
+                break;
+            case 8:
+                monthString = "September";
+                break;
+            case 9:
+                monthString = "October";
+                break;
+            case 10:
+                monthString = "November";
+                break;
+            case 11:
+                monthString = "December";
+                break;
+            default:
+                monthString = "Invalid month";
+                break;
         }
         return monthString;
     }
-    
-    private String getDay(int day)
-    {
+
+    private String getDay(int day) {
         String dayString;
         switch (day) {
-            case 0:  dayString = "Sunday";
-                     break;
-            case 1:  dayString = "Monday";
-                     break;
-            case 2:  dayString = "Tuesday";
-                     break;
-            case 3:  dayString = "Wednesday";
-                     break;
-            case 4:  dayString = "Thursday";
-                     break;
-            case 5:  dayString = "Friday";
-                     break;
-            case 6:  dayString = "Saturday";
-                     break;
-            default: dayString = "Invalid day";
-                     break;
+            case 0:
+                dayString = "Sunday";
+                break;
+            case 1:
+                dayString = "Monday";
+                break;
+            case 2:
+                dayString = "Tuesday";
+                break;
+            case 3:
+                dayString = "Wednesday";
+                break;
+            case 4:
+                dayString = "Thursday";
+                break;
+            case 5:
+                dayString = "Friday";
+                break;
+            case 6:
+                dayString = "Saturday";
+                break;
+            default:
+                dayString = "Invalid day";
+                break;
         }
         return dayString;
     }
-    
+
     private void deleteEntry() {
-        
-        blogtodelete = entireblog.get((lb.getSelectedIndex()-1));
-        
+
+        blogtodelete = entireblog.get((lb.getSelectedIndex() - 1));
+
         artistInfo.deleteBlog(blogtodelete, new AsyncCallback<Void>() {
 
             @Override
@@ -247,7 +260,7 @@ public class BlogWidget extends VerticalPanel {
     }
 
     private void deleteBlog() {
-
+        Artist artist = viewController.getArtist();
         artistInfo.deleteBlog(artist, new AsyncCallback() {
 
             @Override

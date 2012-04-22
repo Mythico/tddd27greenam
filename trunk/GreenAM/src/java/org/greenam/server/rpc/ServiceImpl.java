@@ -69,8 +69,8 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
      * Checks if the current user is an administrator.
      * @return True if the user is an administrator, otherwise false.
      */
-    protected boolean isAdmin(){
-        return userService.isUserAdmin();
+    protected boolean isAdmin(){        
+        return isLogin() && userService.isUserAdmin();
     }
     
     /**

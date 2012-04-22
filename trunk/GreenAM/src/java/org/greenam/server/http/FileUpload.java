@@ -53,13 +53,8 @@ public class FileUpload extends HttpServlet {
 
         ofy.put(album);
 
-        //Redirect recursively to this servlet (calls doGet)
-        //res.sendRedirect("/http/fileupload?id=" + record.getId());
-        if (blobKey == null) {
-            res.sendRedirect("/");
-        } else {
-            res.sendRedirect("/http/fileupload?blob-key=" + blobKey.getKeyString());
-        }
+        //Redirect back to the main page
+        res.sendRedirect("/");
     }
 
     @Override
