@@ -161,7 +161,7 @@ public class BlogWidget extends VerticalPanel {
         Date date = blog.getDate();
         VerticalPanel vp = new VerticalPanel();
         vp.setStyleName("gam-Box");
-        vp.add(new Label("This is entry " + (i + 1) + " and was posted on " + getDay(date.getDay()) + " " + date.getHours() + ":" + date.getMinutes() + ", " + date.getDate() + " " + getMonth(date.getMonth())));
+        vp.add(new Label("This is entry " + (i + 1) + " and was posted on " + getDay(date.getDay()) +  ", " + date.getDate() + " " + getMonth(date.getMonth())));
         vp.add(new Label(blog.getEntry()));
         blogArea.add(vp);
         scrollArea.setHeight("400px");
