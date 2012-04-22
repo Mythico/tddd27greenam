@@ -26,6 +26,7 @@ public interface ArtistServiceAsync {
     public void postBlog(Blog blog, AsyncCallback callback);
     
     public void deleteBlog(Artist artist, AsyncCallback callback);
+    public void deleteBlog(Blog blog, AsyncCallback callback);
     
     public void save(Artist artist, AsyncCallback<Void> callback);
     public void update(Artist artist, AsyncCallback<Artist> callback);

@@ -28,6 +28,7 @@ public interface ArtistService extends RemoteService {
     public void postBlog(Blog blog);
     
     public void deleteBlog(Artist artist);
+    public void deleteBlog(Blog blog);
     
     public void save(Artist artist);
     public Artist update(Artist artist);
