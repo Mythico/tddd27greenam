@@ -43,25 +43,24 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
         if (!hasAccess(event.artistId)) {
             return; //TODO: Throw exception?
         }
-        System.out.println("Posting " + event);
         Objectify ofy = ObjectifyService.begin();
         ofy.put(event);
     }
 
     @Override
     public void postBlog(Blog blog) {
-        /*if (!hasAccess(blog.artistId)) {
+        if (!hasAccess(blog.artistId)) {
             return; //TODO: Throw exception?
-        }*/
+        }
         Objectify ofy = ObjectifyService.begin();
         ofy.put(blog);
     }
     
     @Override
     public void deleteBlog(Artist artist) {
-        /*if (!hasAccess(blog.artistId)) {
+        if (!hasAccess(artist.getId())) {
             return; //TODO: Throw exception?
-        }*/
+        }
         Objectify ofy = ObjectifyService.begin();
         List<Blog> blog = ofy.query(Blog.class).filter("artistId", artist.getId()).list();
         ofy.delete(blog);

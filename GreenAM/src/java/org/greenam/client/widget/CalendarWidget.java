@@ -92,7 +92,6 @@ class NewEventWidget extends VerticalPanel {
     private final TextBox messageBox = new TextBox();
     private final Button addEventButton = new Button("Add");
     private final HorizontalPanel messagePanel = new HorizontalPanel();
-    private Artist artist;
     private final ViewController viewController;
 
     public NewEventWidget(ViewController viewController) {
@@ -130,7 +129,9 @@ class NewEventWidget extends VerticalPanel {
                 errorLabel.setText("You can't post an empty message:");
                 errorLabel.setVisible(true);
             } else {
-                artistInfo.postEvent(new Event(artist.getId(), date, msg), postCallback);
+                Long artistId = viewController.getArtist().getId();
+                Event evt = new Event(artistId, date, msg);
+                artistInfo.postEvent(evt, postCallback);
                 errorLabel.setVisible(false);
             }
         }
