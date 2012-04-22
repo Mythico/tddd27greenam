@@ -57,7 +57,7 @@ public class LoginWidget extends HorizontalPanel {
                     viewController.logout();
                 } else {
                     loginButton.setText("Logout");
-                    loginLabel.setText("  Logged in as: " + result.getName());
+                    loginLabel.setText("Logged in as: " + result.getName());
                     loginLabel.addClickHandler(new ClickHandler() {
 
                         @Override
