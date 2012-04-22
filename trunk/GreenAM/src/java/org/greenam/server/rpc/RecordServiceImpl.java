@@ -31,9 +31,6 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
 
     @Override
     public List<Record> search(String s) {
-        LinkedList<Record> list = new LinkedList<Record>();
-
-        Objectify ofy = ObjectifyService.begin();
 
         List<Record> records = new LinkedList<Record>();
         String[] queries = s.split(",");
@@ -55,7 +52,10 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
     private List<Record> searchTitle(String s) {
 
         Objectify ofy = ObjectifyService.begin();
-        return ofy.query(Record.class).filter("title", s).list();
+        return ofy.query(Record.class).filter("title >=", s)
+                .filter("title <", s + "\uFFFD").list();
+        
+        //return ofy.query(Record.class).filter("title", s).list();
     }
 
     private List<Record> searchArtist(String s) {
