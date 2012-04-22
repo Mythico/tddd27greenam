@@ -61,8 +61,7 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
         if(artist == null){ //User is not an artist
             return false;
         }
-        
-        return artist.getId() == artistId;
+        return artist.getId().equals(artistId);
     }
     
     /**

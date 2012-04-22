@@ -38,11 +38,8 @@ public class BiographyWidget extends VerticalPanel {
         this.viewController = viewController;
 
         vp.setStyleName("gam-Box");
-        
-        //vp.add(new Label(viewController.getArtist().getBiography()));
-        
+                
         BiografyArea.add(vp);
-        
         textArea.setEnabled(true);
         textArea.setVisible(false);
         textArea.setStyleName("gam-Textbox");
@@ -97,7 +94,7 @@ public class BiographyWidget extends VerticalPanel {
         }
 
         Artist artist = viewController.getArtist();
-        artist.setBiography(textArea.getHTML());
+        artist.setBiography(textArea.getText());
 
         
         artistInfo.save(artist, new AsyncCallback<Void>() {
