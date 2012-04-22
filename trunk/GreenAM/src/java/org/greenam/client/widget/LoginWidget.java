@@ -12,7 +12,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupPanel;
 import org.greenam.client.domain.User;
 import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
@@ -26,7 +25,7 @@ public class LoginWidget extends HorizontalPanel {
 
     private final Button loginButton = new Button("Login");
     private final UserServiceAsync async = GWT.create(UserService.class);
-    private final Label loggedInLabel = new Label();
+    private final Label loginLabel = new Label();
     private final ViewController viewController;
 
     public LoginWidget(final ViewController viewController) {
@@ -38,8 +37,8 @@ public class LoginWidget extends HorizontalPanel {
                 Window.Location.replace("/_ah/login_required");
             }
         });
-
-        add(loggedInLabel);
+        loginLabel.addStyleName("gam-Link");
+        add(loginLabel);
         add(loginButton);
 
 
@@ -54,12 +53,12 @@ public class LoginWidget extends HorizontalPanel {
             public void onSuccess(final User result) {
                 if (result == null) { //No user is loggin
                     loginButton.setText("Login");
-                    loggedInLabel.setText("");
+                    loginLabel.setText("");
                     viewController.logout();
                 } else {
                     loginButton.setText("Logout");
-                    loggedInLabel.setText("  Logged in as: " + result.getName());
-                    loggedInLabel.addClickHandler(new ClickHandler() {
+                    loginLabel.setText("  Logged in as: " + result.getName());
+                    loginLabel.addClickHandler(new ClickHandler() {
 
                         @Override
                         public void onClick(ClickEvent event) {

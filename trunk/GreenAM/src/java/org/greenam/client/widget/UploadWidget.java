@@ -28,10 +28,9 @@ public class UploadWidget extends FormPanel {
     private TextBox artistsBox = new TextBox();
     private TextBox recordBox = new TextBox();
     private TextBox albumBox = new TextBox();
-    private TextBox genreBox = new TextBox();
     private TextBox priceBox = new TextBox();
     private Button uploadButton = new Button("Upload");
-    private Grid grid = new Grid(6, 2);
+    private Grid grid = new Grid(5, 2);
     private final ViewController viewController;
 
     public UploadWidget(final ViewController viewController) {
@@ -46,18 +45,14 @@ public class UploadWidget extends FormPanel {
         grid.setHTML(0, 0, "Additional artists:");
         grid.setHTML(1, 0, "Record:");
         grid.setHTML(2, 0, "Album:");
-        grid.setHTML(3, 0, "Genre:");
-        grid.setHTML(4, 0, "Price:");
-        grid.setWidget(5, 0, uploadButton);
+        grid.setHTML(3, 0, "Price:");
+        grid.setWidget(4, 0, uploadButton);
 
         grid.setWidget(0, 1, artistsBox);
         grid.setWidget(1, 1, recordBox);
         grid.setWidget(2, 1, albumBox);
-        grid.setWidget(3, 1, genreBox);
-        grid.setWidget(4, 1, priceBox);
+        grid.setWidget(3, 1, priceBox);
         grid.setWidget(5, 1, fileUpload);
-
-        genreBox.setEnabled(false);
 
         recordBox.setName("recordBox");
         albumBox.setName("albumBox");

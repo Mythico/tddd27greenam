@@ -19,6 +19,11 @@
     text-decoration: underline;
 }
 
+.gam-Link
+{
+    cursor: pointer;
+}
+
 
 /***********************************************************
 *                     MenuBar Demo
@@ -92,10 +97,6 @@
     
 }
 
-.gam-RecordListWidgetLink
-{
-    cursor: pointer;
-}
 
 
 /***********************************************************

@@ -21,10 +21,10 @@ public class SearchWidget extends HorizontalPanel {
     private final SuggestBox searchBox = new SuggestBox();
 
     public SearchWidget(final ViewController viewController) {
-        searchBox.addKeyUpHandler(new KeyUpHandler() {
+        searchBox.addKeyPressHandler(new KeyPressHandler() {
 
             @Override
-            public void onKeyUp(KeyUpEvent event) {
+            public void onKeyPress(KeyPressEvent event) {
                 if (event.getSource().equals(KeyCodes.KEY_ENTER)) {
                     viewController.setSearchView(searchBox.getText());
                     searchBox.setText("");

@@ -38,9 +38,8 @@ public class FileUpload extends HttpServlet {
         String albumTitle = req.getParameter("albumBox");
         List<Long> artists = parseStringToArtists(req.getParameter("artistBox"));
         int price = Integer.parseInt(req.getParameter("priceBox"));
-        int genre = -1; //TODO: Add genre
         String url = "/rpc/recordservice?blob-key=" + blobKey.getKeyString();
-        Record record = new Record(recordTitle, artists, genre, price, url);
+        Record record = new Record(recordTitle, artists, price, url);
         Long recordId = ofy.put(record).getId();
 
 
