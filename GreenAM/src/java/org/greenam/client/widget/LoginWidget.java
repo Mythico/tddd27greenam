@@ -39,8 +39,8 @@ public class LoginWidget extends HorizontalPanel {
             }
         });
 
-        add(loginButton);
         add(loggedInLabel);
+        add(loginButton);
 
 
         async.getCurrentUser(new AsyncCallback<User>() {
@@ -58,7 +58,7 @@ public class LoginWidget extends HorizontalPanel {
                     viewController.logout();
                 } else {
                     loginButton.setText("Logout");
-                    loggedInLabel.setText(result.getName());
+                    loggedInLabel.setText("  Logged in as: " + result.getName());
                     loggedInLabel.addClickHandler(new ClickHandler() {
 
                         @Override
