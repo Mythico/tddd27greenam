@@ -25,17 +25,27 @@ public class BiographyWidget extends VerticalPanel {
 
     private final RichTextArea textArea = new RichTextArea();
     private final HorizontalPanel editPane = new HorizontalPanel();
+    private final VerticalPanel BiografyArea = new VerticalPanel();
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     private final Button saveButton = new Button("Edit");
     private final Button cancelButton = new Button("Cancel");
     private final ViewController viewController;
+    private final VerticalPanel vp = new VerticalPanel();
 
     public BiographyWidget(final ViewController viewController) {
         setSize("100%", "100%");
 
         this.viewController = viewController;
 
-        textArea.setEnabled(false);
+        vp.setStyleName("gam-Box");
+        
+        //vp.add(new Label(viewController.getArtist().getBiography()));
+        
+        BiografyArea.add(vp);
+        
+        textArea.setEnabled(true);
+        textArea.setVisible(false);
+        textArea.setStyleName("gam-Textbox");
         cancelButton.setVisible(false);
 
         saveButton.addClickHandler(new ClickHandler() {
@@ -45,12 +55,13 @@ public class BiographyWidget extends VerticalPanel {
                 if (cancelButton.isVisible()) {
                     save();
                     saveButton.setText("Edit");
-                    textArea.setEnabled(false);
+                    textArea.setVisible(false);
                     cancelButton.setVisible(false);
                 } else {
                     saveButton.setText("Save");
-                    textArea.setEnabled(true);
+                    textArea.setVisible(true);
                     cancelButton.setVisible(true);
+                    textArea.setHTML(viewController.getArtist().getBiography());
                 }
             }
         });
@@ -60,17 +71,19 @@ public class BiographyWidget extends VerticalPanel {
             public void onClick(ClickEvent event) {
                 saveButton.setText("Edit");
 
-                textArea.setHTML(viewController.getArtist().getBiography());
-                textArea.setEnabled(false);
+                textArea.setVisible(false);
+                vp.clear();
+                vp.add(new Label(viewController.getArtist().getBiography()));
+                textArea.setText("");
                 cancelButton.setVisible(false);
             }
         });
 
-
         editPane.add(saveButton);
         editPane.add(cancelButton);
-
+        
         setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
+        add(BiografyArea);
         add(textArea);
         add(editPane);
 
@@ -86,6 +99,7 @@ public class BiographyWidget extends VerticalPanel {
         Artist artist = viewController.getArtist();
         artist.setBiography(textArea.getHTML());
 
+        
         artistInfo.save(artist, new AsyncCallback<Void>() {
 
             @Override
@@ -98,6 +112,10 @@ public class BiographyWidget extends VerticalPanel {
                 //Do nothing
             }
         });
+        
+        vp.clear();
+        vp.add(new Label(viewController.getArtist().getBiography()));
+        
     }
 
     @Override
@@ -106,8 +124,10 @@ public class BiographyWidget extends VerticalPanel {
         if (visible) {
             editPane.setVisible(viewController.hasAccess());
             saveButton.setText("Edit");
-            textArea.setHTML(viewController.getArtist().getBiography());
-            textArea.setEnabled(false);
+            vp.clear();
+            vp.add(new Label(viewController.getArtist().getBiography()));
+            textArea.setText("");
+            
             cancelButton.setVisible(false);
             textArea.setHTML(viewController.getArtist().getBiography());
         }
