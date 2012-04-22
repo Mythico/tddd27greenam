@@ -41,7 +41,7 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
     @Override
     public void postEvent(Event event) {
         if (!hasAccess(event.artistId)) {
-            return; //TODO: Throw exception?
+            throw new AccessException("You don't have access to post new events.");
         }
         Objectify ofy = ObjectifyService.begin();
         ofy.put(event);
@@ -50,7 +50,7 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
     @Override
     public void postBlog(Blog blog) {
         if (!hasAccess(blog.artistId)) {
-            return; //TODO: Throw exception?
+            throw new AccessException("You don't have access to post on this blog.");
         }
         Objectify ofy = ObjectifyService.begin();
         ofy.put(blog);
@@ -59,7 +59,7 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
     @Override
     public void deleteBlog(Artist artist) {
         if (!hasAccess(artist.getId())) {
-            return; //TODO: Throw exception?
+            throw new AccessException("You don't have access to clear the blogs.");
         }
         Objectify ofy = ObjectifyService.begin();
         List<Blog> blog = ofy.query(Blog.class).filter("artistId", artist.getId()).list();
@@ -69,13 +69,14 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
     @Override
     public void deleteBlog(Blog blog) {
         if(!hasAccess(blog.getId())){
-            return; //TODO: Throw exception?
+            throw new AccessException("You don't have access to delete this blog.");
         }
         
         Objectify ofy = ObjectifyService.begin();
         ofy.delete(Blog.class, blog.getId());
     }
 
+    //TODO: rename the to functions below
     @Override
     public void save(Artist artist) {
         Objectify ofy = ObjectifyService.begin();
