@@ -54,8 +54,6 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         Objectify ofy = ObjectifyService.begin();
         return ofy.query(Record.class).filter("title >=", s)
                 .filter("title <", s + "\uFFFD").list();
-        
-        //return ofy.query(Record.class).filter("title", s).list();
     }
 
     private List<Record> searchArtist(String s) {
@@ -123,8 +121,7 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
     @Override
     public void buyRecord(Record record) {
         if(!isLogin()){
-            //TODO: Throw an not login error.
-            return;
+            throw new AccessException("You have to login to be able to buy records.");
         }
         
         Objectify ofy = ObjectifyService.begin();
