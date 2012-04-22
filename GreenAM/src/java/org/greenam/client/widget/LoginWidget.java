@@ -63,7 +63,7 @@ public class LoginWidget extends HorizontalPanel {
 
                         @Override
                         public void onClick(ClickEvent event) {
-                            viewController.setUserView(result);
+                            viewController.setUserView();
                         }
                     });
                 }
@@ -72,17 +72,4 @@ public class LoginWidget extends HorizontalPanel {
 
 
     }
-    AsyncCallback<Long> openArtistPage = new AsyncCallback<Long>() {
-
-        @Override
-        public void onFailure(Throwable caught) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void onSuccess(Long result) {
-            viewController.setArtistView(result);
-        }
-    };
-
 }

@@ -21,12 +21,16 @@ public interface UserService extends RemoteService {
     public boolean isLogin();
 
     public boolean hasAccess(Long userId);
+    
+    public boolean isAdmin();
 
     public long makeArtist(Long userId, String name);
 
-    public void deleteArtist(Long artistId);
+    public void deleteArtist(Artist artist);
 
     public Artist getArtist(Long artistId);
+    
+    public List<Artist> getAllArtists();
 
     public User getCurrentUser();
 
