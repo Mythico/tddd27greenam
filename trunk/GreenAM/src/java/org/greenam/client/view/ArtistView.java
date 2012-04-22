@@ -78,7 +78,7 @@ public class ArtistView extends VerticalPanel {
     private final MenuItem uploadItem = new MenuItem("Upload", uploadEvent);
     private final AlbumListWidget albumListWidget;
     private final BiographyWidget bioPane;
-    private final BlogWidget blogPane = new BlogWidget();
+    private final BlogWidget blogPane;
     private final CalendarWidget eventPane;
     private final UploadWidget uploadPane;
 
@@ -91,7 +91,8 @@ public class ArtistView extends VerticalPanel {
         bioPane = new BiographyWidget(viewController);
         eventPane = new CalendarWidget(viewController);
         uploadPane = new UploadWidget(viewController);
-
+        blogPane = new BlogWidget(viewController);
+                
         menuBar.setStyleName("demo-MenuBar");
         menuBar.addItem(musicItem);
         menuBar.addItem(bioItem);

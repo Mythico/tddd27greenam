@@ -15,6 +15,7 @@ import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
 import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
+import org.greenam.client.view.ViewController;
 
 /**
  *
@@ -34,9 +35,12 @@ public class BlogWidget extends VerticalPanel {
     private final Blog newblogentry = new Blog();
     private Date date = new Date();
     private Artist artist;
+    private final ViewController viewController;
 
-    public BlogWidget() {
+    public BlogWidget(final ViewController viewController) {
 
+        this.viewController = viewController;
+        
         newentryArea.setEnabled(false);
         newentryArea.setText("Add your new blog entry here!");
         newentryArea.setVisible(false);
@@ -84,11 +88,9 @@ public class BlogWidget extends VerticalPanel {
     }
 
     private void save() {
-        save(true);
-    }
-
-    private void save(boolean b) {
-        if (!b) {
+        if (!viewController.hasAccess()) {
+            Window.alert("You are trying to add blog entries without"
+                    + " having the correct access.");
             return;
         }
 
