@@ -23,7 +23,7 @@ public class User extends DatastoreObject {
     @NotNull
     private int money;
     @NotNull
-    private List<Record> boughtRecords;
+    private List<Long> boughtRecordIds;
 
     public User() {
     }
@@ -53,14 +53,18 @@ public class User extends DatastoreObject {
         return money;
     }
     
-    public List<Record> getBoughtRecords(){
-        return boughtRecords;
+    public List<Long> getBoughtRecords(){
+        return boughtRecordIds;
     }
     
     public void addBoughtRecord(Record record){
-        if(boughtRecords == null){
-            boughtRecords = new LinkedList<Record>();
+        addBoughtRecord(record.getId());
+    }
+    
+    public void addBoughtRecord(Long recordId){
+        if(boughtRecordIds == null){
+            boughtRecordIds = new LinkedList<Long>();
         }
-        boughtRecords.add(record);
+        boughtRecordIds.add(recordId);
     }
 }
