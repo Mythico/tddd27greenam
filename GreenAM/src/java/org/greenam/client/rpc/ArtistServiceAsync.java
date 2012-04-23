@@ -22,6 +22,8 @@ public interface ArtistServiceAsync {
     public void getBlog(Artist artist, AsyncCallback<ArrayList<Blog>> callback);
 
     public void postEvent(Event event, AsyncCallback callback);
+    
+    public void deleteEvent(Event event, AsyncCallback callback);
 
     public void postBlog(Blog blog, AsyncCallback callback);
     

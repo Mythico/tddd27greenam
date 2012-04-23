@@ -46,6 +46,16 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
         Objectify ofy = ObjectifyService.begin();
         ofy.put(event);
     }
+    
+    @Override
+    public void deleteEvent(Event event) {
+        if (!hasAccess(event.artistId)) {
+            throw new AccessException("You don't have access to post new events.");
+        }
+        
+        Objectify ofy = ObjectifyService.begin();
+        ofy.delete(Event.class, event.getId());
+    }
 
     @Override
     public void postBlog(Blog blog) {

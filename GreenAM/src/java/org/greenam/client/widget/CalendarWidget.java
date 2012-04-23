@@ -6,16 +6,12 @@ package org.greenam.client.widget;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.datepicker.client.DatePicker;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import net.sourceforge.htmlunit.corejs.javascript.ast.LabeledStatement;
-import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Event;
 import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
@@ -32,6 +28,7 @@ public class CalendarWidget extends HorizontalPanel {
     VerticalPanel eventPanel = new VerticalPanel();
     private NewEventWidget newEventWidget;
     private final ViewController viewController;
+    private List<Event> eventsList = new ArrayList<Event>();
 
     public CalendarWidget(ViewController viewController) {
         setStyleName("gam-CalendarWidget");
@@ -54,13 +51,14 @@ public class CalendarWidget extends HorizontalPanel {
 
         @Override
         public void onSuccess(List<Event> events) {
+            eventsList = events;
             eventPanel.clear();
             for (Event event : events) {
                 addEvent(event);
             }
         }
     };
-
+        
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
@@ -71,17 +69,47 @@ public class CalendarWidget extends HorizontalPanel {
     }
 
 
-    void addEvent(Event e) {
-        VerticalPanel panel = new VerticalPanel();
+    void addEvent(final Event e) {
+        final VerticalPanel panel = new VerticalPanel();
+        final HorizontalPanel Hpanel = new HorizontalPanel();
         Date date = e.getDate();
         Label dateLabel = new Label(getDay(date.getDay()) + ", " + date.getDate() + " " + getMonth(date.getMonth()));
-        //Label date = new Label(e.getDate().toString());
         Label msg = new Label(e.getMessage());
 
         panel.setStyleName("gam-Box");
         panel.add(dateLabel);
         panel.add(msg);
-        eventPanel.add(panel);
+        Hpanel.add(panel);
+        
+        if(viewController.hasAccess()){
+            Button remove = new Button("X");
+            remove.addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    eventPanel.remove(panel);
+                    deleteEvent(e);
+                }
+            });
+            Hpanel.add(remove);
+        }
+        
+        eventPanel.add(Hpanel);
+    }
+    
+    private void deleteEvent(Event event) {
+        artistInfo.deleteEvent(event, new AsyncCallback() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void onSuccess(Object result) {
+                throw new UnsupportedOperationException("Removed!");
+            }
+        });
     }
     
     private String getMonth(int month)
