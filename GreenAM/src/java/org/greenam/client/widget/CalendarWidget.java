@@ -37,7 +37,7 @@ public class CalendarWidget extends HorizontalPanel {
         setStyleName("gam-CalendarWidget");
 
         this.viewController = viewController;
-        newEventWidget = new NewEventWidget(viewController);
+        newEventWidget = new NewEventWidget(viewController, this);
         eventPanel.setSize("400px", "100%");
         newEventWidget.setSize("200px", "100%");
         add(eventPanel);
@@ -71,7 +71,7 @@ public class CalendarWidget extends HorizontalPanel {
     }
 
 
-    private void addEvent(Event e) {
+    void addEvent(Event e) {
         VerticalPanel panel = new VerticalPanel();
         Date date = e.getDate();
         Label dateLabel = new Label(getDay(date.getDay()) + ", " + date.getDate() + " " + getMonth(date.getMonth()));
@@ -153,9 +153,11 @@ class NewEventWidget extends VerticalPanel {
     private final Button addEventButton = new Button("Add");
     private final HorizontalPanel messagePanel = new HorizontalPanel();
     private final ViewController viewController;
+    private final CalendarWidget parent;
 
-    public NewEventWidget(ViewController viewController) {
+    public NewEventWidget(ViewController viewController, CalendarWidget parent) {
         this.viewController = viewController;        
+        this.parent = parent;
         addEventButton.addClickHandler(addEvent);
         errorLabel.setStyleName("gam-error-string");
         errorLabel.setVisible(false);
@@ -190,21 +192,21 @@ class NewEventWidget extends VerticalPanel {
                 errorLabel.setVisible(true);
             } else {
                 Long artistId = viewController.getArtist().getId();
-                Event evt = new Event(artistId, date, msg);
-                artistInfo.postEvent(evt, postCallback);
+                final Event evt = new Event(artistId, date, msg);
+                artistInfo.postEvent(evt, new AsyncCallback() {
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public void onSuccess(Object result) {
+                        parent.addEvent(evt);
+                    }
+                });
                 errorLabel.setVisible(false);
             }
-        }
-    };
-    private AsyncCallback postCallback = new AsyncCallback() {
-
-        @Override
-        public void onFailure(Throwable caught) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void onSuccess(Object result) {
         }
     };
 }

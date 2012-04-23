@@ -25,6 +25,7 @@ public class SearchResultView extends VerticalPanel {
     
     public SearchResultView(ViewController viewController) {
         setStyleName("gam-ContentView");
+        setHeight("600px");
         recordList = new RecordListWidget(viewController);
         albumList = new AlbumListWidget(viewController);
         
