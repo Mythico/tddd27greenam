@@ -13,8 +13,6 @@ import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Blog;
 import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
-import org.greenam.client.rpc.UserService;
-import org.greenam.client.rpc.UserServiceAsync;
 import org.greenam.client.view.ViewController;
 
 /**
@@ -23,7 +21,6 @@ import org.greenam.client.view.ViewController;
  */
 public class BlogWidget extends VerticalPanel {
 
-    private final UserServiceAsync userInfo = GWT.create(UserService.class);
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     private final Button newentryButton = new Button("Add a blog entry");
     private final Button clearblogButton = new Button("Clear your blog");

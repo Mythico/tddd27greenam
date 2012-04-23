@@ -24,6 +24,8 @@ public interface ArtistService extends RemoteService {
     public ArrayList<Blog> getBlog(Artist artist);
 
     public void postEvent(Event event);
+    
+    public void deleteEvent(Event event);
 
     public void postBlog(Blog blog);
     
