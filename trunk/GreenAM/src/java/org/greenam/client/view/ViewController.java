@@ -19,10 +19,12 @@ import org.greenam.client.rpc.UserServiceAsync;
 public final class ViewController extends DeckPanel{
 
     private final UserServiceAsync userInfo = GWT.create(UserService.class);
-    public final int SEARCH_RESULT = 0;
-    public final int ARTIST = 1;
-    public final int USER = 2;
-    public final int ALBUM = 3;
+    private final int HOME = 0;
+    private final int SEARCH = 1;
+    private final int ARTIST = 2;
+    private final int USER = 3;
+    private final int ALBUM = 4;
+    private final HomeView homeView = new HomeView(this);
     private final ArtistView artistView = new ArtistView(this);
     private final UserView userView = new UserView(this);
     private final SearchResultView searchResultView = new SearchResultView(this);
@@ -32,15 +34,15 @@ public final class ViewController extends DeckPanel{
     private boolean isAdmin;
 
     public ViewController() {
-        insert(searchResultView, SEARCH_RESULT);
+        insert(homeView, HOME);
+        insert(searchResultView, SEARCH);
         insert(artistView, ARTIST);
         insert(userView, USER);
         insert(albumView, ALBUM);
 
         //Set the default view.
-        showWidget(SEARCH_RESULT);
+        showWidget(HOME);
 
-        setVisible(false);
 
         userInfo.getCurrentUser(new AsyncCallback<User>() {
 
@@ -65,7 +67,6 @@ public final class ViewController extends DeckPanel{
             @Override
             public void onSuccess(Boolean result) {
                 isAdmin = result;
-                setVisible(true);
             }
         });
 
@@ -110,7 +111,7 @@ public final class ViewController extends DeckPanel{
 
     public void setSearchView(String search) {
         searchResultView.search(search);
-        showWidget(SEARCH_RESULT);
+        showWidget(SEARCH);
     }
 
     /**
