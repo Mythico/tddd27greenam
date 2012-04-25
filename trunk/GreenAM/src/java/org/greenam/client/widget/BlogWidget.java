@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
@@ -129,7 +130,11 @@ public class BlogWidget extends VerticalPanel {
         final HorizontalPanel hp = new HorizontalPanel();
         VerticalPanel vp = new VerticalPanel();
         vp.setStyleName("gam-Box");
-        vp.add(new Label("This is entry " + (i + 1) + " and was posted on " + getDay(date.getDay()) + ", " + date.getDate() + " " + getMonth(date.getMonth())));
+        
+        DateTimeFormat dtf = DateTimeFormat.getFormat("EEEE, d MMMM");
+        Label dateLabel = new Label("This is entry " + (i + 1) +
+                " and was posted on " + dtf.format(date));
+        vp.add(dateLabel);
         vp.add(new Label(blog.getEntry()));
         hp.add(vp);
         
@@ -147,83 +152,6 @@ public class BlogWidget extends VerticalPanel {
         }
         blogArea.add(hp);
         scrollArea.setHeight("400px");
-    }
-
-    private String getMonth(int month) {
-        String monthString;
-        switch (month) {
-            case 0:
-                monthString = "January";
-                break;
-            case 1:
-                monthString = "February";
-                break;
-            case 2:
-                monthString = "March";
-                break;
-            case 3:
-                monthString = "April";
-                break;
-            case 4:
-                monthString = "May";
-                break;
-            case 5:
-                monthString = "June";
-                break;
-            case 6:
-                monthString = "July";
-                break;
-            case 7:
-                monthString = "August";
-                break;
-            case 8:
-                monthString = "September";
-                break;
-            case 9:
-                monthString = "October";
-                break;
-            case 10:
-                monthString = "November";
-                break;
-            case 11:
-                monthString = "December";
-                break;
-            default:
-                monthString = "Invalid month";
-                break;
-        }
-        return monthString;
-    }
-
-    private String getDay(int day) {
-        String dayString;
-        switch (day) {
-            case 0:
-                dayString = "Sunday";
-                break;
-            case 1:
-                dayString = "Monday";
-                break;
-            case 2:
-                dayString = "Tuesday";
-                break;
-            case 3:
-                dayString = "Wednesday";
-                break;
-            case 4:
-                dayString = "Thursday";
-                break;
-            case 5:
-                dayString = "Friday";
-                break;
-            case 6:
-                dayString = "Saturday";
-                break;
-            default:
-                dayString = "Invalid day";
-                break;
-        }
-        return dayString;
     }
 
     private void clearBlog() {
