@@ -6,10 +6,12 @@ package org.greenam.client.widget;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.datepicker.client.DatePicker;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.greenam.client.domain.Event;
@@ -28,13 +30,13 @@ public class CalendarWidget extends HorizontalPanel {
     VerticalPanel eventPanel = new VerticalPanel();
     private NewEventWidget newEventWidget;
     private final ViewController viewController;
-    private List<Event> eventsList = new ArrayList<Event>();
 
     public CalendarWidget(ViewController viewController) {
         setStyleName("gam-CalendarWidget");
 
         this.viewController = viewController;
-        newEventWidget = new NewEventWidget(viewController, this);
+        newEventWidget = new NewEventWidget(viewController);
+        newEventWidget.addClickHandler(addEvent);
         eventPanel.setSize("400px", "100%");
         newEventWidget.setSize("200px", "100%");
         add(eventPanel);
@@ -51,129 +53,91 @@ public class CalendarWidget extends HorizontalPanel {
 
         @Override
         public void onSuccess(List<Event> events) {
-            eventsList = events;
             eventPanel.clear();
             for (Event event : events) {
                 addEvent(event);
             }
         }
     };
-        
+
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
-
+        newEventWidget.setVisible(visible && viewController.hasAccess());
+        
         if (visible) {
             artistInfo.getEvents(viewController.getArtist(), loadCallback);
         }
     }
 
-
-    void addEvent(final Event e) {
+    void addEvent(final Event event) {
         final VerticalPanel panel = new VerticalPanel();
         final HorizontalPanel Hpanel = new HorizontalPanel();
-        Date date = e.getDate();
-        Label dateLabel = new Label(getDay(date.getDay()) + ", " + date.getDate() + " " + getMonth(date.getMonth()));
-        Label msg = new Label(e.getMessage());
+        Date date = event.getDate();
+        DateTimeFormat dtf = DateTimeFormat.getFormat("EEEE, d MMMM");
+        Label dateLabel = new Label(dtf.format(date));
+        Label msg = new Label(event.getMessage());
 
         panel.setStyleName("gam-Box");
         panel.add(dateLabel);
         panel.add(msg);
         Hpanel.add(panel);
-        
-        if(viewController.hasAccess()){
+
+        if (viewController.hasAccess()) {
             Button remove = new Button("X");
+            final AsyncCallback deleteEvent = new AsyncCallback() {
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    Window.alert("Deletion of event failed.\n\n" + caught);
+                }
+
+                @Override
+                public void onSuccess(Object result) {
+                    eventPanel.remove(Hpanel);
+                }
+            };
+
             remove.addClickHandler(new ClickHandler() {
 
                 @Override
-                public void onClick(ClickEvent event) {
-                    eventPanel.remove(panel);
-                    deleteEvent(e);
+                public void onClick(ClickEvent e) {
+                    artistInfo.deleteEvent(event, deleteEvent);
                 }
             });
             Hpanel.add(remove);
         }
-        
+
         eventPanel.add(Hpanel);
     }
-    
-    private void deleteEvent(Event event) {
-        artistInfo.deleteEvent(event, new AsyncCallback() {
+    private ClickHandler addEvent = new ClickHandler() {
 
-            @Override
-            public void onFailure(Throwable caught) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
+        @Override
+        public void onClick(ClickEvent event) {
+            if (newEventWidget.checkConstraints()) {
+                Date date = newEventWidget.getDate();
+                String msg = newEventWidget.getText();
+                Long artistId = viewController.getArtist().getId();
+                final Event evt = new Event(artistId, date, msg);
+                artistInfo.postEvent(evt, new AsyncCallback() {
 
-            @Override
-            public void onSuccess(Object result) {
-                throw new UnsupportedOperationException("Removed!");
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public void onSuccess(Object result) {
+                        addEvent(evt);
+                    }
+                });
             }
-        });
-    }
-    
-    private String getMonth(int month)
-    {
-        String monthString;
-        switch (month) {
-            case 0:  monthString = "January";
-                     break;
-            case 1:  monthString = "February";
-                     break;
-            case 2:  monthString = "March";
-                     break;
-            case 3:  monthString = "April";
-                     break;
-            case 4:  monthString = "May";
-                     break;
-            case 5:  monthString = "June";
-                     break;
-            case 6:  monthString = "July";
-                     break;
-            case 7:  monthString = "August";
-                     break;
-            case 8:  monthString = "September";
-                     break;
-            case 9:  monthString = "October";
-                     break;
-            case 10: monthString = "November";
-                     break;
-            case 11: monthString = "December";
-                     break;
-            default: monthString = "Invalid month";
-                     break;
         }
-        return monthString;
-    }
-    
-    private String getDay(int day)
-    {
-        String dayString;
-        switch (day) {
-            case 0:  dayString = "Sunday";
-                     break;
-            case 1:  dayString = "Monday";
-                     break;
-            case 2:  dayString = "Tuesday";
-                     break;
-            case 3:  dayString = "Wednesday";
-                     break;
-            case 4:  dayString = "Thursday";
-                     break;
-            case 5:  dayString = "Friday";
-                     break;
-            case 6:  dayString = "Saturday";
-                     break;
-            default: dayString = "Invalid day";
-                     break;
-        }
-        return dayString;
-    }
+    };
 }
 
 class NewEventWidget extends VerticalPanel {
 
-    private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     private final DatePicker datePicker = new DatePicker();
     private final Label messageLabel = new Label("Event text");
     private final Label errorLabel = new Label();
@@ -181,12 +145,9 @@ class NewEventWidget extends VerticalPanel {
     private final Button addEventButton = new Button("Add");
     private final HorizontalPanel messagePanel = new HorizontalPanel();
     private final ViewController viewController;
-    private final CalendarWidget parent;
 
-    public NewEventWidget(ViewController viewController, CalendarWidget parent) {
-        this.viewController = viewController;        
-        this.parent = parent;
-        addEventButton.addClickHandler(addEvent);
+    public NewEventWidget(ViewController viewController) {
+        this.viewController = viewController;
         errorLabel.setStyleName("gam-error-string");
         errorLabel.setVisible(false);
 
@@ -203,38 +164,31 @@ class NewEventWidget extends VerticalPanel {
     public void setVisible(boolean visible) {
         super.setVisible(visible && viewController.hasAccess());
     }
-    
-    
 
-    private ClickHandler addEvent = new ClickHandler() {
+    public HandlerRegistration addClickHandler(ClickHandler handler) {
+        return addEventButton.addClickHandler(handler);
+    }
 
-        @Override
-        public void onClick(ClickEvent event) {
-            Date date = datePicker.getValue();
-            String msg = messageBox.getText();
-            if (date == null) {
-                errorLabel.setText("You have to select a date:");
-                errorLabel.setVisible(true);
-            } else if (msg.equals("")) {
-                errorLabel.setText("You can't post an empty message:");
-                errorLabel.setVisible(true);
-            } else {
-                Long artistId = viewController.getArtist().getId();
-                final Event evt = new Event(artistId, date, msg);
-                artistInfo.postEvent(evt, new AsyncCallback() {
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        throw new UnsupportedOperationException("Not supported yet.");
-                    }
-
-                    @Override
-                    public void onSuccess(Object result) {
-                        parent.addEvent(evt);
-                    }
-                });
-                errorLabel.setVisible(false);
-            }
+    public boolean checkConstraints() {
+        if (getDate() == null) {
+            errorLabel.setText("You have to select a date:");
+            errorLabel.setVisible(true);
+            return false;
+        } else if (getText().equals("")) {
+            errorLabel.setText("You can't post an empty message:");
+            errorLabel.setVisible(true);
+            return false;
+        } else {
+            errorLabel.setVisible(false);
+            return true;
         }
-    };
+    }
+
+    public String getText() {
+        return messageBox.getText();
+    }
+
+    public Date getDate() {
+        return datePicker.getValue();
+    }
 }
