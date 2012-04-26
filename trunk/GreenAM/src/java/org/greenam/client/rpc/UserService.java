@@ -24,6 +24,8 @@ public interface UserService extends RemoteService {
     
     public boolean isAdmin();
 
+    public Artist getArtist(Long artistId);
+    
     public User getCurrentUser();
 
     public List<LinkObject<String>> getArtistNames(List<Long> ids);

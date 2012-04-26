@@ -41,6 +41,14 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
     public boolean isAdmin() {
         return super.isAdmin();
     }   
+    
+    @Override
+    public Artist getArtist(Long artistId) {
+        Objectify ofy = ObjectifyService.begin();
+
+        Artist artist = ofy.get(Artist.class, artistId);
+        return artist;
+    }
 
     @Override
     public User getCurrentUser() {
