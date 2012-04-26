@@ -22,14 +22,8 @@ public interface UserServiceAsync {
     
     public void isAdmin(AsyncCallback<Boolean> callback);
 
-    public void makeArtist(Long userId, String name, AsyncCallback<Long> callback);
-
-    public void deleteArtist(Artist artist, AsyncCallback callback);
-
     public void getArtist(Long artistId, AsyncCallback<Artist> callback);
     
-    public void getAllArtists(AsyncCallback<List<Artist>> callback);
-
     public void getCurrentUser(AsyncCallback<User> callback);
     
     public void getArtistNames(List<Long> ids, AsyncCallback<List<LinkObject<String>>> callback);
