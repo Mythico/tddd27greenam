@@ -10,6 +10,7 @@ import java.util.Date;
 /**
  *
  * @author Emil
+ * @author Michael
  */
 @Entity
 public class Blog extends DatastoreObject {

@@ -23,9 +23,9 @@ public class Artist extends DatastoreObject{
     public Artist() {
     }
 
-    public Artist(Long userId, String name) {
+    public Artist(Long userId) {
         this.userId = userId;
-        this.name = name;
+        this.name = "Artist [" + getId() + "]";
         this.biography = "";
         
         //this.events = events;

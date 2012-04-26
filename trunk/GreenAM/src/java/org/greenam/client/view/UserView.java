@@ -9,13 +9,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import java.util.List;
-import org.greenam.client.domain.Album;
 import org.greenam.client.domain.Artist;
-import org.greenam.client.domain.Record;
 import org.greenam.client.domain.User;
+import org.greenam.client.rpc.AdminService;
+import org.greenam.client.rpc.AdminServiceAsync;
 import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
+import org.greenam.client.widget.ArtistListWidget;
+import org.greenam.client.widget.ArtistRequestListWidget;
 
 /**
  *
@@ -72,30 +73,6 @@ public class UserView extends VerticalPanel {
             }
         });
         add(addMoneyButton);
-
-
-        //TODO: Temp until a real admin gui is implemented.
-        Button b = new Button("TEMP: Make me an artist, don't click me if im an artist.");
-        b.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                User user = viewController.getUser();
-                userInfo.makeArtist(user.getId(), user.getName(), new AsyncCallback<Long>() {
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        throw new UnsupportedOperationException("Not supported yet.");
-                    }
-
-                    @Override
-                    public void onSuccess(Long result) {
-                        viewController.setArtistView(result);
-                    }
-                });
-            }
-        });
-        add(b);
         add(adminPanel);
     }
 
@@ -116,63 +93,26 @@ public class UserView extends VerticalPanel {
 
 class AdminPanel extends HorizontalPanel {
 
-    private final UserServiceAsync userInfo = GWT.create(UserService.class);
     private final ViewController viewController;
-    private final VerticalPanel artistPanel = new VerticalPanel();
+    private final ArtistListWidget artistList;
+    private final ArtistRequestListWidget requestList;
 
     public AdminPanel(ViewController viewController) {
         this.viewController = viewController;
-        add(artistPanel);
+        artistList = new ArtistListWidget(viewController);
+        requestList = new ArtistRequestListWidget(viewController);
+        add(artistList);
+        add(requestList);
     }
 
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible && viewController.isAdmin());
 
-        if (visible && viewController.isAdmin()) {
-            artistPanel.clear();
-            artistPanel.add(new Label("Artists"));
-            userInfo.getAllArtists(getArtistList);
-        }
+        artistList.setVisible(visible && viewController.isAdmin());
+        requestList.setVisible(visible && viewController.isAdmin());
+        
     }
-    AsyncCallback<List<Artist>> getArtistList = new AsyncCallback<List<Artist>>() {
-
-        @Override
-        public void onFailure(Throwable caught) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void onSuccess(List<Artist> result) {
-            for (final Artist artist : result) {
-                final HorizontalPanel hp = new HorizontalPanel();
-                Label l = new Label("[" + artist.getId() + "] " + artist.getName());
-                Button remove = new Button("X");
-                remove.addClickHandler(new ClickHandler() {
-
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        userInfo.deleteArtist(artist, new AsyncCallback() {
-
-                            @Override
-                            public void onFailure(Throwable caught) {
-                                throw new UnsupportedOperationException("Not supported yet.");
-                            }
-
-                            @Override
-                            public void onSuccess(Object result) {
-                                artistPanel.remove(hp);
-                            }
-                        });
-                    }
-                });
-                hp.add(remove);
-                hp.add(l);
-                artistPanel.add(hp);
-            }
-        }
-    };
+   
     
-    AsyncCallback<List<Record>> getRecordList;
-    AsyncCallback<List<Album>> getAlbumList;
 }
