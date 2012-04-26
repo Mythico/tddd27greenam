@@ -96,4 +96,14 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         return user;
     }
 
+    @Override
+    public void sendRequest(String msg, int type) {
+        if(!isLogin()){
+            throw new AccessException("You have to be login to send requests.");
+        }
+        Long id = getCurrentUser().getId();
+        AdminRequest request = new AdminRequest(type, id, msg);
+        ofy.put(request);
+    }
+
 }

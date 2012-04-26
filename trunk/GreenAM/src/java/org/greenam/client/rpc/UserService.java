@@ -33,4 +33,6 @@ public interface UserService extends RemoteService {
     public Artist getAsArtist(User user);
     
     public User addMoney(int amount);
+    
+    public void sendRequest(String msg, int type);
 }
