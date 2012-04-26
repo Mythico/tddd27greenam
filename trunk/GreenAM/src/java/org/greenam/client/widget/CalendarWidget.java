@@ -28,19 +28,20 @@ public class CalendarWidget extends HorizontalPanel {
 
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     VerticalPanel eventPanel = new VerticalPanel();
-    private NewEventWidget newEventWidget;
+    private AddEventPanel addEventPanel;
     private final ViewController viewController;
 
     public CalendarWidget(ViewController viewController) {
         setStyleName("gam-CalendarWidget");
 
         this.viewController = viewController;
-        newEventWidget = new NewEventWidget(viewController);
-        newEventWidget.addClickHandler(addEvent);
+        addEventPanel = new AddEventPanel(viewController);
+        addEventPanel.addClickHandler(addEvent);
         eventPanel.setSize("400px", "100%");
-        newEventWidget.setSize("200px", "100%");
+        eventPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
+        addEventPanel.setSize("200px", "100%");
         add(eventPanel);
-        add(newEventWidget);
+        add(addEventPanel);
 
 
     }
@@ -63,60 +64,24 @@ public class CalendarWidget extends HorizontalPanel {
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
-        newEventWidget.setVisible(visible && viewController.hasAccess());
-        
+        addEventPanel.setVisible(visible && viewController.hasAccess());
+
         if (visible) {
             artistInfo.getEvents(viewController.getArtist(), loadCallback);
         }
     }
 
-    void addEvent(final Event event) {
-        final VerticalPanel panel = new VerticalPanel();
-        final HorizontalPanel Hpanel = new HorizontalPanel();
-        Date date = event.getDate();
-        DateTimeFormat dtf = DateTimeFormat.getFormat("EEEE, d MMMM");
-        Label dateLabel = new Label(dtf.format(date));
-        Label msg = new Label(event.getMessage());
-
-        Hpanel.setStyleName("gam-Box");
-        panel.add(dateLabel);
-        panel.add(msg);
-        Hpanel.add(panel);
-
-        if (viewController.hasAccess()) {
-            Image remove = new Image("img/cross_script.png");
-            final AsyncCallback deleteEvent = new AsyncCallback() {
-
-                @Override
-                public void onFailure(Throwable caught) {
-                    Window.alert("Deletion of event failed.\n\n" + caught);
-                }
-
-                @Override
-                public void onSuccess(Object result) {
-                    eventPanel.remove(Hpanel);
-                }
-            };
-
-            remove.addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent e) {
-                    artistInfo.deleteEvent(event, deleteEvent);
-                }
-            });
-            Hpanel.add(remove);
-        }
-
-        eventPanel.add(Hpanel);
+    private void addEvent(Event event) {
+        EventPanel panel = new EventPanel(event, viewController.hasAccess());
+        eventPanel.add(panel);
     }
     private ClickHandler addEvent = new ClickHandler() {
 
         @Override
         public void onClick(ClickEvent event) {
-            if (newEventWidget.checkConstraints()) {
-                Date date = newEventWidget.getDate();
-                String msg = newEventWidget.getText();
+            if (addEventPanel.checkConstraints()) {
+                Date date = addEventPanel.getDate();
+                String msg = addEventPanel.getText();
                 Long artistId = viewController.getArtist().getId();
                 final Event evt = new Event(artistId, date, msg);
                 artistInfo.postEvent(evt, new AsyncCallback() {
@@ -136,7 +101,59 @@ public class CalendarWidget extends HorizontalPanel {
     };
 }
 
-class NewEventWidget extends VerticalPanel {
+/**
+ * A helper class for representing an event in the calender.
+ *
+ * @author Emil
+ * @author Michael
+ */
+class EventPanel extends HorizontalPanel {
+
+    private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
+    private final Event event;
+
+    public EventPanel(Event event, boolean hasAccess) {
+        this.event = event;
+        setStyleName("gam-Box");
+
+        final VerticalPanel vp = new VerticalPanel();
+        Date date = event.getDate();
+        DateTimeFormat dtf = DateTimeFormat.getFormat("EEEE, d MMMM");
+        Label dateLabel = new Label(dtf.format(date));
+        Label msg = new Label(event.getMessage());
+
+        vp.add(dateLabel);
+        vp.add(msg);
+        add(vp);
+
+        if (hasAccess) {
+            Image remove = new Image("img/cross_script.png");
+            remove.addClickHandler(removeEvent);
+            add(remove);
+        }
+    }
+    private final ClickHandler removeEvent = new ClickHandler() {
+
+        @Override
+        public void onClick(ClickEvent e) {
+            artistInfo.deleteEvent(event, removeThis);
+        }
+    };
+    private AsyncCallback removeThis = new AsyncCallback() {
+
+        @Override
+        public void onFailure(Throwable caught) {
+            Window.alert("Deletion of event failed.\n\n" + caught);
+        }
+
+        @Override
+        public void onSuccess(Object result) {
+            removeFromParent();
+        }
+    };
+}
+
+class AddEventPanel extends VerticalPanel {
 
     private final DatePicker datePicker = new DatePicker();
     private final Label messageLabel = new Label("Event text");
@@ -146,9 +163,10 @@ class NewEventWidget extends VerticalPanel {
     private final HorizontalPanel messagePanel = new HorizontalPanel();
     private final ViewController viewController;
 
-    public NewEventWidget(ViewController viewController) {
+    public AddEventPanel(ViewController viewController) {
         this.viewController = viewController;
-        errorLabel.setStyleName("gam-error-string");
+        errorLabel.setStyleName("gam-Error");
+        setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
         errorLabel.setVisible(false);
 
         messagePanel.add(messageLabel);

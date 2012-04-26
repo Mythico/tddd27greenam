@@ -12,11 +12,17 @@
 
 }
 
-.gam-error-string
+.gam-Error
 {
     color: red;
     font-weight: bold;
     text-decoration: underline;
+}
+
+.gam-Status
+{    
+    color: black;
+    font-weight: bold;
 }
 
 .gam-Link
