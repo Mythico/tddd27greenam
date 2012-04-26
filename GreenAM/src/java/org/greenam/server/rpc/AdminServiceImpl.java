@@ -31,6 +31,7 @@ public class AdminServiceImpl extends ServiceImpl implements AdminService {
         }
         artist = new Artist(userId);
         ofy.put(artist);
+        ofy.delete(request);
     }
 
     @Override
