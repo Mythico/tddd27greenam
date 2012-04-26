@@ -32,6 +32,7 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
         ObjectifyService.register(Event.class);
         ObjectifyService.register(Record.class);
         ObjectifyService.register(User.class);
+        ObjectifyService.register(AdminRequest.class);
     }
 
     /**

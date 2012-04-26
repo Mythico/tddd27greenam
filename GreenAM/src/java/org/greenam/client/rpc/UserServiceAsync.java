@@ -31,4 +31,6 @@ public interface UserServiceAsync {
     public void getAsArtist(User user, AsyncCallback<Artist> callback);
     
     public void addMoney(int amount, AsyncCallback<User> callback);
+
+    public void sendRequest(String msg, int type, AsyncCallback callback);
 }

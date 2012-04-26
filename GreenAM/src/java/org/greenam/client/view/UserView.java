@@ -17,6 +17,7 @@ import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
 import org.greenam.client.widget.ArtistListWidget;
 import org.greenam.client.widget.ArtistRequestListWidget;
+import org.greenam.client.widget.RequestArtistWidget;
 
 /**
  *
@@ -30,6 +31,7 @@ public class UserView extends VerticalPanel {
     private final Button artistPageButton = new Button("Go to artist Page");
     private final Button addMoneyButton = new Button("Add 100$");
     private final AdminPanel adminPanel;
+    private final RequestArtistWidget requestWidget = new RequestArtistWidget();
     private final ViewController viewController;
 
     public UserView(final ViewController viewController) {
@@ -73,6 +75,7 @@ public class UserView extends VerticalPanel {
             }
         });
         add(addMoneyButton);
+        add(requestWidget);
         add(adminPanel);
     }
 
