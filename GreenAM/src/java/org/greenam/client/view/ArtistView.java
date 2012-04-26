@@ -116,8 +116,7 @@ public class ArtistView extends VerticalPanel {
 
         if (visible) {
             Artist artist = viewController.getArtist();
-            artistLabel.setText("[" + artist.getId()
-                    + "]Artist: " + artist.getName());
+            artistLabel.setText("Artist: " + artist.getName());
             showMusic.execute();
         }
     }
