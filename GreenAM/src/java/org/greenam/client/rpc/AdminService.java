@@ -25,5 +25,5 @@ public interface AdminService extends RemoteService {
     
     public List<Artist> listArtists();
     
-    public List<AdminRequest> listArtistRequest();
+    public List<AdminRequest> listArtistRequests();
 }

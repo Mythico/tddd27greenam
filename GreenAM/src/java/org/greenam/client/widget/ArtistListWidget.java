@@ -75,6 +75,7 @@ class ArtistPanel extends HorizontalPanel {
 
     public ArtistPanel(Artist artist) {
         this.artist = artist;
+        setStyleName("gam-Box");
 
         Label l = new Label("[" + artist.getId() + "] " + artist.getName());
         Button remove = new Button("X");
