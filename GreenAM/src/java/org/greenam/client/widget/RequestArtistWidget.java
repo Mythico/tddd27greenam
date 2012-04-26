@@ -74,13 +74,13 @@ public class RequestArtistWidget extends VerticalPanel {
     }
 
     private void setStatus(String msg) {
-        statusText.setStyleName("gam-status");
+        statusText.setStyleName("gam-Status");
         statusText.setVisible(true);
         statusText.setText(msg);
     }
 
     private void setError(String msg) {
-        statusText.setStyleName("gam-error");
+        statusText.setStyleName("gam-Error");
         statusText.setVisible(true);
         statusText.setText(msg);
     }
