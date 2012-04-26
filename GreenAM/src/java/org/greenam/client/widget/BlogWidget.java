@@ -129,7 +129,7 @@ public class BlogWidget extends VerticalPanel {
         Date date = blog.getDate();
         final HorizontalPanel hp = new HorizontalPanel();
         VerticalPanel vp = new VerticalPanel();
-        vp.setStyleName("gam-Box");
+        hp.setStyleName("gam-Box");
         
         DateTimeFormat dtf = DateTimeFormat.getFormat("EEEE, d MMMM");
         Label dateLabel = new Label("This is entry " + (i + 1) +
@@ -139,7 +139,7 @@ public class BlogWidget extends VerticalPanel {
         hp.add(vp);
         
         if(viewController.hasAccess()){
-            Button remove = new Button("X");
+            Image remove = new Image("img/cross_script.png");
             remove.addClickHandler(new ClickHandler() {
 
                 @Override

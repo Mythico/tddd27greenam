@@ -78,13 +78,13 @@ public class CalendarWidget extends HorizontalPanel {
         Label dateLabel = new Label(dtf.format(date));
         Label msg = new Label(event.getMessage());
 
-        panel.setStyleName("gam-Box");
+        Hpanel.setStyleName("gam-Box");
         panel.add(dateLabel);
         panel.add(msg);
         Hpanel.add(panel);
 
         if (viewController.hasAccess()) {
-            Button remove = new Button("X");
+            Image remove = new Image("img/cross_script.png");
             final AsyncCallback deleteEvent = new AsyncCallback() {
 
                 @Override
