@@ -23,6 +23,8 @@ public interface ArtistService extends RemoteService {
 
     public ArrayList<Blog> getBlog(Artist artist);
 
+    public void editBiography(String bio, Long artistId);
+    
     public void postEvent(Event event);
     
     public void deleteEvent(Event event);
@@ -30,8 +32,5 @@ public interface ArtistService extends RemoteService {
     public void postBlog(Blog blog);
     
     public void deleteBlog(Artist artist);
-    public void deleteBlog(Blog blog);
-    
-    public void save(Artist artist);
-    public Artist update(Artist artist);
+    public void deleteBlog(Blog blog);    
 }
