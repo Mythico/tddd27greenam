@@ -23,26 +23,25 @@ import org.greenam.client.view.ViewController;
  */
 public class BiographyWidget extends VerticalPanel {
 
-    private final RichTextArea textArea = new RichTextArea();
-    private final HorizontalPanel editPane = new HorizontalPanel();
-    private final VerticalPanel BiografyArea = new VerticalPanel();
+    private final RichTextArea editArea = new RichTextArea();
+    private final HorizontalPanel buttonPanel = new HorizontalPanel();
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     private final Button saveButton = new Button("Edit");
     private final Button cancelButton = new Button("Cancel");
     private final ViewController viewController;
-    private final VerticalPanel vp = new VerticalPanel();
+    private final Label bioLabel = new Label();
 
     public BiographyWidget(final ViewController viewController) {
         setSize("100%", "100%");
 
         this.viewController = viewController;
 
-        vp.setStyleName("gam-Box");
-                
-        BiografyArea.add(vp);
-        textArea.setEnabled(true);
-        textArea.setVisible(false);
-        textArea.setStyleName("gam-Textbox");
+        bioLabel.setStyleName("gam-Box");
+        bioLabel.setWidth("600px");
+
+        editArea.setEnabled(true);
+        editArea.setVisible(false);
+        editArea.setStyleName("gam-Textbox");
         cancelButton.setVisible(false);
 
         saveButton.addClickHandler(new ClickHandler() {
@@ -51,14 +50,9 @@ public class BiographyWidget extends VerticalPanel {
             public void onClick(ClickEvent event) {
                 if (cancelButton.isVisible()) {
                     save();
-                    saveButton.setText("Edit");
-                    textArea.setVisible(false);
-                    cancelButton.setVisible(false);
+                    exitEdit();
                 } else {
-                    saveButton.setText("Save");
-                    textArea.setVisible(true);
-                    cancelButton.setVisible(true);
-                    textArea.setHTML(viewController.getArtist().getBiography());
+                    enterEdit();
                 }
             }
         });
@@ -66,23 +60,17 @@ public class BiographyWidget extends VerticalPanel {
 
             @Override
             public void onClick(ClickEvent event) {
-                saveButton.setText("Edit");
-
-                textArea.setVisible(false);
-                vp.clear();
-                vp.add(new Label(viewController.getArtist().getBiography()));
-                textArea.setText("");
-                cancelButton.setVisible(false);
+                exitEdit();
             }
         });
 
-        editPane.add(saveButton);
-        editPane.add(cancelButton);
-        
+        buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
+
         setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
-        add(BiografyArea);
-        add(textArea);
-        add(editPane);
+        add(bioLabel);
+        add(editArea);
+        add(buttonPanel);
 
     }
 
@@ -93,40 +81,52 @@ public class BiographyWidget extends VerticalPanel {
             return;
         }
 
-        Artist artist = viewController.getArtist();
-        artist.setBiography(textArea.getText());
-
-        
-        artistInfo.save(artist, new AsyncCallback<Void>() {
+        Long id = viewController.getArtist().getId();
+        artistInfo.editBiography(editArea.getText(), id, new AsyncCallback() {
 
             @Override
             public void onFailure(Throwable caught) {
-                Window.alert("BiographyWidget failed RPC on save.\n" + caught);
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
-            public void onSuccess(Void result) {
-                //Do nothing
+            public void onSuccess(Object result) {
+                Artist artist = viewController.getArtist();
+                artist.setBiography(editArea.getText());
+                bioLabel.setText(viewController.getArtist().getBiography());
             }
         });
-        
-        vp.clear();
-        vp.add(new Label(viewController.getArtist().getBiography()));
-        
+
+
     }
 
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
+
+        buttonPanel.setVisible(visible && viewController.hasAccess());
         if (visible) {
-            editPane.setVisible(viewController.hasAccess());
-            saveButton.setText("Edit");
-            vp.clear();
-            vp.add(new Label(viewController.getArtist().getBiography()));
-            textArea.setText("");
-            
-            cancelButton.setVisible(false);
-            textArea.setHTML(viewController.getArtist().getBiography());
+            exitEdit();
         }
+    }
+
+    /**
+     * Exiting editing mode
+     */
+    private void exitEdit() {
+        saveButton.setText("Edit");
+        bioLabel.setText(viewController.getArtist().getBiography());
+        editArea.setVisible(false);
+        cancelButton.setVisible(false);
+    }
+
+    /**
+     * Enter editing mode.
+     */
+    private void enterEdit() {
+        saveButton.setText("Save");
+        editArea.setVisible(true);
+        cancelButton.setVisible(true);
+        editArea.setText("");
     }
 }

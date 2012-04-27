@@ -35,6 +35,16 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
     }
 
     @Override
+    public void editBiography(String bio, Long artistId) {
+        if (!hasAccess(artistId)) {
+            throw new AccessException("You don't have access to edit the biography.");
+        }
+        Artist artist = ofy.get(Artist.class, artistId);
+        artist.setBiography(bio);
+        ofy.put(artist);
+    }
+    
+    @Override
     public void postEvent(Event event) {
         if (!hasAccess(event.artistId)) {
             throw new AccessException("You don't have access to post new events.");
@@ -73,16 +83,5 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
             throw new AccessException("You don't have access to delete this blog.");
         }
         ofy.delete(Blog.class, blog.getId());
-    }
-
-    //TODO: rename the to functions below
-    @Override
-    public void save(Artist artist) {
-        ofy.put(artist);
-    }
-
-    @Override
-    public Artist update(Artist artist) {
-        return ofy.get(Artist.class, artist.getId());
     }
 }

@@ -21,6 +21,8 @@ public interface ArtistServiceAsync {
 
     public void getBlog(Artist artist, AsyncCallback<ArrayList<Blog>> callback);
 
+    public void editBiography(String bio, Long artistId, AsyncCallback callback);
+    
     public void postEvent(Event event, AsyncCallback callback);
     
     public void deleteEvent(Event event, AsyncCallback callback);
@@ -28,8 +30,5 @@ public interface ArtistServiceAsync {
     public void postBlog(Blog blog, AsyncCallback callback);
     
     public void deleteBlog(Artist artist, AsyncCallback callback);
-    public void deleteBlog(Blog blog, AsyncCallback callback);
-    
-    public void save(Artist artist, AsyncCallback<Void> callback);
-    public void update(Artist artist, AsyncCallback<Artist> callback);
+    public void deleteBlog(Blog blog, AsyncCallback callback);    
 }
