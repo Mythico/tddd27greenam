@@ -21,6 +21,7 @@ public class SearchWidget extends HorizontalPanel {
     private final SuggestBox searchBox = new SuggestBox();
 
     public SearchWidget(final ViewController viewController) {
+        setHorizontalAlignment(ALIGN_RIGHT);
         searchBox.addKeyPressHandler(new KeyPressHandler() {
 
             @Override

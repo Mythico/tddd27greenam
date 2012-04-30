@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.media.client.Audio;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -24,15 +25,18 @@ import org.greenam.client.view.ViewController;
  *
  * @author Emil
  */
-public class RecordListWidget extends ListWidget<Record> {
+public class RecordListWidget extends BaseWidget {
 
+    protected final RecordServiceAsync recordInfo = GWT.create(RecordService.class);
     private Audio audio;
+    private Grid grid = new Grid();
 
     public RecordListWidget(ViewController viewController) {
         super(viewController);
 
         audio = Audio.createIfSupported();
 
+        grid.setStyleName("gam-Box");
         grid.resize(1, 6);
         grid.setText(0, 1, "Title");
         grid.setText(0, 2, "Album");
@@ -40,12 +44,11 @@ public class RecordListWidget extends ListWidget<Record> {
         grid.setText(0, 4, "Price");
         grid.setText(0, 5, "Buy");
 
-
+        add(grid);
 
     }
 
-    @Override
-    protected void update(List<Record> records) {
+    private void load(List<Record> records) {
         int row = records.size() + 1;
         grid.resize(row, 6);
 
@@ -80,9 +83,13 @@ public class RecordListWidget extends ListWidget<Record> {
 
                 @Override
                 public void onClick(ClickEvent event) {
-
-                    audio.setSrc("/http/fileupload?blob-key=" + record.getBlobKey());
-                    audio.play();
+                    if (userOwnRecord(record)) {
+                        audio.setSrc("/http/fileupload?blob-key=" + record.getBlobKey());
+                        audio.play();
+                        setStatus("Playing " + record.getTitle());
+                    } else{
+                        setStatus("You have to buy the record in order to play it.");
+                    }
                 }
             });
 
@@ -90,18 +97,27 @@ public class RecordListWidget extends ListWidget<Record> {
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    recordInfo.buyRecord(record, new AsyncCallback() {
+                    if (userOwnRecord(record)) {
+                        setStatus("You own that record.");
+                    } else {
+                        recordInfo.buyRecord(record, new AsyncCallback() {
 
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            Window.alert("TEMP: Failed!\n\n" + caught);
-                        }
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                setError("Something went wrong with your purchases.",
+                                        caught.getLocalizedMessage());
+                            }
 
-                        @Override
-                        public void onSuccess(Object result) {
-                            Window.alert("TEMP: Done!");
-                        }
-                    });
+                            @Override
+                            public void onSuccess(Object result) {
+                                setStatus("You have bought " + record.getTitle());
+                                User user = viewController.getUser();
+                                user.addBoughtRecord(record);
+                                user.addMoney(-record.getPrice());
+                                viewController.updateUser(user);
+                            }
+                        });
+                    }
                 }
             });
 
@@ -114,13 +130,44 @@ public class RecordListWidget extends ListWidget<Record> {
             i++;
         }
 
-        setSize("600px", "600px");
+        setSize(
+                "600px", "600px");
 
         artistFetch.fetch();
+
         albumFetch.fetch();
     }
+
+    private boolean userOwnRecord(Record record) {
+        User user = viewController.getUser();
+        for (Long id : user.getBoughtRecords()) {
+            if (record.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public final AsyncCallback<List<Record>> callback = new AsyncCallback<List<Record>>() {
+
+        @Override
+        public void onSuccess(List<Record> response) {
+            load(response);
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            setError("Record list callback failed.", caught.getLocalizedMessage());
+        }
+    };
 }
 
+/**
+ * The fetch object is used for queuing up multiple rpc calls to a single one.
+ * It also removes redundant calls when the same id is used multiple times.
+ *
+ * @author Emil
+ * @author Michael
+ */
 abstract class FetchObject {
 
     protected final ViewController viewController;
