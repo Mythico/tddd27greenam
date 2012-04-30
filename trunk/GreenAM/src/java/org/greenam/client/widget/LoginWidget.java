@@ -29,11 +29,10 @@ public class LoginWidget extends BaseWidget {
     private final UserServiceAsync async = GWT.create(UserService.class);
     private final Label loginLabel = new Label();
     private final Label moneyLabel = new Label();
-    private final ViewController viewController;
     private final HorizontalPanel hp = new HorizontalPanel();
 
     public LoginWidget(final ViewController viewController) {
-        this.viewController = viewController;
+        super(viewController, false);
         loginButton.addClickHandler(new ClickHandler() {
 
             @Override
