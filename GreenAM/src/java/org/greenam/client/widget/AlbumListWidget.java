@@ -12,10 +12,11 @@ import com.google.gwt.user.client.ui.DisclosurePanel;
 import java.util.List;
 import org.greenam.client.domain.Album;
 import org.greenam.client.domain.Artist;
+import org.greenam.client.rpc.AdminService;
+import org.greenam.client.rpc.AdminServiceAsync;
 import org.greenam.client.rpc.RecordService;
 import org.greenam.client.rpc.RecordServiceAsync;
 import org.greenam.client.view.ViewController;
-
 
 /**
  *
@@ -23,15 +24,13 @@ import org.greenam.client.view.ViewController;
  */
 public class AlbumListWidget extends BaseWidget {
 
-    
     private final RecordServiceAsync recordInfo = GWT.create(RecordService.class);
-    private final ViewController viewController;
-    
+
     public AlbumListWidget(ViewController viewController) {
-        this.viewController = viewController;
+        super(viewController);
     }
-    
-    private void load(){
+
+    private void load() {
         Artist artist = viewController.getArtist();
         recordInfo.getAlbums(artist, new AsyncCallback<List<Album>>() {
 
@@ -42,8 +41,8 @@ public class AlbumListWidget extends BaseWidget {
 
             @Override
             public void onSuccess(List<Album> result) {
-                for(Album album : result){
-                    add(new AlbumPanel(album, viewController.hasAccess()));
+                for (Album album : result) {
+                    add(new AlbumPanel(album, viewController));
                 }
             }
         });
@@ -52,26 +51,32 @@ public class AlbumListWidget extends BaseWidget {
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
-        
-        if(visible){
+
+        if (visible) {
             load();
         }
     }
-    
-    
 }
+
 class AlbumPanel extends BasePanel {
 
+    private final RecordServiceAsync recordInfo = GWT.create(RecordService.class);
+    private final AdminServiceAsync adminAsync = GWT.create(AdminService.class);
     private DisclosurePanel panel;
     private Album album;
 
-    public AlbumPanel(Album album, boolean hasAccess) {
+    public AlbumPanel(Album album, ViewController viewController) {
         setStyleName("gam-Box");
         this.album = album;
-        this.panel = new DisclosurePanel(album.getTitle());
+        panel = new DisclosurePanel(album.getTitle());
+        panel.setWidth("560px");
+
+        RecordListWidget rlw = new RecordListWidget(viewController);
+        recordInfo.getRecords(album.getRecordIds(), rlw.callback);
+        panel.add(rlw);
+
         add(panel);
-        
-        if(hasAccess){
+        if (viewController.hasAccess()) {
             addDeleteHandler(deleteAlbum);
         }
     }
@@ -79,7 +84,7 @@ class AlbumPanel extends BasePanel {
 
         @Override
         public void onClick(ClickEvent event) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            adminAsync.deleteAlbum(album, removeThis);
         }
     };
 }
