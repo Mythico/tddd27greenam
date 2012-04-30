@@ -23,16 +23,14 @@ import org.greenam.client.view.ViewController;
  *
  * @author Emil
  */
-public class LoginWidget extends VerticalPanel {
+public class LoginWidget extends BaseWidget {
 
     private final Button loginButton = new Button("Login");
-    private final Button updateButton = new Button("Update");
     private final UserServiceAsync async = GWT.create(UserService.class);
     private final Label loginLabel = new Label();
     private final Label moneyLabel = new Label();
     private final ViewController viewController;
     private final HorizontalPanel hp = new HorizontalPanel();
-    private final HorizontalPanel hp2 = new HorizontalPanel();
 
     public LoginWidget(final ViewController viewController) {
         this.viewController = viewController;
@@ -47,27 +45,20 @@ public class LoginWidget extends VerticalPanel {
         hp.add(loginLabel);
         hp.add(loginButton);
         add(hp);
-        hp2.add(moneyLabel);
-        hp2.add(updateButton);
-        add(hp2);
-
-        updateButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                moneyLabel.setText(" Money: " + viewController.getUser().getMoney());
-            }
-        });
+        add(moneyLabel);
+        
+        viewController.registerForUserUpdates(this);
         
         async.getCurrentUser(new AsyncCallback<User>() {
 
             @Override
             public void onFailure(Throwable caught) {
-                Window.alert("LoginWidget RPC throwable\n" + caught);
+                setError("LoginWidget RPC throwable", caught.getLocalizedMessage());
             }
 
             @Override
             public void onSuccess(final User result) {
+                clearStatus();
                 if (result == null) { //No user is loggin
                     loginButton.setText("Login");
                     loginLabel.setText("");
@@ -90,4 +81,11 @@ public class LoginWidget extends VerticalPanel {
         
 
     }
+
+    @Override
+    public void update(User user) {
+        moneyLabel.setText(" Money: " + user.getMoney());
+    }
+    
+    
 }

@@ -69,7 +69,10 @@ public class UserView extends VerticalPanel {
 
                     @Override
                     public void onSuccess(User result) {
-                        viewController.getUser().addMoney(100);
+                        User user = viewController.getUser();
+                        user.addMoney(100);
+                        viewController.updateUser(user);
+
                     }
                 });
             }
@@ -94,6 +97,7 @@ public class UserView extends VerticalPanel {
     }
 }
 
+
 class AdminPanel extends HorizontalPanel {
 
     private final ViewController viewController;
@@ -114,8 +118,6 @@ class AdminPanel extends HorizontalPanel {
 
         artistList.setVisible(visible && viewController.isAdmin());
         requestList.setVisible(visible && viewController.isAdmin());
-        
+
     }
-   
-    
 }
