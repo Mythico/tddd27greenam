@@ -88,7 +88,14 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
     @Override
     public List<Album> getAlbums(Artist artist) {
         Objectify ofy = ObjectifyService.begin();
-        List<Album> list = ofy.query(Album.class).filter("artistIds in", artist.getId()).list();
+        List<Album> list = ofy.query(Album.class).filter("artistIds", artist.getId()).list();
+        return list;
+    }
+    
+    @Override
+    public List<Record> getRecords(List<Long> recordIds){        
+        Objectify ofy = ObjectifyService.begin();
+        List<Record> list = ofy.query(Record.class).filter("id in", recordIds).list();
         return list;
     }
 
