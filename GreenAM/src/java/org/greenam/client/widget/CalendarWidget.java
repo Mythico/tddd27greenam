@@ -19,41 +19,42 @@ import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
 import org.greenam.client.view.ViewController;
 
-//TODO: Add some better Date handler.
 /**
- *
+ * A calendar for showing and adding upcoming events for a specified artist.
  * @author Emil
+ * @author Michael
  */
-public class CalendarWidget extends HorizontalPanel {
+public class CalendarWidget extends BaseWidget {
 
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
-    VerticalPanel eventPanel = new VerticalPanel();
+    private VerticalPanel eventPanel = new VerticalPanel();
     private AddEventPanel addEventPanel;
-    private final ViewController viewController;
 
     public CalendarWidget(ViewController viewController) {
-        setStyleName("gam-CalendarWidget");
+        super(viewController);
 
-        this.viewController = viewController;
         addEventPanel = new AddEventPanel(viewController);
         addEventPanel.addClickHandler(addEvent);
         eventPanel.setSize("400px", "100%");
-        eventPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
         addEventPanel.setSize("200px", "100%");
-        add(eventPanel);
-        add(addEventPanel);
 
+
+        HorizontalPanel panel = new HorizontalPanel();
+        panel.add(eventPanel);
+        panel.add(addEventPanel);
+        add(panel);
 
     }
     private AsyncCallback<List<Event>> loadCallback = new AsyncCallback<List<Event>>() {
 
         @Override
         public void onFailure(Throwable caught) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            setError("Calendar load failed.", caught.getLocalizedMessage());
         }
 
         @Override
         public void onSuccess(List<Event> events) {
+            clearStatus();
             eventPanel.clear();
             for (Event event : events) {
                 addEvent(event);
@@ -71,6 +72,11 @@ public class CalendarWidget extends HorizontalPanel {
         }
     }
 
+    /**
+     * Creates an EventPanel containing information of a specified event and
+     * adding it to the panel.
+     * @param event An event.
+     */
     private void addEvent(Event event) {
         EventPanel panel = new EventPanel(event, viewController.hasAccess());
         eventPanel.add(panel);
@@ -88,7 +94,7 @@ public class CalendarWidget extends HorizontalPanel {
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        throw new UnsupportedOperationException("Not supported yet.");
+                        setError("Posing event failed.",caught.getLocalizedMessage());                        
                     }
 
                     @Override
@@ -117,6 +123,7 @@ class EventPanel extends HorizontalPanel {
         setStyleName("gam-Box");
 
         final VerticalPanel vp = new VerticalPanel();
+        vp.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
         Date date = event.getDate();
         DateTimeFormat dtf = DateTimeFormat.getFormat("EEEE, d MMMM");
         Label dateLabel = new Label(dtf.format(date));
