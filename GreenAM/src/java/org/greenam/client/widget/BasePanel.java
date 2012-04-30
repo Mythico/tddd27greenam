@@ -23,6 +23,7 @@ public abstract class BasePanel extends HorizontalPanel {
 
     public BasePanel() {
         setStyleName("gam-Box");
+        setWidth("580px");
     }
 
 
