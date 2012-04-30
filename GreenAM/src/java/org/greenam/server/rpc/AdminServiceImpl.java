@@ -41,6 +41,23 @@ public class AdminServiceImpl extends ServiceImpl implements AdminService {
         }        
         delete(artist);
     }
+
+    @Override
+    public void deleteAlbum(Album album) {
+        if(!isAdmin()){
+            throw new AccessException("You have to be an admin to delete album.");
+        }        
+        delete(album);
+    }
+
+    @Override
+    public void deleteRecord(Record record) {
+        if(!isAdmin()){
+            throw new AccessException("You have to be an admin to delete record.");
+        }        
+        delete(record);
+    }
+    
     @Override
     public void deleteRequest(AdminRequest request) {
         if(!isAdmin()){
