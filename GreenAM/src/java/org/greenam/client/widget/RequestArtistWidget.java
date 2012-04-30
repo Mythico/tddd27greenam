@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import org.greenam.client.domain.AdminRequest;
 import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
+import org.greenam.client.view.ViewController;
 
 /**
  * The RequestArtistWidget is a simple form for creating an AdminRequest that
@@ -23,23 +24,20 @@ import org.greenam.client.rpc.UserServiceAsync;
  * @author Emil
  * @author Michael
  */
-public class RequestArtistWidget extends VerticalPanel {
+public class RequestArtistWidget extends BaseWidget {
 
     private final UserServiceAsync userInfo = GWT.create(UserService.class);
     private TextArea textArea = new TextArea();
-    private Label statusText = new Label();
 
-    public RequestArtistWidget() {
-
+    public RequestArtistWidget(ViewController viewController) {
+        super(viewController);
         Button send = new Button("Send");
         send.addClickHandler(sendRequest);
-        statusText.setVisible(false);
 
         add(new Label("Request artist status"));
         add(new Label("Message:"));
         add(textArea);
         add(send);
-        add(statusText);
 
     }
     private final ClickHandler sendRequest = new ClickHandler() {
@@ -57,8 +55,8 @@ public class RequestArtistWidget extends VerticalPanel {
 
         @Override
         public void onFailure(Throwable caught) {
-            setError("An error has occured while sending the request.\n\n" 
-                    + caught);
+            setError("An error has occured while sending the request.",
+                    caught.getLocalizedMessage());
         }
 
         @Override
@@ -66,22 +64,4 @@ public class RequestArtistWidget extends VerticalPanel {
             setStatus("The request has been send.");
         }
     };
-
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        statusText.setVisible(false);
-    }
-
-    private void setStatus(String msg) {
-        statusText.setStyleName("gam-Status");
-        statusText.setVisible(true);
-        statusText.setText(msg);
-    }
-
-    private void setError(String msg) {
-        statusText.setStyleName("gam-Error");
-        statusText.setVisible(true);
-        statusText.setText(msg);
-    }
 }
