@@ -15,6 +15,7 @@ public class HomeView extends VerticalPanel{
 
     public HomeView(ViewController viewController) {
         setStyleName("gam-ContentView");
+        setWidth("600px");
         setHeight("600px");
         add(new Label("Home View"));
     }

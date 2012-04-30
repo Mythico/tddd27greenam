@@ -23,14 +23,13 @@ import org.greenam.client.view.ViewController;
  *
  * @author Emil
  */
-public class ArtistRequestListWidget extends VerticalPanel {
+public class ArtistRequestListWidget extends BaseWidget {
 
     private final AdminServiceAsync adminInfo = GWT.create(AdminService.class);
-    private final ViewController viewController;
     private final VerticalPanel requestPanel = new VerticalPanel();
 
     public ArtistRequestListWidget(ViewController viewController) {
-        this.viewController = viewController;
+        super(viewController);
         add(new Label("Artist requests"));
         add(requestPanel);
     }
@@ -41,6 +40,7 @@ public class ArtistRequestListWidget extends VerticalPanel {
 
         if (visible) {
             requestPanel.clear();
+            setStatus("Searching for requests...");
             adminInfo.listArtistRequests(listArtistRequest);
         }
     }
@@ -48,7 +48,7 @@ public class ArtistRequestListWidget extends VerticalPanel {
 
         @Override
         public void onFailure(Throwable caught) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            setError("Listing artist failed.", caught.getLocalizedMessage());
         }
 
         @Override
@@ -57,6 +57,7 @@ public class ArtistRequestListWidget extends VerticalPanel {
                 RequestPanel panel = new RequestPanel(request);                
                 requestPanel.add(panel);
             }
+            clearStatus();
         }
     };
 }
@@ -65,9 +66,11 @@ public class ArtistRequestListWidget extends VerticalPanel {
  * RequestPanel is a helper class to the ArtistRequestListWidget that creates
  * a panel with two labels describing the request and two buttons for accepting
  * or declining a request for becoming an artist.
+ * 
  * @author Emil
+ * @author Michael
  */
-class RequestPanel extends HorizontalPanel {
+class RequestPanel extends BasePanel {
 
     private final AdminServiceAsync adminInfo = GWT.create(AdminService.class);
     final VerticalPanel vp = new VerticalPanel();
@@ -89,25 +92,7 @@ class RequestPanel extends HorizontalPanel {
         vp.add(userLabel);
         vp.add(msgLabel);
         add(vp);
-    }
-    
-    
-    /**
-     * A callback used by the click handlers for removing this panel when an 
-     * users request has been accepted or declined.
-     */
-    private final AsyncCallback removeThis = new AsyncCallback() {
-
-        @Override
-        public void onFailure(Throwable caught) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void onSuccess(Object result) {
-            removeFromParent();
-        }
-    };
+    }    
     
     /**
      * A click handler used for accepting users request for becoming an artist.

@@ -63,42 +63,22 @@ public class ArtistListWidget extends VerticalPanel {
 }
 
 /**
- * ArtistPanel is a helperclass for ArtistListWidget that have a label for
+ * ArtistPanel is a helper class for ArtistListWidget that have a label for
  * describing an artist and a button used for removing an artist.
  * @author Emil
  * @author Michael
  */
-class ArtistPanel extends HorizontalPanel {
+class ArtistPanel extends BasePanel {
 
     private final AdminServiceAsync adminInfo = GWT.create(AdminService.class);
     private final Artist artist;
 
     public ArtistPanel(Artist artist) {
         this.artist = artist;
-        setStyleName("gam-Box");
 
-        Label l = new Label("[" + artist.getId() + "] " + artist.getName());
-        Button remove = new Button("X");
-        remove.addClickHandler(removeArtist);
-        add(remove);
-        add(l);
+        add(new Label("[" + artist.getId() + "] " + artist.getName()));        
+        addDeleteHandler(removeArtist);
     }
-    /**
-     * A callback used by the click handler for removing this panel when an
-     * artist has been removed.
-     */
-    private final AsyncCallback removeThis = new AsyncCallback() {
-
-        @Override
-        public void onFailure(Throwable caught) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void onSuccess(Object result) {
-            removeFromParent();
-        }
-    };
     
     /**
      * A click handler used for deleting an artist.
