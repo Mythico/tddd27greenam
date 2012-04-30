@@ -4,60 +4,82 @@
  */
 package org.greenam.client.widget;
 
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import java.util.List;
 import org.greenam.client.domain.Album;
+import org.greenam.client.domain.Artist;
+import org.greenam.client.rpc.RecordService;
+import org.greenam.client.rpc.RecordServiceAsync;
 import org.greenam.client.view.ViewController;
+
 
 /**
  *
  * @author Emil
  */
-public class AlbumListWidget extends ListWidget<Album> {
+public class AlbumListWidget extends BaseWidget {
 
+    
+    private final RecordServiceAsync recordInfo = GWT.create(RecordService.class);
+    private final ViewController viewController;
+    
     public AlbumListWidget(ViewController viewController) {
-        super(viewController);
+        this.viewController = viewController;
+    }
+    
+    private void load(){
+        Artist artist = viewController.getArtist();
+        recordInfo.getAlbums(artist, new AsyncCallback<List<Album>>() {
 
+            @Override
+            public void onFailure(Throwable caught) {
+                setError("Unable to fetch albums.", caught.getLocalizedMessage());
+            }
 
-        grid.resize(1, 3);
-        grid.setText(0, 0, "Name");
-        grid.setText(0, 1, "Records");
-        grid.setText(0, 2, "Artists");
+            @Override
+            public void onSuccess(List<Album> result) {
+                for(Album album : result){
+                    add(new AlbumPanel(album, viewController.hasAccess()));
+                }
+            }
+        });
     }
 
     @Override
-    protected void update(List<Album> list) {
-        int row = list.size() + 1;
-        grid.resize(row, 3);
-
-        int i = 1;
-        for (final Album album : list) {
-            Label name = new Label(album.getTitle());
-            name.setStyleName("gam-RecordListWidgetLink");
-            
-            HorizontalPanel rhp = new HorizontalPanel();
-            for(Long rid :album.getRecordIds()){
-                Label ridLabel = new Label("" + rid);
-                ridLabel.setStyleName("gam-RecordListWidgetLink");
-                rhp.add(ridLabel);
-            }
-            HorizontalPanel ahp = new HorizontalPanel();
-            for(Long aid : album.getArtistIds()){
-                
-                Label ridLabel = new Label("" + aid);
-                ridLabel.setStyleName("gam-RecordListWidgetLink");
-                ahp.add(ridLabel);
-            }
-
-
-
-            grid.setWidget(i, 0, name);
-            grid.setWidget(i, 1, rhp);
-            grid.setWidget(i, 2, ahp);
-            i++;
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        
+        if(visible){
+            load();
         }
     }
     
     
+}
+class AlbumPanel extends BasePanel {
+
+    private DisclosurePanel panel;
+    private Album album;
+
+    public AlbumPanel(Album album, boolean hasAccess) {
+        setStyleName("gam-Box");
+        this.album = album;
+        this.panel = new DisclosurePanel(album.getTitle());
+        add(panel);
+        
+        if(hasAccess){
+            addDeleteHandler(deleteAlbum);
+        }
+    }
+    private final ClickHandler deleteAlbum = new ClickHandler() {
+
+        @Override
+        public void onClick(ClickEvent event) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    };
 }
