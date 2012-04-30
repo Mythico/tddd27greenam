@@ -31,7 +31,7 @@ public class UserView extends VerticalPanel {
     private final Button artistPageButton = new Button("Go to artist Page");
     private final Button addMoneyButton = new Button("Add 100$");
     private final AdminPanel adminPanel;
-    private final RequestArtistWidget requestWidget = new RequestArtistWidget();
+    private final RequestArtistWidget requestWidget;
     private final ViewController viewController;
 
     public UserView(final ViewController viewController) {
@@ -39,7 +39,8 @@ public class UserView extends VerticalPanel {
 
         this.viewController = viewController;
         adminPanel = new AdminPanel(viewController);
-
+        requestWidget = new RequestArtistWidget(viewController);
+        
         add(userLabel);
         add(moneyLabel);
         add(artistPageButton);
