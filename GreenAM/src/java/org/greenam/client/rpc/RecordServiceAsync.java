@@ -23,4 +23,6 @@ public interface RecordServiceAsync {
      void getAlbumNamesFromRecords(List<Long> recordIds, AsyncCallback<List<LinkObject<String>>> albumsSet);
      
      void buyRecord(Record record, AsyncCallback callback);
+
+    public void getRecords(List<Long> recordIds, AsyncCallback<List<Record>> callback);
 }

@@ -21,7 +21,11 @@ public interface RecordService extends RemoteService {
     String getBlobStoreUploadUrl();
     
     List<Album> getAlbums(Artist artist);
+    List<Record> getRecords(List<Long> recordIds);
+    
     List<LinkObject<String>> getAlbumNamesFromRecords(List<Long> recordIds);
     
     void buyRecord(Record record);
+    
 }
+
