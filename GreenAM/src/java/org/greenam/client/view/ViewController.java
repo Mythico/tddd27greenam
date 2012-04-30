@@ -7,10 +7,12 @@ package org.greenam.client.view;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DeckPanel;
+import java.util.LinkedList;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.User;
 import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
+import org.greenam.client.widget.BaseWidget;
 
 /**
  *
@@ -32,6 +34,7 @@ public final class ViewController extends DeckPanel{
     private Artist artist;
     private User user;
     private boolean isAdmin;
+    private LinkedList<BaseWidget> userUpdates = new LinkedList<BaseWidget>();
 
     public ViewController() {
         insert(homeView, HOME);
@@ -131,6 +134,20 @@ public final class ViewController extends DeckPanel{
     public User getUser() {
         return user;
     }
+    
+    /**
+     * Update user will update all registered widgets with the new user.
+     * This function should only be called in the onSuccess of asynchronous 
+     * callbacks or else you might update with faulty information.
+     * 
+     * @param user 
+     */
+    public void updateUser(User user) {
+        this.user = user;
+        for(BaseWidget w : userUpdates){
+            w.update(user);
+        }
+    }
 
     /**
      * Checks if the user has login or is anonymous. This function is used by
@@ -165,5 +182,9 @@ public final class ViewController extends DeckPanel{
 
     public boolean isAdmin() {
         return isAdmin;
+    }
+    
+    public void registerForUserUpdates(BaseWidget w){
+        userUpdates.add(w);
     }
 }

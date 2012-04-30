@@ -7,6 +7,7 @@ package org.greenam.client.widget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.greenam.client.domain.User;
 
 /**
  *
@@ -77,5 +78,16 @@ public abstract class BaseWidget extends VerticalPanel {
         statusText.setVisible(false);
         errorText.setText("");
         errorText.setVisible(false);
+    }
+    
+    /**
+     * An update function that will be called if the class has registered for
+     * user updates in the view controller.
+     * This function doesn't do anything by default and should therfore be
+     * overwritten.
+     * @param user An updated user. 
+     */
+    public void update(User user){
+        
     }
 }
