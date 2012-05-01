@@ -11,6 +11,7 @@ import java.util.List;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Blog;
 import org.greenam.client.domain.Event;
+import org.greenam.client.domain.Comment;
 
 /**
  *
@@ -23,6 +24,8 @@ public interface ArtistService extends RemoteService {
 
     public ArrayList<Blog> getBlog(Artist artist);
 
+    public ArrayList<Comment> getComment(Blog blog);
+    
     public void editBiography(String bio, Long artistId);
     
     public void postEvent(Event event);
@@ -30,6 +33,8 @@ public interface ArtistService extends RemoteService {
     public void deleteEvent(Event event);
 
     public void postBlog(Blog blog);
+    
+    public void postComment(Comment comment);
     
     public void deleteBlog(Artist artist);
     public void deleteBlog(Blog blog);    
