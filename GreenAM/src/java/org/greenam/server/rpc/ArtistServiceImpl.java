@@ -4,6 +4,7 @@
  */
 package org.greenam.server.rpc;
 
+import com.google.gwt.user.client.Window;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Query;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import org.greenam.client.domain.*;
+import org.greenam.client.domain.Comment;
 
 import org.greenam.client.rpc.ArtistService;
 
@@ -32,6 +34,12 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
     public ArrayList<Blog> getBlog(Artist artist) {
         List<Blog> list = ofy.query(Blog.class).filter("artistId", artist.getId()).order("date").list();
         return new ArrayList<Blog>(list);
+    }
+    
+    @Override
+    public ArrayList<Comment> getComment(Blog blog) {
+        List<Comment> list = ofy.query(Comment.class).filter("blogId", blog.getId()).order("date").list();
+        return new ArrayList<Comment>(list);
     }
 
     @Override
@@ -66,6 +74,12 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
             throw new AccessException("You don't have access to post on this blog.");
         }
         ofy.put(blog);
+    }
+    
+    @Override
+    public void postComment(Comment comment) {
+        ofy.put(comment);
+        Window.alert(("Saved the comment!"));
     }
     
     @Override
