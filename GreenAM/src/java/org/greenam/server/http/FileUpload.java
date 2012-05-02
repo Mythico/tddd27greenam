@@ -46,9 +46,10 @@ public class FileUpload extends HttpServlet {
 
         Album album = ofy.query(Album.class).filter("title", albumTitle).get();
         if (album == null) {
-            album = new Album(albumTitle, artists);
+            album = new Album(albumTitle, recordId);
+        } else {
+            album.addRecord(recordId);
         }
-        album.addRecord(recordId);
 
 
         ofy.put(album);
@@ -61,7 +62,11 @@ public class FileUpload extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws IOException {
         BlobKey blobKey = new BlobKey(req.getParameter("blob-key"));
-        blobstoreService.serve(blobKey, res);
+        if(hasAccess(blobKey)){
+            blobstoreService.serve(blobKey, res);
+        } else {
+            res.sendError(403, "You have to buy the record to have access to it.");
+        }
     }
 
     private List<Long> parseStringToArtists(String artists) {
@@ -75,5 +80,14 @@ public class FileUpload extends HttpServlet {
         }
 
         return list;
+    }
+    
+    /**
+     * Checks if the current user has access to download this record.
+     * @param key
+     * @return True if the user has access, otherwise false.
+     */
+    private boolean hasAccess(BlobKey key){
+        return true; //TODO: Implement this function.
     }
 }
