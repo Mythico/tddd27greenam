@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class HomeView extends VerticalPanel{
 
     public HomeView(ViewController viewController) {
-        setStyleName("gam-ContentView");
+        setStyleName("gam-BaseWidget");
         setWidth("600px");
         setHeight("600px");
         add(new Label("Home View"));

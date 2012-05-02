@@ -24,7 +24,7 @@ public class SearchResultView extends VerticalPanel {
     private final RecordServiceAsync async = GWT.create(RecordService.class);
     
     public SearchResultView(ViewController viewController) {
-        setStyleName("gam-ContentView");
+        setStyleName("gam-BaseWidget");
         setHeight("600px");
         recordList = new RecordListWidget(viewController);
         albumList = new AlbumListWidget(viewController);

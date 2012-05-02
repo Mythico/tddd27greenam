@@ -7,8 +7,11 @@ package org.greenam.client.view;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import com.sun.java.swing.plaf.windows.resources.windows;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.User;
 import org.greenam.client.rpc.AdminService;
@@ -17,45 +20,101 @@ import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
 import org.greenam.client.widget.ArtistListWidget;
 import org.greenam.client.widget.ArtistRequestListWidget;
+import org.greenam.client.widget.BasePanel;
+import org.greenam.client.widget.BaseWidget;
 import org.greenam.client.widget.RequestArtistWidget;
 
 /**
  *
  * @author Emil
  */
-public class UserView extends VerticalPanel {
+public class UserView extends BaseWidget {
+
+    private final DeckPanel panel = new DeckPanel();
+    private final int USER = 0;
+    private final int ADMIN = 1;
+    private final MenuItem userPage;
+    private final MenuItem adminPage;
+    private final MenuItem artistPage;
+
+    public UserView(final ViewController viewController) {
+        super(viewController);
+
+        final AdminPanel adminPanel = new AdminPanel(viewController);
+        final UserPanel userPanel = new UserPanel(viewController);
+
+
+
+        final MenuBar menuBar = new MenuBar();
+        userPage = new MenuItem("User Page", showUser);
+        adminPage = new MenuItem("Admin Page", showAdmin);
+        artistPage = new MenuItem("Go to Artist Page", goArtist);
+        menuBar.addItem(userPage);
+        menuBar.addItem(adminPage);
+        menuBar.addItem(artistPage);
+
+        panel.insert(userPanel, USER);
+        panel.insert(adminPanel, ADMIN);
+
+        add(menuBar);
+        add(panel);
+
+
+        panel.showWidget(USER);
+    }
+    Command showUser = new Command() {
+
+        @Override
+        public void execute() {
+            panel.showWidget(USER);
+        }
+    };
+    Command showAdmin = new Command() {
+
+        @Override
+        public void execute() {
+            panel.showWidget(ADMIN);
+        }
+    };
+    Command goArtist = new Command() {
+
+        @Override
+        public void execute() {
+            Long id = viewController.getArtist().getId();
+            viewController.setArtistView(id);
+        }
+    };
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+
+        userPage.setVisible(visible && viewController.isLogin());
+        adminPage.setVisible(visible && viewController.isAdmin());
+        artistPage.setVisible(visible && viewController.isArtist());
+
+
+    }
+}
+
+class UserPanel extends BasePanel {
 
     private final UserServiceAsync userInfo = GWT.create(UserService.class);
     private final Label userLabel = new Label("Unknown");
     private final Label moneyLabel = new Label("Unknown");
-    private final Button artistPageButton = new Button("Go to artist Page");
-    private final Button addMoneyButton = new Button("Add 100$");
-    private final AdminPanel adminPanel;
+    private final Button addMoneyButton = new Button("Add 100€");
     private final RequestArtistWidget requestWidget;
     private final ViewController viewController;
 
-    public UserView(final ViewController viewController) {
-        setStyleName("gam-ContentView");
-
+    public UserPanel(final ViewController viewController) {
         this.viewController = viewController;
-        adminPanel = new AdminPanel(viewController);
+
+
         requestWidget = new RequestArtistWidget(viewController);
-        
         add(userLabel);
         add(moneyLabel);
-        add(artistPageButton);
-
-        artistPageButton.setVisible(false);
-        artistPageButton.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                Artist artist = viewController.getArtist();
-                if (artist != null) {
-                    viewController.setArtistView(artist.getId());
-                }
-            }
-        });
+        add(addMoneyButton);
+        add(requestWidget);
 
         addMoneyButton.addClickHandler(new ClickHandler() {
 
@@ -78,28 +137,22 @@ public class UserView extends VerticalPanel {
                 });
             }
         });
-        add(addMoneyButton);
-        add(requestWidget);
-        add(adminPanel);
     }
 
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
-        adminPanel.setVisible(visible);
 
-        if (visible) {
+        if (visible && viewController.isLogin()) {
             User user = viewController.getUser();
             moneyLabel.setText("$" + user.getMoney());
-            artistPageButton.setVisible(viewController.getArtist() != null);
             userLabel.setText(user.getName());
         }
 
     }
 }
 
-
-class AdminPanel extends HorizontalPanel {
+class AdminPanel extends BasePanel {
 
     private final ViewController viewController;
     private final ArtistListWidget artistList;

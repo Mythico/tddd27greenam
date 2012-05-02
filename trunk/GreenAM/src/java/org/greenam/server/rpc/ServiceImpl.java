@@ -56,6 +56,9 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
         if (!isLogin()) {
             return false;
         }
+        if (isAdmin()) {
+            return true;
+        }
         //Create an useraccount if the user dosn't allready have one.
         String fid = getFederatedId();
         Long accessingUser = getOrCreateUser(fid).getId();

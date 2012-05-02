@@ -5,6 +5,7 @@
 package org.greenam.client.view;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DeckPanel;
 import java.util.LinkedList;
@@ -18,7 +19,7 @@ import org.greenam.client.widget.BaseWidget;
  *
  * @author Emil
  */
-public final class ViewController extends DeckPanel{
+public final class ViewController extends DeckPanel {
 
     private final UserServiceAsync userInfo = GWT.create(UserService.class);
     private final int HOME = 0;
@@ -59,20 +60,6 @@ public final class ViewController extends DeckPanel{
                 user = result;
             }
         });
-
-        userInfo.isAdmin(new AsyncCallback<Boolean>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void onSuccess(Boolean result) {
-                isAdmin = result;
-            }
-        });
-
     }
 
     public void setArtistView(Long artistId) {
@@ -93,7 +80,7 @@ public final class ViewController extends DeckPanel{
     }
 
     public void setUserView() {
-        userInfo.getAsArtist(user, new AsyncCallback<Artist>() {
+        userInfo.getCurrentUser(new AsyncCallback<User>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -101,9 +88,33 @@ public final class ViewController extends DeckPanel{
             }
 
             @Override
-            public void onSuccess(Artist result) {
-                artist = result;
-                showWidget(USER);
+            public void onSuccess(User result) {
+                user = result;
+                userInfo.getAsArtist(user, new AsyncCallback<Artist>() {
+
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public void onSuccess(Artist result) {
+                        artist = result;
+                        userInfo.isAdmin(new AsyncCallback<Boolean>() {
+
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                throw new UnsupportedOperationException("Not supported yet.");
+                            }
+
+                            @Override
+                            public void onSuccess(Boolean result) {
+                                isAdmin = result;
+                                showWidget(USER);                                
+                            }
+                        });
+                    }
+                });
             }
         });
     }
@@ -115,6 +126,30 @@ public final class ViewController extends DeckPanel{
     public void setSearchView(String search) {
         searchResultView.search(search);
         showWidget(SEARCH);
+    }
+
+    /**
+     * Register a base widget for user updates. Every time updateUser is called
+     * the widgets update function will be called with an updated user.
+     *
+     * @param w A widget that will be updated.
+     */
+    public void registerForUserUpdates(BaseWidget w) {
+        userUpdates.add(w);
+    }
+
+    /**
+     * Update user will update all registered widgets with the new user. This
+     * function should only be called in the onSuccess of asynchronous callbacks
+     * or else you might update with faulty information.
+     *
+     * @param user
+     */
+    public void updateUser(User user) {
+        this.user = user;
+        for (BaseWidget w : userUpdates) {
+            w.update(user);
+        }
     }
 
     /**
@@ -134,36 +169,40 @@ public final class ViewController extends DeckPanel{
     public User getUser() {
         return user;
     }
-    
-    /**
-     * Update user will update all registered widgets with the new user.
-     * This function should only be called in the onSuccess of asynchronous 
-     * callbacks or else you might update with faulty information.
-     * 
-     * @param user 
-     */
-    public void updateUser(User user) {
-        this.user = user;
-        for(BaseWidget w : userUpdates){
-            w.update(user);
-        }
-    }
 
     /**
      * Checks if the user has login or is anonymous. This function is used by
      * widgets that requires that you are login, ex to comment on blogs.
      *
-     * @return Returns true if the user has login, otherwise false.
+     * @return True if the user has login, otherwise false.
      */
     public boolean isLogin() {
         return user != null;
     }
 
     /**
+     * Checks if the current user is an administrator.
+     *
+     * @return True if the user is an administrator, otherwise false.
+     */
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    /**
+     * Checks if the current user is an artist.
+     *
+     * @return True if the user is an artist, otherwise false.
+     */
+    public boolean isArtist() {
+        return getArtist() != null;
+    }
+
+    /**
      * Checks if the user has access to change an artist page or other pages
      * that requires the user to be an artist.
      *
-     * @return Returns true if the user is an artist.
+     * @return True if the user is an artist.
      */
     public boolean hasAccess() {
         if (user == null || artist == null) {
@@ -178,13 +217,5 @@ public final class ViewController extends DeckPanel{
      */
     public void logout() {
         user = null;
-    }
-
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-    
-    public void registerForUserUpdates(BaseWidget w){
-        userUpdates.add(w);
     }
 }

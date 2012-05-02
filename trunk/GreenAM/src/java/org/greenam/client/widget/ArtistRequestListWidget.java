@@ -29,7 +29,7 @@ public class ArtistRequestListWidget extends BaseWidget {
     private final VerticalPanel requestPanel = new VerticalPanel();
 
     public ArtistRequestListWidget(ViewController viewController) {
-        super(viewController);
+        super(viewController, false);
         add(new Label("Artist requests"));
         add(requestPanel);
     }

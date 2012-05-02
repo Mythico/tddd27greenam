@@ -25,21 +25,21 @@ public abstract class BaseWidget extends ScrollPanel {
     protected final ViewController viewController;
     private final boolean fixedSize;
 
-    public BaseWidget(ViewController viewController){
+    public BaseWidget(ViewController viewController) {
         this(viewController, true);
     }
-    
+
     public BaseWidget(ViewController viewController, boolean fixedSize) {
         this.viewController = viewController;
         this.fixedSize = fixedSize;
-        
-        if(fixedSize){
+        if (fixedSize) {
+            setStyleName("gam-BaseWidget");
             setWidth("600px");
         }
-        
+
         statusText.setStyleName("gam-Status");
         errorText.setStyleName("gam-Error");
-        
+
         panel.add(contentPanel);
         panel.add(statusText);
         panel.add(errorText);
@@ -48,17 +48,16 @@ public abstract class BaseWidget extends ScrollPanel {
 
     /**
      * Add widgets directly to the content panel.
-     * @param w 
+     *
+     * @param w
      */
     @Override
     public final void add(Widget w) {
         contentPanel.add(w);
-        if(fixedSize){
+        if (fixedSize) {
             setHeight("600px");
         }
     }
-    
-    
 
     @Override
     public void setVisible(boolean visible) {
@@ -69,6 +68,7 @@ public abstract class BaseWidget extends ScrollPanel {
 
     /**
      * Sets a status message in the bottom of this widget to a message.
+     *
      * @param msg A status message.
      */
     protected void setStatus(String msg) {
@@ -80,6 +80,7 @@ public abstract class BaseWidget extends ScrollPanel {
 
     /**
      * Sets an error message in the bottom of this widget to a message.
+     *
      * @param msg An error message.
      */
     protected void setError(String msg, String error) {
@@ -88,25 +89,24 @@ public abstract class BaseWidget extends ScrollPanel {
         errorText.setVisible(true);
         errorText.setText(error);
     }
-    
+
     /**
      * Clears any status or error messages and hides the label.
      */
-    protected void clearStatus(){
+    protected void clearStatus() {
         statusText.setText("");
         statusText.setVisible(false);
         errorText.setText("");
         errorText.setVisible(false);
     }
-    
+
     /**
      * An update function that will be called if the class has registered for
-     * user updates in the view controller.
-     * This function doesn't do anything by default and should therfore be
-     * overwritten.
-     * @param user An updated user. 
+     * user updates in the view controller. This function doesn't do anything by
+     * default and should therfore be overwritten.
+     *
+     * @param user An updated user.
      */
-    public void update(User user){
-        
+    public void update(User user) {
     }
 }
