@@ -17,7 +17,6 @@ import java.util.Set;
 public class Album extends DatastoreObject {
 
     private String title;
-    private List<Long> artistIds;
     private List<Long> recordIds;
 
     public Album() {
@@ -25,17 +24,10 @@ public class Album extends DatastoreObject {
       
     
     
-    public Album(String title, List<Long> artistIds) {
+    public Album(String title, Long recordId) {
         this.title = title;
-        this.artistIds = artistIds;
-    }
-
-    public List<Long> getArtistIds() {
-        return artistIds;
-    }
-
-    public void setArtistIds(List<Long> artistIds) {
-        this.artistIds = artistIds;
+        recordIds = new LinkedList<Long>();
+        recordIds.add(recordId);
     }
 
     public String getTitle() {
@@ -55,9 +47,6 @@ public class Album extends DatastoreObject {
     }
 
     public void addRecord(Long id) {
-        if(recordIds == null){
-            recordIds = new LinkedList<Long>();
-        }
         recordIds.add(id);
     }
     
