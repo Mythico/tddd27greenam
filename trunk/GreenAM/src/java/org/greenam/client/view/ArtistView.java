@@ -92,7 +92,6 @@ public class ArtistView extends VerticalPanel {
         uploadPane = new UploadWidget(viewController);
         blogPane = new BlogWidget(viewController);
                 
-        menuBar.setStyleName("demo-MenuBar");
         menuBar.addItem(musicItem);
         menuBar.addItem(bioItem);
         menuBar.addItem(blogItem);
@@ -115,6 +114,7 @@ public class ArtistView extends VerticalPanel {
         super.setVisible(visible);
 
         if (visible) {
+            uploadItem.setVisible(viewController.hasAccess());
             Artist artist = viewController.getArtist();
             artistLabel.setText("Artist: " + artist.getName());
             showMusic.execute();
