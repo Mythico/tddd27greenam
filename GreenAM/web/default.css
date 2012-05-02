@@ -30,52 +30,16 @@
     cursor: pointer;
 }
 
-
 /***********************************************************
-*                     MenuBar Demo
-***********************************************************/
-.demo-MenuBar
-{
-    border                      :   1px solid #666;
-    margin                      :   0 auto;
-    background-color            :   #eee;
-    font-size                   :   70%;
-    padding                     :   3px;
-}
-.demo-MenuBar table
-{
-    border-collapse             :   separate;
-    border                      :   1px solid #00f;
-    background-color            :   #ddd;
-}
-.demo-MenuBar .gwt-MenuItem
-{
-
-    cursor                      :   hand;
-    cursor                      :   pointer;
-
-    border                      :   1px solid #999;
-    background-color            :   #eee;
-    padding                     :   2px 10px;
-}
-.demo-MenuBar .gwt-MenuItem-selected
-{
-    background-color            :   #fff;
-}
-
-
-/***********************************************************
-*                     Content View
+*                     Base Widget
 ***********************************************************/
 
-.gam-ContentView
+.gam-BaseWidget
 {   
-    width                       :   600px;
     margin                      :   0 auto;    
     font-size                   :   70%;
     padding                     :   3px;
     background                  :   #299a0b;
-
 }
 
 
@@ -104,15 +68,6 @@
 }
 
 
-
-/***********************************************************
-*                     Calendar Widget
-***********************************************************/
-
-.gam-CalendarWidget
-{
-    width                       :   600px; 
-}
 
 .gam-Box
 {

@@ -82,7 +82,7 @@ public class ArtistView extends VerticalPanel {
     private final UploadWidget uploadPane;
 
     public ArtistView(ViewController viewController) {
-        setStyleName("gam-ContentView");
+        setStyleName("gam-BaseWidget");
 
         this.viewController = viewController;
 

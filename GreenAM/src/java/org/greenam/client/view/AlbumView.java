@@ -22,7 +22,7 @@ public class AlbumView extends VerticalPanel {
     private final AlbumListWidget albumListWidget;
 
     public AlbumView(ViewController viewController) {
-        setStyleName("gam-ContentView");
+        setStyleName("gam-BaseWidget");
 
         albumListWidget = new AlbumListWidget(viewController);
         scrollPanel.add(albumListWidget);

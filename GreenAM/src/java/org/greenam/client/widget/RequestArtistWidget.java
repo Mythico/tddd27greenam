@@ -30,7 +30,7 @@ public class RequestArtistWidget extends BaseWidget {
     private TextArea textArea = new TextArea();
 
     public RequestArtistWidget(ViewController viewController) {
-        super(viewController);
+        super(viewController, false);
         Button send = new Button("Send");
         send.addClickHandler(sendRequest);
 
