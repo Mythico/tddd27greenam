@@ -7,8 +7,6 @@ package org.greenam.server.rpc;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.images.ImagesService;
-import com.google.appengine.api.images.ImagesServiceFactory;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Query;
@@ -126,9 +124,10 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
      * user doesn't have enough money.
      *
      * @param record A record to be bought.
+     * @return User An updated user
      */
     @Override
-    public void buyRecord(Record record) {
+    public User buyRecord(Record record) {
         if (!isLogin()) {
             throw new AccessException("You have to login to be able to buy records.");
         }
@@ -138,7 +137,7 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         int price = record.getPrice();
         if (user.getMoney() < price) {
             //TODO: Add an error instead of returning null, not enough money
-            return;
+            return null;
         }
         user.addMoney(-price);
         user.addBoughtRecord(record);
@@ -150,6 +149,6 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
             user.addMoney(price / artistIds.size());
             save(user);
         }
-
+        return user;
     }
 }

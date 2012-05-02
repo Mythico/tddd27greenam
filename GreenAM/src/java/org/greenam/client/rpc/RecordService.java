@@ -25,7 +25,7 @@ public interface RecordService extends RemoteService {
     
     List<LinkObject<String>> getAlbumNamesFromRecords(List<Long> recordIds);
     
-    void buyRecord(Record record);
+    User buyRecord(Record record);
     
 }
 

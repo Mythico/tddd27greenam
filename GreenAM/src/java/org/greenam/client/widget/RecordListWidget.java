@@ -73,9 +73,10 @@ public class RecordListWidget extends BaseWidget {
             albumFetch.addPanel(record.getId(), albumPanel);
 
 
-
-            playImg.addStyleName("gam-Link");
-            buyImg.addStyleName("gam-Link");
+            if (viewController.isLogin()) {
+                playImg.addStyleName("gam-Link");
+                buyImg.addStyleName("gam-Link");
+            }
             title.addStyleName("gam-Link");
 
             //Click handlers
@@ -87,7 +88,7 @@ public class RecordListWidget extends BaseWidget {
                         audio.setSrc("/http/fileupload?blob-key=" + record.getBlobKey());
                         audio.play();
                         setStatus("Playing " + record.getTitle());
-                    } else{
+                    } else {
                         setStatus("You have to buy the record in order to play it.");
                     }
                 }
@@ -100,7 +101,7 @@ public class RecordListWidget extends BaseWidget {
                     if (userOwnRecord(record)) {
                         setStatus("You own that record.");
                     } else {
-                        recordInfo.buyRecord(record, new AsyncCallback() {
+                        recordInfo.buyRecord(record, new AsyncCallback<User>() {
 
                             @Override
                             public void onFailure(Throwable caught) {
@@ -109,12 +110,9 @@ public class RecordListWidget extends BaseWidget {
                             }
 
                             @Override
-                            public void onSuccess(Object result) {
+                            public void onSuccess(User result) {
                                 setStatus("You have bought " + record.getTitle());
-                                User user = viewController.getUser();
-                                user.addBoughtRecord(record);
-                                user.addMoney(-record.getPrice());
-                                viewController.updateUser(user);
+                                viewController.updateUser(result);
                             }
                         });
                     }
@@ -130,8 +128,7 @@ public class RecordListWidget extends BaseWidget {
             i++;
         }
 
-        setSize(
-                "600px", "600px");
+        setSize("600px", "600px");
 
         artistFetch.fetch();
 
@@ -188,30 +185,26 @@ abstract class FetchObject {
     }
 
     public abstract void fetch();
-    protected AsyncCallback<List<LinkObject<String>>> callback =
-            new AsyncCallback<List<LinkObject<String>>>() {
+    protected AsyncCallback<List<LinkObject<String>>> callback = new AsyncCallback<List<LinkObject<String>>>() {
 
-                @Override
-                public void onFailure(Throwable caught) {
-                    throw new UnsupportedOperationException("Not supported yet.");
+        @Override
+        public void onFailure(Throwable caught) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void onSuccess(List<LinkObject<String>> result) {
+            for (LinkObject<String> lo : result) {
+                for (HorizontalPanel panel : map.get(lo.getLinkId())) {
+                    Label label = new Label(lo.getObject());
+                    panel.add(label);
+                    label.addClickHandler(clickHandler.create(lo.getObjectId()));
+                    label.addStyleName("gam-Link");
                 }
 
-                @Override
-                public void onSuccess(List<LinkObject<String>> result) {
-                    for (LinkObject<String> lo : result) {
-                        List<HorizontalPanel> list = map.get(lo.getLinkId());
-
-                        if (list != null) {
-                            for (HorizontalPanel panel : list) {
-                                Label label = new Label(lo.getObject());
-                                panel.add(label);
-                                label.addClickHandler(clickHandler.create(lo.getObjectId()));
-                                label.addStyleName("gam-Link");
-                            }
-                        }
-                    }
-                }
-            };
+            }
+        }
+    };
 
     /**
      * A helper class for wrapping a Click handler to different subclasses. *

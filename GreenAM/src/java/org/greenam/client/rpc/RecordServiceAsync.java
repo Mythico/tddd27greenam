@@ -22,7 +22,7 @@ public interface RecordServiceAsync {
     
      void getAlbumNamesFromRecords(List<Long> recordIds, AsyncCallback<List<LinkObject<String>>> albumsSet);
      
-     void buyRecord(Record record, AsyncCallback callback);
+     void buyRecord(Record record, AsyncCallback<User> callback);
 
     public void getRecords(List<Long> recordIds, AsyncCallback<List<Record>> callback);
 }
