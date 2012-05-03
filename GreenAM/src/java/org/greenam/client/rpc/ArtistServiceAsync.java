@@ -14,7 +14,7 @@ import org.greenam.client.domain.Comment;
 
 /**
  *
- * @author Emil
+ * @author Emil & Michael
  */
 public interface ArtistServiceAsync {  
     

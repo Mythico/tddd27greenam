@@ -18,7 +18,7 @@ import org.greenam.client.rpc.ArtistService;
 
 /**
  *
- * @author Emil
+ * @author Emil & Michael
  */
 public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
 
@@ -79,7 +79,6 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
     @Override
     public void postComment(Comment comment) {
         ofy.put(comment);
-        Window.alert(("Saved the comment!"));
     }
     
     @Override
