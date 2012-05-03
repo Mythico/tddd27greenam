@@ -62,11 +62,12 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onClick(ClickEvent event) {
-                clearBlog();
+                clearEntireBlog();
             }
         });
     }
 
+    //Saves the latest entry to the blog and updates the blog
     private void save() {
         if (!viewController.hasAccess()) {
             Window.alert("You are trying to add blog entries without"
@@ -85,13 +86,13 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onSuccess(Void result) {
-                load();
+                update();
             }
         });
     }
 
     //Gets the blog and shows it
-    private void load() {
+    private void update() {
         blogArea.clear();
         Artist artist = viewController.getArtist();
         artistInfo.getBlog(artist, new AsyncCallback<ArrayList<Blog>>() {
@@ -117,7 +118,7 @@ public class BlogWidget extends VerticalPanel {
         super.setVisible(visible);
 
         if (visible) {
-            load();
+            update();
             boolean hasAccess = viewController.hasAccess();
             newentryArea.setEnabled(hasAccess);
             newentryArea.setVisible(hasAccess);
@@ -131,12 +132,13 @@ public class BlogWidget extends VerticalPanel {
         
         final HorizontalPanel mainEntryPanel = new HorizontalPanel();
         final VerticalPanel entry = new VerticalPanel();
-        VerticalPanel commentsPanel = new VerticalPanel();
         final VerticalPanel commentvp = new VerticalPanel();
         final DisclosurePanel panel;
         final Button addCommentButton = new Button("Add comment");
         final RichTextArea addComment = new RichTextArea();
+        VerticalPanel commentsPanel = new VerticalPanel();
                 
+        mainEntryPanel.setStyleName("gam-Box");
         addComment.setStyleName("gam-Textbox");
         addComment.setText("Enter comment here!");
         
@@ -145,22 +147,22 @@ public class BlogWidget extends VerticalPanel {
             @Override
             public void onClick(ClickEvent event) {
                 if (!addComment.getText().equals("Enter comment here!")) {
-                    saveComment(addComment.getText(), blog);
+                    saveComment(addComment.getText(), blog, viewController.getUser().getName());
                 }
             }
         });
         
-        mainEntryPanel.setStyleName("gam-Box");
-        
+        //Print the entry
         DateTimeFormat dtf = DateTimeFormat.getFormat("EEEE, d MMMM");
         Label dateLabel = new Label("This is entry " + (i + 1) +
                 " and was posted on " + dtf.format(date));
         entry.add(dateLabel);
         entry.add(new Label(blog.getEntry()));
-        
-        
+                
+        //Save the entry as the header of mainEntryPanel
         mainEntryPanel.add(entry);
         
+        //Add a new disclosurepanel and add the entry
         panel = new DisclosurePanel(entry);
         panel.setWidth("500px");
         
@@ -186,7 +188,7 @@ public class BlogWidget extends VerticalPanel {
                 @Override
                 public void onClick(ClickEvent event) {
                     blogArea.remove(mainEntryPanel);
-                    deleteBlog(blog);
+                    deleteBlogEntry(blog);
                 }
             });
             mainEntryPanel.add(remove);
@@ -196,6 +198,7 @@ public class BlogWidget extends VerticalPanel {
         scrollArea.setHeight("400px");
     }
 
+    //Get all the comments and post them on a VerticalPanel
     private VerticalPanel getComments(Blog blog) {
          final VerticalPanel panel = new VerticalPanel();
          panel.setStyleName("gam-Box");
@@ -214,7 +217,7 @@ public class BlogWidget extends VerticalPanel {
                     Date date = comment.get(i).getDate();
                     DateTimeFormat dtf = DateTimeFormat.getFormat("EEEE, d MMMM");
                     Label dateLabel = new Label("This is comment " + (i + 1) +
-                            " and was posted on " + dtf.format(date));
+                            " and was posted on " + dtf.format(date) + " by " + comment.get(i).getName());
                     panel.add(dateLabel);
                     panel.add(new Label(comment.get(i).getEntry()));  
                 }
@@ -222,10 +225,10 @@ public class BlogWidget extends VerticalPanel {
         });
          return panel;
     }
+    
+    private void saveComment(String commentToAdd, Blog blog, String user) {
         
-    private void saveComment(String commentToAdd, Blog blog) {
-        
-        Comment comment = new Comment(commentToAdd, blog);
+        Comment comment = new Comment(commentToAdd, blog, user);
         artistInfo.postComment(comment, new AsyncCallback<Void>() {
 
             @Override
@@ -235,12 +238,13 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onSuccess(Void result) {
-                load();
+                update();
             }
         });
     }
     
-    private void clearBlog() {
+    //Deletes the entire blog
+    private void clearEntireBlog() {
         Artist artist = viewController.getArtist();
         artistInfo.deleteBlog(artist, new AsyncCallback() {
 
@@ -251,11 +255,13 @@ public class BlogWidget extends VerticalPanel {
 
             @Override
             public void onSuccess(Object result) {
-                load();
+                update();
             }
         });
     }
-    private void deleteBlog(Blog blog) {
+    
+    //Deletes a specific entry
+    private void deleteBlogEntry(Blog blog) {
         artistInfo.deleteBlog(blog, new AsyncCallback() {
 
             @Override

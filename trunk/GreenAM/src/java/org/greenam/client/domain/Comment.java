@@ -18,19 +18,25 @@ public class Comment extends DatastoreObject {
     private String comment;
     private Long blogId;
     private Date date;
+    private String name;
     
     public Comment(){
         
     }
     
-    public Comment(String comment, Blog blog) {
+    public Comment(String comment, Blog blog, String name) {
         this.comment = comment;
         this.date = new Date();
         blogId = blog.getId();
+        this.name = name;
     }
     
     public String getEntry() {
         return comment;
+    }
+    
+    public String getName() {
+        return name;
     }
     
     public Long getBlogId() {
