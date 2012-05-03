@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Blog;
+import org.greenam.client.domain.Comment;
 import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
 import org.greenam.client.view.ViewController;
@@ -30,7 +31,7 @@ public class BlogWidget extends VerticalPanel {
     private final RichTextArea newentryArea = new RichTextArea();
     private final HorizontalPanel buttonPanel = new HorizontalPanel();
     private final ViewController viewController;
-
+    
     public BlogWidget(final ViewController viewController) {
 
         this.viewController = viewController;
@@ -39,7 +40,7 @@ public class BlogWidget extends VerticalPanel {
         newentryArea.setText("Add your new blog entry here!");
         newentryArea.setVisible(false);
         newentryArea.setStyleName("gam-Textbox");
-
+        
         add(scrollArea);
         add(newentryArea);
         add(buttonPanel);
@@ -127,33 +128,118 @@ public class BlogWidget extends VerticalPanel {
 
     private void addBlog(final Blog blog, int i) {
         Date date = blog.getDate();
-        final HorizontalPanel hp = new HorizontalPanel();
-        VerticalPanel vp = new VerticalPanel();
-        hp.setStyleName("gam-Box");
+        
+        final HorizontalPanel mainEntryPanel = new HorizontalPanel();
+        final VerticalPanel entry = new VerticalPanel();
+        VerticalPanel commentsPanel = new VerticalPanel();
+        final VerticalPanel commentvp = new VerticalPanel();
+        final DisclosurePanel panel;
+        final Button addCommentButton = new Button("Add comment");
+        final RichTextArea addComment = new RichTextArea();
+                
+        addComment.setStyleName("gam-Textbox");
+        addComment.setText("Enter comment here!");
+        
+        addCommentButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                if (!addComment.getText().equals("Enter comment here!")) {
+                    saveComment(addComment.getText(), blog);
+                }
+            }
+        });
+        
+        mainEntryPanel.setStyleName("gam-Box");
         
         DateTimeFormat dtf = DateTimeFormat.getFormat("EEEE, d MMMM");
         Label dateLabel = new Label("This is entry " + (i + 1) +
                 " and was posted on " + dtf.format(date));
-        vp.add(dateLabel);
-        vp.add(new Label(blog.getEntry()));
-        hp.add(vp);
+        entry.add(dateLabel);
+        entry.add(new Label(blog.getEntry()));
         
+        
+        mainEntryPanel.add(entry);
+        
+        panel = new DisclosurePanel(entry);
+        panel.setWidth("500px");
+        
+        //Get and post the comments for this blog entry
+        commentsPanel = getComments(blog);
+        
+        //Add the comment panel, add comment button and the text box where you write your comment
+        commentvp.add(commentsPanel);
+        commentvp.add(addComment);
+        commentvp.add(addCommentButton);
+        
+        //Add all comment stuff to the disclosure panel
+        panel.setContent(commentvp);
+        
+        //Add disclosure panel to the entry
+        mainEntryPanel.add(panel);
+        
+        //Add button so you can delete your blog entries
         if(viewController.hasAccess()){
             Image remove = new Image("img/cross_script.png");
             remove.addClickHandler(new ClickHandler() {
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    blogArea.remove(hp);
+                    blogArea.remove(mainEntryPanel);
                     deleteBlog(blog);
                 }
             });
-            hp.add(remove);
+            mainEntryPanel.add(remove);
         }
-        blogArea.add(hp);
+                
+        blogArea.add(mainEntryPanel);
         scrollArea.setHeight("400px");
     }
 
+    private VerticalPanel getComments(Blog blog) {
+         final VerticalPanel panel = new VerticalPanel();
+         panel.setStyleName("gam-Box");
+         
+         artistInfo.getComment(blog, new AsyncCallback<ArrayList<Comment>>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                throw new UnsupportedOperationException("Get comment failed");
+            }
+
+            @Override
+            public void onSuccess(ArrayList<Comment> comment) {
+                //Clear and print the blog
+                for (int i = 0; i < comment.size(); i++) {
+                    Date date = comment.get(i).getDate();
+                    DateTimeFormat dtf = DateTimeFormat.getFormat("EEEE, d MMMM");
+                    Label dateLabel = new Label("This is comment " + (i + 1) +
+                            " and was posted on " + dtf.format(date));
+                    panel.add(dateLabel);
+                    panel.add(new Label(comment.get(i).getEntry()));  
+                }
+            }
+        });
+         return panel;
+    }
+        
+    private void saveComment(String commentToAdd, Blog blog) {
+        
+        Comment comment = new Comment(commentToAdd, blog);
+        artistInfo.postComment(comment, new AsyncCallback<Void>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Window.alert("BlogWidget failed RPC on saving the comments.\n" + caught);
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                load();
+            }
+        });
+    }
+    
     private void clearBlog() {
         Artist artist = viewController.getArtist();
         artistInfo.deleteBlog(artist, new AsyncCallback() {

@@ -29,6 +29,7 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
         ObjectifyService.register(Album.class);
         ObjectifyService.register(Artist.class);
         ObjectifyService.register(Blog.class);
+        ObjectifyService.register(Comment.class);
         ObjectifyService.register(Event.class);
         ObjectifyService.register(Record.class);
         ObjectifyService.register(User.class);

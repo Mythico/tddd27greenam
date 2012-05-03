@@ -15,7 +15,7 @@ import org.greenam.client.domain.Comment;
 
 /**
  *
- * @author Emil
+ * @author Emil & Michael
  */
 @RemoteServiceRelativePath("rpc/artistservice")
 public interface ArtistService extends RemoteService {
