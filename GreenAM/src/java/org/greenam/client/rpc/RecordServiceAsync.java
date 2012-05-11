@@ -9,8 +9,11 @@ import java.util.List;
 import org.greenam.client.domain.*;
 
 /**
- *
+ * An asynchronous service interface for fetching 
+ * and sending data about records and albums.
+ * 
  * @author Emil
+ * @author Michael
  */
 public interface RecordServiceAsync {
 

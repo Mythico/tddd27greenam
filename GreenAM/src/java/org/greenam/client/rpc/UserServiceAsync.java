@@ -11,8 +11,11 @@ import org.greenam.client.domain.LinkObject;
 import org.greenam.client.domain.User;
 
 /**
- *
+ * An asynchronous service interface for fetching 
+ * and sending data about the current user.
+ * 
  * @author Emil
+ * @author Michael
  */
 public interface UserServiceAsync {
     

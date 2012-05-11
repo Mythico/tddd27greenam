@@ -12,8 +12,10 @@ import org.greenam.client.domain.LinkObject;
 import org.greenam.client.domain.User;
 
 /**
- *
+ * A RPC interface for fetching and sending data about the current user.
+ * 
  * @author Emil
+ * @author Michael
  */
 @RemoteServiceRelativePath("rpc/userservice")
 public interface UserService extends RemoteService {
