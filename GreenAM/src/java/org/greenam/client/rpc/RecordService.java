@@ -10,17 +10,20 @@ import java.util.List;
 import org.greenam.client.domain.*;
 
 /**
- *
+ * A RPC interface for fetching and sending data about records and albums.
+ * 
  * @author Emil
+ * @author Michael
  */
 @RemoteServiceRelativePath("rpc/recordservice")
 public interface RecordService extends RemoteService {
 
-    public List<Record> search(String s);
+    List<Record> search(String s);
 
     String getBlobStoreUploadUrl();
     
     List<Album> getAlbums(Artist artist);
+    
     List<Record> getRecords(List<Long> recordIds);
     
     List<LinkObject<String>> getAlbumNamesFromRecords(List<Long> recordIds);
