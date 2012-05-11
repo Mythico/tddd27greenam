@@ -28,12 +28,12 @@ public class CalendarWidget extends BaseWidget {
 
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     private VerticalPanel eventPanel = new VerticalPanel();
-    private AddEventPanel addEventPanel;
+    private CreateEventPanel addEventPanel;
 
     public CalendarWidget(ViewController viewController) {
         super(viewController);
 
-        addEventPanel = new AddEventPanel(viewController);
+        addEventPanel = new CreateEventPanel(viewController);
         addEventPanel.addClickHandler(addEvent);
         eventPanel.setSize("400px", "100%");
         addEventPanel.setSize("200px", "100%");
@@ -113,14 +113,13 @@ public class CalendarWidget extends BaseWidget {
  * @author Emil
  * @author Michael
  */
-class EventPanel extends HorizontalPanel {
+class EventPanel extends BasePanel {
 
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     private final Event event;
 
     public EventPanel(Event event, boolean hasAccess) {
         this.event = event;
-        setStyleName("gam-Box");
 
         final VerticalPanel vp = new VerticalPanel();
         vp.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
@@ -146,21 +145,15 @@ class EventPanel extends HorizontalPanel {
             artistInfo.deleteEvent(event, removeThis);
         }
     };
-    private AsyncCallback removeThis = new AsyncCallback() {
-
-        @Override
-        public void onFailure(Throwable caught) {
-            Window.alert("Deletion of event failed.\n\n" + caught);
-        }
-
-        @Override
-        public void onSuccess(Object result) {
-            removeFromParent();
-        }
-    };
 }
 
-class AddEventPanel extends VerticalPanel {
+/**
+ * Create Event panel creates an DatePicker and a message box. You have
+ * to add a click handler for it to do anything and that click handler
+ * will be called when you create a new event.
+ * @author Emil
+ */
+class CreateEventPanel extends VerticalPanel {
 
     private final DatePicker datePicker = new DatePicker();
     private final Label messageLabel = new Label("Event text");
@@ -170,7 +163,7 @@ class AddEventPanel extends VerticalPanel {
     private final HorizontalPanel messagePanel = new HorizontalPanel();
     private final ViewController viewController;
 
-    public AddEventPanel(ViewController viewController) {
+    public CreateEventPanel(ViewController viewController) {
         this.viewController = viewController;
         errorLabel.setStyleName("gam-Error");
         setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
@@ -190,10 +183,29 @@ class AddEventPanel extends VerticalPanel {
         super.setVisible(visible && viewController.hasAccess());
     }
 
+    /**
+     * Add a ClickHandler to the button that creates new event. The added
+     * click handler will be called when the user is trying to add an event.
+     * @param handler A ClickHandler 
+     * @return A ClickHandler for removing the handler.
+     */
     public HandlerRegistration addClickHandler(ClickHandler handler) {
         return addEventButton.addClickHandler(handler);
     }
+    
+    /**
+     * Removes a ClickHandler.
+     * @param handler A HandlerRegistration returned by the addClickHandler.
+     */
+    public void removeClickHandler(HandlerRegistration handler) {
+        handler.removeHandler();
+    }
 
+    /**
+     * Checks the constrains of the variable parts. It will return false if
+     * the date is not in the future or if there is no message.
+     * @return True if the constraints are correct, otherwise false.
+     */
     public boolean checkConstraints() {
         if (getDate() == null) {
             errorLabel.setText("You have to select a date:");
@@ -209,10 +221,18 @@ class AddEventPanel extends VerticalPanel {
         }
     }
 
+    /**
+     * Gets the message of an event that is about to be created.
+     * @return A message.
+     */
     public String getText() {
         return messageBox.getText();
     }
 
+    /**
+     * Gets the date of an event that is about to be created.
+     * @return A date.
+     */
     public Date getDate() {
         return datePicker.getValue();
     }
