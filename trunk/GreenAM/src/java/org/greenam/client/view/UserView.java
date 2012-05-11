@@ -157,13 +157,15 @@ class AdminPanel extends BasePanel {
     private final ViewController viewController;
     private final ArtistListWidget artistList;
     private final ArtistRequestListWidget requestList;
+    private final VerticalPanel panel = new VerticalPanel();
 
     public AdminPanel(ViewController viewController) {
         this.viewController = viewController;
         artistList = new ArtistListWidget(viewController);
         requestList = new ArtistRequestListWidget(viewController);
-        add(artistList);
-        add(requestList);
+        panel.add(artistList);
+        panel.add(requestList);
+        add(panel);
     }
 
     @Override

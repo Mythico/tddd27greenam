@@ -17,7 +17,8 @@ public class HomeView extends VerticalPanel{
         setStyleName("gam-BaseWidget");
         setWidth("600px");
         setHeight("600px");
-        add(new Label("Home View"));
+        add(new Label("Home Page"));
+        add(new Label("News"));
     }
     
     

@@ -5,6 +5,7 @@
 package org.greenam.client.widget;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AudioElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.media.client.Audio;
@@ -45,6 +46,8 @@ public class RecordListWidget extends BaseWidget {
         grid.setText(0, 5, "Buy");
 
         add(grid);
+        audio.setControls(true);
+        add(audio);
 
     }
 
