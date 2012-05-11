@@ -5,23 +5,22 @@
 package org.greenam.client.widget;
 
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
-import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.*;
 import org.greenam.client.view.ViewController;
 
 /**
  *
  * @author Emil
  */
-public class SearchWidget extends HorizontalPanel {
+public class SearchWidget extends BaseWidget {
 
     private final Button searchButton = new Button("Search");
     private final SuggestBox searchBox = new SuggestBox();
+    private final HorizontalPanel panel = new HorizontalPanel();
 
     public SearchWidget(final ViewController viewController) {
-        setHorizontalAlignment(ALIGN_RIGHT);
+        super(viewController, false);
+        panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
         searchBox.addKeyPressHandler(new KeyPressHandler() {
 
             @Override
@@ -43,7 +42,8 @@ public class SearchWidget extends HorizontalPanel {
                 });
 
 
-        add(searchBox);
-        add(searchButton);
+        panel.add(searchBox);
+        panel.add(searchButton);
+        add(panel);
     }
 }
