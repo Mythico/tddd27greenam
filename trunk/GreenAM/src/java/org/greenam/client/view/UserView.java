@@ -8,14 +8,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import com.sun.java.swing.plaf.windows.resources.windows;
-import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.User;
-import org.greenam.client.rpc.AdminService;
-import org.greenam.client.rpc.AdminServiceAsync;
 import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
 import org.greenam.client.widget.ArtistListWidget;
@@ -116,6 +111,7 @@ class UserPanel extends BasePanel {
         add(addMoneyButton);
         add(requestWidget);
 
+        //Note: temporary untill a currecy system is implemented.
         addMoneyButton.addClickHandler(new ClickHandler() {
 
             @Override
@@ -152,6 +148,14 @@ class UserPanel extends BasePanel {
     }
 }
 
+/**
+ * Admin panel is a special panel of the user panel that only administrators
+ * can see. It contains administration tools for viewing and removing artists
+ * and accepting or denying user request.
+ * 
+ * @author Emil
+ * @author Michael
+ */
 class AdminPanel extends BasePanel {
 
     private final ViewController viewController;
