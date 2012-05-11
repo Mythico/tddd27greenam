@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Blog;
-import org.greenam.client.domain.Event;
 import org.greenam.client.domain.Comment;
+import org.greenam.client.domain.Event;
 
 /**
- *
- * @author Emil & Michael
+ * An asynchronous service interface.
+ * 
+ * @author Emil
+ * @author Michael
  */
 public interface ArtistServiceAsync {  
     
