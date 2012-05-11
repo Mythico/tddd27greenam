@@ -5,12 +5,17 @@
 package org.greenam.client.widget;
 
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.SuggestBox;
 import org.greenam.client.view.ViewController;
 
 /**
- *
+ * The Search Widget provides a small seach box.
+ * 
  * @author Emil
+ * @author Michael
  */
 public class SearchWidget extends BaseWidget {
 
