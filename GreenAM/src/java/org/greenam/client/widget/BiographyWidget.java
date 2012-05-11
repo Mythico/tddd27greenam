@@ -13,28 +13,27 @@ import com.google.gwt.user.client.ui.*;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
-import org.greenam.client.rpc.UserService;
-import org.greenam.client.rpc.UserServiceAsync;
 import org.greenam.client.view.ViewController;
 
 /**
- *
+ * The biography widget is a simple widget that creates a text area
+ * that can be edit if you are the owner.
+ * 
  * @author Emil
+ * @author Michael
  */
-public class BiographyWidget extends VerticalPanel {
+public class BiographyWidget extends BaseWidget {
 
     private final RichTextArea editArea = new RichTextArea();
     private final HorizontalPanel buttonPanel = new HorizontalPanel();
     private final ArtistServiceAsync artistInfo = GWT.create(ArtistService.class);
     private final Button saveButton = new Button("Edit");
     private final Button cancelButton = new Button("Cancel");
-    private final ViewController viewController;
     private final Label bioLabel = new Label();
 
     public BiographyWidget(final ViewController viewController) {
+        super(viewController);
         setSize("100%", "100%");
-
-        this.viewController = viewController;
 
         bioLabel.setStyleName("gam-Box");
         bioLabel.setWidth("600px");
@@ -67,13 +66,15 @@ public class BiographyWidget extends VerticalPanel {
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
 
-        setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
         add(bioLabel);
         add(editArea);
         add(buttonPanel);
 
     }
 
+    /**
+     * Save fetches the data from the edit area and send it to the server.
+     */
     private void save() {
         if (!viewController.hasAccess()) {
             Window.alert("You are trying to save an artist biography without"
@@ -86,7 +87,7 @@ public class BiographyWidget extends VerticalPanel {
 
             @Override
             public void onFailure(Throwable caught) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                setError("Could not save biography.", caught.getLocalizedMessage());
             }
 
             @Override
