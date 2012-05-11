@@ -11,7 +11,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import org.greenam.client.domain.AdminRequest;
 import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
@@ -40,6 +39,10 @@ public class RequestArtistWidget extends BaseWidget {
         add(send);
 
     }
+    
+    /**
+     * A click handler that will send a request to the administrators.
+     */
     private final ClickHandler sendRequest = new ClickHandler() {
 
         @Override
@@ -51,6 +54,10 @@ public class RequestArtistWidget extends BaseWidget {
             userInfo.sendRequest(msg, type, callback);
         }
     };
+    
+    /**
+     * A void callback that will update the user by setting the status.
+     */
     private AsyncCallback callback = new AsyncCallback() {
 
         @Override
