@@ -7,7 +7,6 @@ package org.greenam.server.http;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import java.io.IOException;
@@ -22,10 +21,26 @@ import org.greenam.client.domain.Album;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Record;
 
+/**
+ * Fileupload is a httpservlet that will upload music files to the blobstore
+ * or serve them from it.
+ * 
+ * @author Emil
+ * @author Michael
+ */
 public class FileUpload extends HttpServlet {
 
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
+    /**
+     * Fetches the data that is being uploaded from the upload widget. It will
+     * create a new record, a new album if one didn't exists and store the
+     * music file in the blobstore.
+     * @param req
+     * @param res
+     * @throws ServletException
+     * @throws IOException 
+     */
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
@@ -40,24 +55,32 @@ public class FileUpload extends HttpServlet {
         List<Long> artists = parseStringToArtists(req.getParameter("artistBox"));
         int price = Integer.parseInt(req.getParameter("priceBox"));
         String blobKeyString = blobKey.getKeyString();
+        
+        //Create a record from the specified parameters
         Record record = new Record(recordTitle, artists, price, blobKeyString);
         Long recordId = ofy.put(record).getId();
 
-
+        //Find the album that matches a specified title. Create one if none 
+        //existed. Finnaly, add the recordid to the album.
         Album album = ofy.query(Album.class).filter("title", albumTitle).get();
         if (album == null) {
             album = new Album(albumTitle, recordId);
         } else {
             album.addRecord(recordId);
         }
-
-
         ofy.put(album);
 
         //Redirect back to the main page
         res.sendRedirect("/");
     }
 
+    /**
+     * Serves a blob from the blobstore that is coupled with a blob-key that
+     * is send in the request.
+     * @param req
+     * @param res
+     * @throws IOException 
+     */
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws IOException {
@@ -69,6 +92,13 @@ public class FileUpload extends HttpServlet {
         }
     }
 
+    /**
+     * All all the artists that belongs to a record that is being uploaded are
+     * send in one string that has to be parsed. This function parse that string
+     * and returns a list of artist ids that can be added to a record.
+     * @param artists A string of artists name.
+     * @return A list of artist ids.
+     */
     private List<Long> parseStringToArtists(String artists) {
         Objectify ofy = ObjectifyService.begin();
 
