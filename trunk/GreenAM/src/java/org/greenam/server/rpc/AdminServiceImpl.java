@@ -4,24 +4,33 @@
  */
 package org.greenam.server.rpc;
 
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Query;
-import java.util.LinkedList;
 import java.util.List;
 import org.greenam.client.domain.*;
-
 import org.greenam.client.rpc.AdminService;
 
+
 /**
- *
+ * An implementation of the AdminService interface.
+ * All these function requires administrator status or they will throw
+ * AccessExceptions.
+ * 
  * @author Emil
+ * @author Michael
  */
 public class AdminServiceImpl extends ServiceImpl implements AdminService {
 
+    /**
+     * Makes a user an artist. The user that is giving the artist status to an
+     * user has to be an administrator.
+     * @param request A request for becomming an artist.
+     */
     @Override
     public void makeArtist(AdminRequest request) {
-        //TODO: Check for moderator or admin status
+        if(!isAdmin()){
+            throw new AccessException("You have to be an administrator to make"
+                    + " a user an artist.");
+        }
         
         Long userId = request.getUserId();
         Query<Artist> q = ofy.query(Artist.class);
@@ -34,6 +43,10 @@ public class AdminServiceImpl extends ServiceImpl implements AdminService {
         ofy.delete(request);
     }
 
+    /**
+     * Deletes an artist.
+     * @param artist An artist to be deleted.
+     */
     @Override
     public void deleteArtist(Artist artist) {
         if(!isAdmin()){
@@ -42,6 +55,10 @@ public class AdminServiceImpl extends ServiceImpl implements AdminService {
         delete(artist);
     }
 
+    /**
+     * Deletes an album.
+     * @param album An album to be deleted.
+     */
     @Override
     public void deleteAlbum(Album album) {
         if(!isAdmin()){
@@ -50,6 +67,10 @@ public class AdminServiceImpl extends ServiceImpl implements AdminService {
         delete(album);
     }
 
+    /**
+     * Deletes a record.
+     * @param record An record to be deleted.
+     */
     @Override
     public void deleteRecord(Record record) {
         if(!isAdmin()){
@@ -58,6 +79,10 @@ public class AdminServiceImpl extends ServiceImpl implements AdminService {
         delete(record);
     }
     
+    /**
+     * Deletes a request.
+     * @param record An request to be deleted.
+     */
     @Override
     public void deleteRequest(AdminRequest request) {
         if(!isAdmin()){
@@ -66,6 +91,11 @@ public class AdminServiceImpl extends ServiceImpl implements AdminService {
         ofy.delete(request);
     }
     
+    /**
+     * Creates a list of all the artist that is using this service and 
+     * returning it.
+     * @return A list of artists.
+     */
     @Override
     public List<Artist> listArtists() {
         if(!isAdmin()){
@@ -74,6 +104,11 @@ public class AdminServiceImpl extends ServiceImpl implements AdminService {
         return ofy.query(Artist.class).list();
     }
     
+    /**
+     * Creates a list of all the AdminRequest that is requesting artist status
+     * and returning it.
+     * @return A list of adminRequest.
+     */    
     @Override
     public List<AdminRequest> listArtistRequests() {
         if(!isAdmin()){
