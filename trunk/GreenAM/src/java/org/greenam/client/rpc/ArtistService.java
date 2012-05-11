@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Blog;
-import org.greenam.client.domain.Event;
 import org.greenam.client.domain.Comment;
+import org.greenam.client.domain.Event;
 
 /**
- *
- * @author Emil & Michael
+ * A RPC interface for fetching and sending data about artists.
+ * 
+ * @author Emil
+ * @author Michael
  */
 @RemoteServiceRelativePath("rpc/artistservice")
 public interface ArtistService extends RemoteService {

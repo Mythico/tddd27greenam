@@ -13,8 +13,11 @@ import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Record;
 
 /**
- *
+ * A RPC interface for fetching and sending data that requires 
+ * administration status.
+ * 
  * @author Emil
+ * @author Michael
  */
 @RemoteServiceRelativePath("rpc/adminservice")
 public interface AdminService extends RemoteService {

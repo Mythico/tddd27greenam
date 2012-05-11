@@ -13,7 +13,8 @@ import org.greenam.client.domain.Comment;
 import org.greenam.client.domain.Event;
 
 /**
- * An asynchronous service interface.
+ * An asynchronous service interface for fetching 
+ * and sending data about artists.
  * 
  * @author Emil
  * @author Michael

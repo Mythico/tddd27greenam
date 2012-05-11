@@ -12,8 +12,11 @@ import org.greenam.client.domain.Artist;
 import org.greenam.client.domain.Record;
 
 /**
- *
+ * An asynchronous service interface for fetching 
+ * and sending data that requires administration status.
+ * 
  * @author Emil
+ * @author Michael
  */
 public interface AdminServiceAsync {
     
