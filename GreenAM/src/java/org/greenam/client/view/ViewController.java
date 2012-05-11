@@ -127,6 +127,10 @@ public final class ViewController extends DeckPanel {
         searchResultView.search(search);
         showWidget(SEARCH);
     }
+    
+    public void setHomeView() {
+        showWidget(HOME);
+    }
 
     /**
      * Register a base widget for user updates. Every time updateUser is called
@@ -218,4 +222,5 @@ public final class ViewController extends DeckPanel {
     public void logout() {
         user = null;
     }
+
 }

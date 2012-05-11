@@ -5,6 +5,8 @@
 package org.greenam.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
 import org.greenam.client.view.ViewController;
 import org.greenam.client.widget.LoginWidget;
@@ -34,7 +36,13 @@ public class MainEntryPoint implements EntryPoint {
         final ViewController viewController = new ViewController();
 
         final Image logo = new Image("img/logo.png");
-        
+        logo.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                viewController.setHomeView();
+            }
+        });
         grid.setWidget(0, 0, new LoginWidget(viewController));
         grid.setWidget(0, 1, logo);
         

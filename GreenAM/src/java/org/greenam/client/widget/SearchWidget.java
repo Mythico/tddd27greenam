@@ -26,9 +26,9 @@ public class SearchWidget extends HorizontalPanel {
 
             @Override
             public void onKeyPress(KeyPressEvent event) {
-                if (event.getSource().equals(KeyCodes.KEY_ENTER)) {
+                if (event.getCharCode() == KeyCodes.KEY_ENTER) {
+
                     viewController.setSearchView(searchBox.getText());
-                    searchBox.setText("");
                 }
             }
         });
