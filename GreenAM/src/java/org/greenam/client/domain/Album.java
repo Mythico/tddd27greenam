@@ -31,7 +31,7 @@ public class Album extends DatastoreObject {
     }
 
     /**
-     * Gets the title of the album.
+     * Get the title of the album.
      * @return A title.
      */
     public String getTitle() {
@@ -39,7 +39,7 @@ public class Album extends DatastoreObject {
     }
 
     /**
-     * Gets a list of records ids.
+     * Get a list of records ids.
      * @return A list containing record ids.
      */
     public List<Long> getRecordIds() {
@@ -47,7 +47,7 @@ public class Album extends DatastoreObject {
     }
 
     /**
-     * Adds a record to this album.
+     * Add a record to this album.
      * @param id A record id.
      */
     public void addRecord(Long id) {

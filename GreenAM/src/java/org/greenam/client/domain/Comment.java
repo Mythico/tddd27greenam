@@ -22,7 +22,7 @@ public class Comment extends DatastoreObject {
     }
     
     /**
-     * Creates a Comment with an entry, blog this comment was posted on and
+     * Create a Comment with an entry, blog this comment was posted on and
      * the name of the poster.
      * @param entry An entry.
      * @param blog A blog.
@@ -36,7 +36,7 @@ public class Comment extends DatastoreObject {
     }
     
     /**
-     * Gets the entry.
+     * Get the entry.
      * @return An entry.
      */
     public String getEntry() {
@@ -44,7 +44,7 @@ public class Comment extends DatastoreObject {
     }
     
     /**
-     * Gets the name of the user that posted the comment.
+     * Get the name of the user that posted the comment.
      * @return A name.
      */
     public String getName() {
@@ -52,7 +52,7 @@ public class Comment extends DatastoreObject {
     }
     
     /**
-     * Gets the blog id this comment was posted on.
+     * Get the blog id this comment was posted on.
      * @return A blog id.
      */
     public Long getBlogId() {
@@ -60,7 +60,7 @@ public class Comment extends DatastoreObject {
     }
     
     /**
-     * Gets the date this comment was posted on.
+     * Get the date this comment was posted on.
      * @return A date.
      */
     public Date getDate() {

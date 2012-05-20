@@ -18,7 +18,7 @@ public class Artist extends DatastoreObject{
     }
 
     /**
-     * Creates an artist from a user.
+     * Create an artist from a user.
      * @param userId A user id.
      */
     public Artist(Long userId) {
@@ -28,7 +28,7 @@ public class Artist extends DatastoreObject{
     }
 
     /**
-     * Gets the user id of this artist.
+     * Get the user id of this artist.
      * @return A user id.
      */
     public Long getUserId() {
@@ -36,7 +36,7 @@ public class Artist extends DatastoreObject{
     }
     
     /**
-     * Gets this artist biography.
+     * Get this artist biography.
      * @return A biography.
      */
     public String getBiography() {
@@ -44,7 +44,7 @@ public class Artist extends DatastoreObject{
     }
 
     /**
-     * Sets this artist biography.
+     * Set this artist biography.
      * @param biography A biography.
      */
     public void setBiography(String biography) {
@@ -52,7 +52,7 @@ public class Artist extends DatastoreObject{
     }
 
     /**
-     * Gets the artists name.
+     * Get the artists name.
      * @return A name.
      */
     public String getName() {
@@ -60,7 +60,7 @@ public class Artist extends DatastoreObject{
     }
 
     /**
-     * Sets the artists name.
+     * Set the artists name.
      * @param name A name.
      */
     public void setName(String name) {
