@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.client;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -16,6 +12,7 @@ import org.greenam.client.widget.SearchWidget;
  * Main entry point.
  *
  * @author Emil
+ * @author Michael
  */
 public class MainEntryPoint implements EntryPoint {
 
@@ -28,6 +25,9 @@ public class MainEntryPoint implements EntryPoint {
     /**
      * The entry point method, called automatically by loading a module that
      * declares an implementing class as an entry-point
+     * 
+     * Creates a basic grid layout with login button, logo and searchbar at the
+     * top and a content panel in the center.
      */
     @Override
     public void onModuleLoad() {
