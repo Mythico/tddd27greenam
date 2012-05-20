@@ -24,7 +24,7 @@ public class Blog extends DatastoreObject {
     }
     
     /**
-     * Creates a blog with an entry and an artist.
+     * Create a blog with an entry and an artist.
      * The dates is created automatically.
      * @param entry A blog entry
      * @param artist An artist.
@@ -36,7 +36,7 @@ public class Blog extends DatastoreObject {
     }
     
     /**
-     * Gets the entry.
+     * Get the entry.
      * @return An entry.
      */
     public String getEntry() {
@@ -44,7 +44,7 @@ public class Blog extends DatastoreObject {
     }
     
     /**
-     * Gets the artist id.
+     * Get the artist id.
      * @return An artist id.
      */
     public Long getArtistId() {
@@ -52,7 +52,7 @@ public class Blog extends DatastoreObject {
     }
     
     /**
-     * Gets the date this blog was posted.
+     * Get the date this blog was posted.
      * @return A date.
      */
     public Date getDate() {

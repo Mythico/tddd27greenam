@@ -24,6 +24,13 @@ public class AdminRequest extends DatastoreObject{
     public AdminRequest() {
     }
 
+    /**
+     * Create an admin recuest with a type, an id of the user that created the
+     * request and a message.
+     * @param type A type.
+     * @param userId An user id.
+     * @param message A message
+     */
     public AdminRequest(int type, Long userId, String message) {
         this.type = type;
         this.userId = userId;
@@ -31,7 +38,7 @@ public class AdminRequest extends DatastoreObject{
     }
 
     /**
-     * Gets the message from the request.
+     * Get the message from the request.
      * @return A message.
      */
     public String getMessage() {
@@ -39,7 +46,7 @@ public class AdminRequest extends DatastoreObject{
     }
 
     /**
-     * Gets the type of this request.
+     * Get the type of this request.
      * @return A type.
      */
     public int getType() {
@@ -47,7 +54,7 @@ public class AdminRequest extends DatastoreObject{
     }
 
     /**
-     * Gets the user id of the user that created this request.
+     * Get the user id of the user that created this request.
      * @return A user id.
      */
     public Long getUserId() {
