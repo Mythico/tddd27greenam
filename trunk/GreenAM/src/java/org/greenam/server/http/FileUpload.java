@@ -50,7 +50,7 @@ public class FileUpload extends HttpServlet {
         BlobKey blobKey = blobs.get("upload");
 
         //Get the paramters from the request to populate the Record object
-        String recordTitle = req.getParameter("albumBox");
+        String recordTitle = req.getParameter("recordBox");
         String albumTitle = req.getParameter("albumBox");
         List<Long> artists = parseStringToArtists(req.getParameter("artistBox"));
         int price = Integer.parseInt(req.getParameter("priceBox"));
