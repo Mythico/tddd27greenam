@@ -1,12 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.client.domain;
 
 /**
- *
+ * Access Exception is thrown when client is trying to access information
+ * it dosn't have access to.
+ * 
  * @author Emil
+ * @author Michael
  */
 public class AccessException extends RuntimeException{
 
