@@ -4,7 +4,7 @@
  */
 package org.greenam.client.view;
 
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -17,8 +17,8 @@ public class HomeView extends VerticalPanel{
         setStyleName("gam-BaseWidget");
         setWidth("600px");
         setHeight("600px");
-        add(new Label("Home Page"));
-        add(new Label("News"));
+        add(new HTML("<H1>Technical Difficulities</H1>"
+                + ""));
     }
     
     

@@ -28,6 +28,9 @@ public class User extends DatastoreObject {
     private List<Long> boughtRecordIds;
 
     public User() {
+        if(boughtRecordIds == null){
+            boughtRecordIds = new LinkedList<Long>();
+        }
     }
 
     /**
@@ -38,6 +41,7 @@ public class User extends DatastoreObject {
     public User(String federatedId, String name) {
         this.federatedId = federatedId;
         this.name = name;
+        boughtRecordIds = new LinkedList<Long>();
     }
 
     /**

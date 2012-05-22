@@ -163,7 +163,8 @@ public class BlogWidget extends VerticalPanel {
         mainEntryPanel.add(entry);
         
         //Add a new disclosurepanel and add the entry
-        panel = new DisclosurePanel(entry);
+        panel = new DisclosurePanel();
+        panel.setHeader(entry);
         panel.setWidth("500px");
         
         //Get and post the comments for this blog entry
@@ -198,7 +199,11 @@ public class BlogWidget extends VerticalPanel {
         scrollArea.setHeight("400px");
     }
 
-    //Get all the comments and post them on a VerticalPanel
+    /**
+     * Get all the comments and post them on a VerticalPanel
+     * @param blog
+     * @return 
+     */
     private VerticalPanel getComments(Blog blog) {
          final VerticalPanel panel = new VerticalPanel();
          panel.setStyleName("gam-Box");

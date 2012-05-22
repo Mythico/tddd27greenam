@@ -99,6 +99,9 @@ public class UploadWidget extends BaseWidget {
      */
     private boolean checkConstrains() {
         //TODO: add checks.
+        if(fileUpload.getFilename() == null || fileUpload.getFilename().equals("")){
+            return false;
+        }
         return true;
     }
 }

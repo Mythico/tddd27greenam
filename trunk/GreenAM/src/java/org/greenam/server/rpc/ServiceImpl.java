@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.server.rpc;
 
 import com.google.appengine.api.blobstore.BlobKey;
@@ -19,6 +15,7 @@ import org.greenam.client.domain.*;
 /**
  *
  * @author Emil
+ * @author Michael
  */
 public abstract class ServiceImpl extends RemoteServiceServlet {
 
