@@ -13,8 +13,11 @@ import org.greenam.client.widget.AlbumListWidget;
 import org.greenam.client.widget.RecordListWidget;
 
 /**
- *
+ *  SearchResultView is the view that shows the results of a new search, 
+ *  replaces the Homeview.
+ * 
  * @author Emil
+ * @author Michael
  */
 public class SearchResultView extends VerticalPanel {
 

@@ -14,11 +14,18 @@ import org.greenam.client.domain.*;
 import org.greenam.client.rpc.UserService;
 
 /**
- *
+ * An implementation of the UserService interface.
+ * 
  * @author Emil
+ * @author Michael
  */
 public class UserServiceImpl extends ServiceImpl implements UserService {
 
+    /*
+     * Check if a User is logged in or not.
+     * 
+     * @return true if a user is logged in otherwise false.
+     */
     @Override
     public boolean isLogin() {
         if (!userService.isUserLoggedIn()) {
@@ -30,18 +37,26 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
 
         return true;
     }
-
+    
+    /*
+     * Check if the artist has access.
+     */
     @Override
     public boolean hasAccess(Long artistId) {
         return super.hasAccess(artistId);
     }
 
-    
+    /*
+     * Check if the user is an admin.
+     */
     @Override
     public boolean isAdmin() {
         return super.isAdmin();
     }   
     
+    /*
+     * Get the artist that is current logged in.
+     */
     @Override
     public Artist getArtist(Long artistId) {
         Objectify ofy = ObjectifyService.begin();
@@ -50,6 +65,9 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         return artist;
     }
 
+    /*
+     * Get the user that is currenly logged in.
+     */
     @Override
     public User getCurrentUser() {
         if (!userService.isUserLoggedIn()) {
@@ -58,7 +76,10 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         String fid = getFederatedId();
         return getOrCreateUser(fid);
     }
-
+    
+    /*
+     * Get a list of the names of all the artists that exists in the database.
+     */
     @Override
     public List<LinkObject<String>> getArtistNames(List<Long> ids) {        
         List<LinkObject<String>> list = new LinkedList<LinkObject<String>>();
@@ -88,6 +109,9 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         return a;
     }
 
+    /*
+     * Add money to a User.
+     */
     @Override
     public User addMoney(int amount) {
         User user = getCurrentUser();
@@ -96,6 +120,9 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         return user;
     }
 
+    /*
+     * Sends a request to the admins about becoming an Artist.
+     */
     @Override
     public void sendRequest(String msg, int type) {
         if(!isLogin()){

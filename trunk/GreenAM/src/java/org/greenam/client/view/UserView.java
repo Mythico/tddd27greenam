@@ -20,8 +20,11 @@ import org.greenam.client.widget.BaseWidget;
 import org.greenam.client.widget.RequestArtistWidget;
 
 /**
- *
+ * Userview is the view that every user can see. It shows their money, and 
+ * gives the option to add more money or request to become an artist.
+ * 
  * @author Emil
+ * @author Michael
  */
 public class UserView extends BaseWidget {
 

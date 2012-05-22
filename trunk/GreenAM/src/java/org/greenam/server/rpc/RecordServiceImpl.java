@@ -19,8 +19,10 @@ import org.greenam.client.domain.*;
 import org.greenam.client.rpc.RecordService;
 
 /**
+ * An implementation of the RecordService interface.
  *
  * @author Emil
+ * @author Michael
  */
 public class RecordServiceImpl extends ServiceImpl implements RecordService {
 
@@ -43,13 +45,19 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         return records;
 
     }
-
+    
+    /*
+     * Search for all the songs in the database with a certain title.
+     */
     private List<Record> searchTitle(String s) {
 
         Objectify ofy = ObjectifyService.begin();
         return ofy.query(Record.class).filter("title >=", s).filter("title <", s + "\uFFFD").list();
     }
 
+    /*
+     * Search for all the records posted by a artist.
+     */
     private List<Record> searchArtist(String s) {
 
         Objectify ofy = ObjectifyService.begin();
@@ -64,7 +72,10 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         }
         return records;
     }
-
+    
+    /*
+     * Same as above but you search with an artistId instead of string
+     */
     private List<Record> searchArtist(Long artistId) {
 
         Objectify ofy = ObjectifyService.begin();
@@ -82,6 +93,11 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         return blobstoreService.createUploadUrl("/http/fileupload");
     }
     
+    /*
+     * Get all the albums posted by the artist.
+     * 
+     * @return a list of all albums
+     */
     @Override
     public List<Album> getAlbums(Artist artist) {
         Objectify ofy = ObjectifyService.begin();
@@ -89,6 +105,11 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         return list;
     }
     
+    /*
+     * Get all records in the list.
+     * 
+     * @return list of records
+     */
     @Override
     public List<Record> getRecords(List<Long> recordIds){        
         Objectify ofy = ObjectifyService.begin();
@@ -96,6 +117,11 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         return list;
     }
 
+    /*
+     * Gets all album names connected to the records.
+     * 
+     * @return list of album names
+     */
     @Override
     public List<LinkObject<String>> getAlbumNamesFromRecords(List<Long> recordIds) {
 

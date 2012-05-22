@@ -4,7 +4,7 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.NotSaved;
 
 /**
- * The admin request is a datastore object witch is used by the client to send
+ * The admin request is a datastore object which is used by the client to send
  * messages to administrators.
  * 
  * @author Emil
@@ -25,7 +25,7 @@ public class AdminRequest extends DatastoreObject{
     }
 
     /**
-     * Create an admin recuest with a type, an id of the user that created the
+     * Create an admin request with a type, an id of the user that created the
      * request and a message.
      * @param type A type.
      * @param userId An user id.
