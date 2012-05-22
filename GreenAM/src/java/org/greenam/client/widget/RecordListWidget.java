@@ -23,8 +23,11 @@ import org.greenam.client.rpc.*;
 import org.greenam.client.view.ViewController;
 
 /**
- *
+ * RecordListWidget sets the look of the search result page and gets 
+ * all the records and shows them.
+ * 
  * @author Emil
+ * @author Michael
  */
 public class RecordListWidget extends BaseWidget {
 
@@ -51,6 +54,10 @@ public class RecordListWidget extends BaseWidget {
 
     }
 
+    /*
+     * Get the records and show them with the play and buy button and the other
+     * necessary information.
+     */
     private void load(List<Record> records) {
         int row = records.size() + 1;
         grid.resize(row, 6);
@@ -82,7 +89,7 @@ public class RecordListWidget extends BaseWidget {
             }
             title.addStyleName("gam-Link");
 
-            //Click handlers
+            //Play the song if play button is clicked
             playImg.addClickHandler(new ClickHandler() {
 
                 @Override
@@ -96,7 +103,8 @@ public class RecordListWidget extends BaseWidget {
                     }
                 }
             });
-
+            
+            //attempt to buy the song if buy button is pressed.
             buyImg.addClickHandler(new ClickHandler() {
 
                 @Override
@@ -138,6 +146,9 @@ public class RecordListWidget extends BaseWidget {
         albumFetch.fetch();
     }
 
+    /*
+     * Check if the currently logged in user owns the record.
+     */
     private boolean userOwnRecord(Record record) {
         User user = viewController.getUser();
         for (Long id : user.getBoughtRecords()) {

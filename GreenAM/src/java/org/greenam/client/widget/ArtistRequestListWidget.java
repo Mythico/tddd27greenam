@@ -9,19 +9,21 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import java.util.List;
 import org.greenam.client.domain.AdminRequest;
-import org.greenam.client.domain.Artist;
 import org.greenam.client.rpc.AdminService;
 import org.greenam.client.rpc.AdminServiceAsync;
 import org.greenam.client.view.ViewController;
 
 /**
- *
+ * ArtistRequistListWidget is used to show the admins a list of all the users
+ * requesting to become an artist, and gives the admins the ability to accept
+ * or decline these.
+ * 
  * @author Emil
+ * @author Michael
  */
 public class ArtistRequestListWidget extends BaseWidget {
 

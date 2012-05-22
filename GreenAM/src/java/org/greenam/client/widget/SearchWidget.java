@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import org.greenam.client.view.ViewController;
 
 /**
- * The Search Widget provides a small seach box.
+ * The Search Widget provides a small search box.
  * 
  * @author Emil
  * @author Michael
