@@ -53,9 +53,6 @@ public class UserView extends BaseWidget {
 
         add(menuBar);
         add(panel);
-
-
-        panel.showWidget(USER);
     }
     Command showUser = new Command() {
 
@@ -84,10 +81,10 @@ public class UserView extends BaseWidget {
     public void setVisible(boolean visible) {
         super.setVisible(visible);
 
-        userPage.setVisible(visible && viewController.isLogin());
+        userPage.setVisible(visible);
         adminPage.setVisible(visible && viewController.isAdmin());
         artistPage.setVisible(visible && viewController.isArtist());
-
+        panel.showWidget(USER);
 
     }
 }
@@ -133,6 +130,12 @@ class UserPanel extends BasePanel {
                 });
             }
         });
+        
+        if (viewController.isLogin()) {
+            User user = viewController.getUser();
+            moneyLabel.setText(user.getMoney() + "€");
+            userLabel.setText(user.getName());
+        }
     }
 
     @Override
@@ -141,7 +144,7 @@ class UserPanel extends BasePanel {
 
         if (visible && viewController.isLogin()) {
             User user = viewController.getUser();
-            moneyLabel.setText("$" + user.getMoney());
+            moneyLabel.setText(user.getMoney() + "€");
             userLabel.setText(user.getName());
         }
 

@@ -4,6 +4,7 @@
  */
 package org.greenam.server.rpc;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Query;
 import java.util.List;
 import org.greenam.client.domain.*;
@@ -39,7 +40,16 @@ public class AdminServiceImpl extends ServiceImpl implements AdminService {
             //TODO: Throw error? Artist allready an artist?
         }
         artist = new Artist(userId);
+        
+        
+        //To generate an id, the artist must be saved in the datastore.
+        Key<Artist> put = ofy.put(artist);
+        
+        //Set the name to the generated id.
+        artist = ofy.get(put);        
+        artist.setName("Artist [" + artist.getId() + "]");
         ofy.put(artist);
+        
         ofy.delete(request);
     }
 

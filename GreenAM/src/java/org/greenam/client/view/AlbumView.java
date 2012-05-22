@@ -11,8 +11,9 @@ import org.greenam.client.rpc.UserServiceAsync;
 import org.greenam.client.widget.AlbumListWidget;
 
 /**
- *
+ 
  * @author Emil
+ * @author Michael
  */
 public class AlbumView extends VerticalPanel {
 

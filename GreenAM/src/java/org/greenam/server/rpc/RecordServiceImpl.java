@@ -16,7 +16,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.greenam.client.domain.*;
-
 import org.greenam.client.rpc.RecordService;
 
 /**
