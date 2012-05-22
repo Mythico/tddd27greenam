@@ -14,8 +14,11 @@ import org.greenam.client.widget.CalendarWidget;
 import org.greenam.client.widget.UploadWidget;
 
 /**
- *
+ *  ArtistView shows the artists view, with the help of AlbumListWidget, 
+ *  BiographyWidget, BlogWidget, CalendarWidget and UploadWidget.
+ * 
  * @author Emil
+ * @author Michael
  */
 public class ArtistView extends VerticalPanel {
 
@@ -40,6 +43,10 @@ public class ArtistView extends VerticalPanel {
 
         }
     };
+    
+    /*
+     * Which widget to run on different commands.
+     */
     private final Command showBio = new Command() {
 
         @Override
@@ -68,6 +75,7 @@ public class ArtistView extends VerticalPanel {
             deckPanel.showWidget(UPLOAD);
         }
     };
+    
     private final Label artistLabel = new Label("Unknown");
     private final MenuBar menuBar = new MenuBar();
     private final MenuItem musicItem = new MenuItem("Music", showMusic);
@@ -81,6 +89,9 @@ public class ArtistView extends VerticalPanel {
     private final CalendarWidget eventPane;
     private final UploadWidget uploadPane;
 
+    /*
+     * Add the menuitmes and what they do.
+     */
     public ArtistView(ViewController viewController) {
         setStyleName("gam-BaseWidget");
 

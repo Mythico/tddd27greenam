@@ -2,7 +2,7 @@ package org.greenam.client.domain;
 
 /**
  * Access Exception is thrown when client is trying to access information
- * it dosn't have access to.
+ * it doesn't have access to.
  * 
  * @author Emil
  * @author Michael

@@ -38,5 +38,6 @@ public interface ArtistServiceAsync {
     public void postComment(Comment comment, AsyncCallback callback);
     
     public void deleteBlog(Artist artist, AsyncCallback callback);
+    
     public void deleteBlog(Blog blog, AsyncCallback callback);    
 }

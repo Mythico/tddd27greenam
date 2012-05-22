@@ -15,8 +15,11 @@ import org.greenam.client.rpc.UserServiceAsync;
 import org.greenam.client.widget.BaseWidget;
 
 /**
- *
+ * ViewController helps to change between the different views, mostly
+ * Artist, User or Admin view.
+ * 
  * @author Emil
+ * @author Michael
  */
 public final class ViewController extends DeckPanel {
 

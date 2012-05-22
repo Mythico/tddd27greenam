@@ -8,8 +8,11 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- *
- * @author Emil
+ *  This is the HomeView, the view you see on the homepage when you first
+ *  start the site or press the logo button.
+ * 
+ *  @author Emil
+ *  @author Michael
  */
 public class HomeView extends VerticalPanel{
 
