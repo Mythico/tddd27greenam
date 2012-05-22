@@ -12,7 +12,8 @@ import org.greenam.client.domain.User;
 import org.greenam.client.view.ViewController;
 
 /**
- *
+ * Basewidget is a helper class for the other widgets.
+ * 
  * @author Emil
  * @author Michael
  */

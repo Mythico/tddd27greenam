@@ -19,8 +19,10 @@ import org.greenam.client.rpc.RecordServiceAsync;
 import org.greenam.client.view.ViewController;
 
 /**
- *
+ * AlbumListWidget gets and shows all albums made by an artist.
+ * 
  * @author Emil
+ * @author Michael
  */
 public class AlbumListWidget extends BaseWidget {
 

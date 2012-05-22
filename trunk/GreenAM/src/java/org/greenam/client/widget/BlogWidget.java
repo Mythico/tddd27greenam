@@ -18,7 +18,9 @@ import org.greenam.client.rpc.ArtistServiceAsync;
 import org.greenam.client.view.ViewController;
 
 /**
- *
+ * Blogwidget shows and handles the blog.
+ * 
+ * @author Emil
  * @author Michael
  */
 public class BlogWidget extends VerticalPanel {
@@ -48,6 +50,7 @@ public class BlogWidget extends VerticalPanel {
         buttonPanel.add(newentryButton);
         buttonPanel.add(clearblogButton);
 
+        //Save the entry if the New Entry button is pressed
         newentryButton.addClickHandler(new ClickHandler() {
 
             @Override
@@ -58,6 +61,7 @@ public class BlogWidget extends VerticalPanel {
             }
         });
 
+        //Clear the blog if clear blog button is pressed.
         clearblogButton.addClickHandler(new ClickHandler() {
 
             @Override
@@ -67,7 +71,10 @@ public class BlogWidget extends VerticalPanel {
         });
     }
 
-    //Saves the latest entry to the blog and updates the blog
+    /*
+     * Saves the latest entry to the blog and updates the blog
+     * 
+     */
     private void save() {
         if (!viewController.hasAccess()) {
             Window.alert("You are trying to add blog entries without"
@@ -91,7 +98,10 @@ public class BlogWidget extends VerticalPanel {
         });
     }
 
-    //Gets the blog and shows it
+    /*
+     * Gets the blog and shows it
+     * 
+     */
     private void update() {
         blogArea.clear();
         Artist artist = viewController.getArtist();
@@ -127,6 +137,9 @@ public class BlogWidget extends VerticalPanel {
         }
     }
 
+    /*
+     * Show the blog entry and all its comments.
+     */
     private void addBlog(final Blog blog, int i) {
         Date date = blog.getDate();
         
@@ -202,7 +215,7 @@ public class BlogWidget extends VerticalPanel {
     /**
      * Get all the comments and post them on a VerticalPanel
      * @param blog
-     * @return 
+     * @return Verticalpanel with all the comments
      */
     private VerticalPanel getComments(Blog blog) {
          final VerticalPanel panel = new VerticalPanel();
@@ -231,6 +244,9 @@ public class BlogWidget extends VerticalPanel {
          return panel;
     }
     
+    /*
+     * Save the comment to its blog entry.
+     */
     private void saveComment(String commentToAdd, Blog blog, String user) {
         
         Comment comment = new Comment(commentToAdd, blog, user);
@@ -248,7 +264,10 @@ public class BlogWidget extends VerticalPanel {
         });
     }
     
-    //Deletes the entire blog
+    /*
+     * Deletes the entire blog
+     * 
+     */
     private void clearEntireBlog() {
         Artist artist = viewController.getArtist();
         artistInfo.deleteBlog(artist, new AsyncCallback() {
@@ -265,7 +284,10 @@ public class BlogWidget extends VerticalPanel {
         });
     }
     
-    //Deletes a specific entry
+    /*
+     * Deletes a specific entry
+     * 
+     */
     private void deleteBlogEntry(Blog blog) {
         artistInfo.deleteBlog(blog, new AsyncCallback() {
 

@@ -17,6 +17,7 @@ import org.greenam.client.view.ViewController;
 
 /**
  * A calendar for showing and adding upcoming events for a specified artist.
+ * 
  * @author Emil
  * @author Michael
  */
