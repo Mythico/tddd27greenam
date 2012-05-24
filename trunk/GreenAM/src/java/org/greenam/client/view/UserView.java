@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.client.view;
 
 import com.google.gwt.core.client.GWT;
@@ -13,11 +9,7 @@ import com.google.gwt.user.client.ui.*;
 import org.greenam.client.domain.User;
 import org.greenam.client.rpc.UserService;
 import org.greenam.client.rpc.UserServiceAsync;
-import org.greenam.client.widget.ArtistListWidget;
-import org.greenam.client.widget.ArtistRequestListWidget;
-import org.greenam.client.widget.BasePanel;
-import org.greenam.client.widget.BaseWidget;
-import org.greenam.client.widget.RequestArtistWidget;
+import org.greenam.client.widget.*;
 
 /**
  * Userview is the view that every user can see. It shows their money, and 
@@ -92,6 +84,12 @@ public class UserView extends BaseWidget {
     }
 }
 
+/**
+ * User panel is a panel that show information of the current user.
+ * 
+ * @author Emil
+ * @author Michael
+ */
 class UserPanel extends BasePanel {
 
     private final UserServiceAsync userInfo = GWT.create(UserService.class);
