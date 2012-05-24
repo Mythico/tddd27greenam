@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.client.view;
 
 import com.google.gwt.core.client.GWT;
@@ -64,6 +60,10 @@ public final class ViewController extends DeckPanel {
         });
     }
 
+    /**
+     * Set the current view to the artist view .
+     * @param artistId An artist id.
+     */
     public void setArtistView(Long artistId) {
 
         userInfo.getArtist(artistId, new AsyncCallback<Artist>() {
@@ -81,6 +81,9 @@ public final class ViewController extends DeckPanel {
         });
     }
 
+    /**
+     * Set the current view to the user view.
+     */
     public void setUserView() {
         userInfo.getCurrentUser(new AsyncCallback<User>() {
 
@@ -121,15 +124,26 @@ public final class ViewController extends DeckPanel {
         });
     }
 
+    /**
+     * Set the current view to the album view.
+     * @param albumId An album id.
+     */
     public void setAlbumView(Long albumId) {
         showWidget(ALBUM);
     }
 
+    /**
+     * Set the current view to the search view.
+     * @param search A search string
+     */
     public void setSearchView(String search) {
         searchResultView.search(search);
         showWidget(SEARCH);
     }
     
+    /**
+     * Sets the current view to the home view.
+     */
     public void setHomeView() {
         showWidget(HOME);
     }

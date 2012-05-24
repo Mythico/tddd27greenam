@@ -1,17 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.client.view;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.*;
 import org.greenam.client.domain.Artist;
-import org.greenam.client.widget.AlbumListWidget;
-import org.greenam.client.widget.BiographyWidget;
-import org.greenam.client.widget.BlogWidget;
-import org.greenam.client.widget.CalendarWidget;
-import org.greenam.client.widget.UploadWidget;
+import org.greenam.client.widget.*;
 
 /**
  *  ArtistView shows the artists view, with the help of AlbumListWidget, 
@@ -44,7 +36,7 @@ public class ArtistView extends VerticalPanel {
         }
     };
     
-    /*
+    /**
      * Which widget to run on different commands.
      */
     private final Command showBio = new Command() {
@@ -89,7 +81,7 @@ public class ArtistView extends VerticalPanel {
     private final CalendarWidget eventPane;
     private final UploadWidget uploadPane;
 
-    /*
+    /**
      * Add the menuitmes and what they do.
      */
     public ArtistView(ViewController viewController) {
