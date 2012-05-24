@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.server.rpc;
 
 import com.google.appengine.api.blobstore.BlobKey;
@@ -26,6 +22,15 @@ import org.greenam.client.rpc.RecordService;
  */
 public class RecordServiceImpl extends ServiceImpl implements RecordService {
 
+    /**
+     * Search for records with a string that will be parsed.
+     * You can search for multiple queries by splitting them with a ','.
+     * You can also prefix the search with artist: that will search for artist
+     * names or artistId: that will list all the records for a single artist.
+     * 
+     * @param s A unparsed query string
+     * @return A list of records.
+     */
     @Override
     public List<Record> search(String s) {
 
@@ -46,8 +51,10 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
 
     }
     
-    /*
+    /**
      * Search for all the songs in the database with a certain title.
+     * 
+     * @param s A search query.
      */
     private List<Record> searchTitle(String s) {
 
@@ -56,7 +63,9 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
     }
 
     /*
-     * Search for all the records posted by a artist.
+     * Search for all the records posted by an artist.
+     * 
+     * @param s A search query.
      */
     private List<Record> searchArtist(String s) {
 
@@ -74,7 +83,9 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
     }
     
     /*
-     * Same as above but you search with an artistId instead of string
+     * Search for all the records posted by an artist with a specified id.
+     * 
+     * @param artistId An artist id.
      */
     private List<Record> searchArtist(Long artistId) {
 
@@ -84,7 +95,11 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         return records;
     }
 
-    //Generate a Blobstore Upload URL from the GAE BlobstoreService
+    
+    /**
+     * Generate a Blobstore Upload URL from the GAE BlobstoreService
+     * @return A blobstore url.
+     */
     @Override
     public String getBlobStoreUploadUrl() {
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
@@ -93,9 +108,10 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         return blobstoreService.createUploadUrl("/http/fileupload");
     }
     
-    /*
-     * Get all the albums posted by the artist.
+    /**
+     * Get all the albums posted by an artist.
      * 
+     * @param artist An artist.
      * @return a list of all albums
      */
     @Override
@@ -105,9 +121,10 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         return list;
     }
     
-    /*
-     * Get all records in the list.
+    /**
+     * Get all records from a list of record ids.
      * 
+     * @param recordIds A list of record ids.
      * @return list of records
      */
     @Override
@@ -117,9 +134,10 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         return list;
     }
 
-    /*
-     * Gets all album names connected to the records.
+    /**
+     * Gets all album names connected to a list of record ids.
      * 
+     * @param recordIds A list of record ids.
      * @return list of album names
      */
     @Override
@@ -135,7 +153,7 @@ public class RecordServiceImpl extends ServiceImpl implements RecordService {
         }
         return list;
     }
-
+        
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();

@@ -1,16 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.server.rpc;
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 import java.util.LinkedList;
 import java.util.List;
 import org.greenam.client.domain.*;
-
 import org.greenam.client.rpc.UserService;
 
 /**
@@ -21,10 +15,11 @@ import org.greenam.client.rpc.UserService;
  */
 public class UserServiceImpl extends ServiceImpl implements UserService {
 
-    /*
-     * Check if a User is logged in or not.
-     * 
-     * @return true if a user is logged in otherwise false.
+    
+    /**
+     * Checks if there is a user that is login.
+     *
+     * @return True if a user has login, otherwise false.
      */
     @Override
     public boolean isLogin() {
@@ -38,16 +33,23 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         return true;
     }
     
-    /*
-     * Check if the artist has access.
+    /**
+     * Checks if the current user has access to pages that requires
+     * artist-access.
+     *
+     * @param artistId
+     * @return False if the current user doesn't have access or that there is no
+     * user login, otherwise true.
      */
     @Override
     public boolean hasAccess(Long artistId) {
         return super.hasAccess(artistId);
     }
 
-    /*
-     * Check if the user is an admin.
+    /**
+     * Checks if the current user is an administrator.
+     *
+     * @return True if the user is an administrator, otherwise false.
      */
     @Override
     public boolean isAdmin() {
@@ -65,20 +67,25 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         return artist;
     }
 
-    /*
+    /**
      * Get the user that is currenly logged in.
+     * 
+     * @return Null if the user isn't login, otherwise an User object.
      */
     @Override
     public User getCurrentUser() {
-        if (!userService.isUserLoggedIn()) {
+        if (!isLogin()) {
             return null;
         }
         String fid = getFederatedId();
         return getOrCreateUser(fid);
     }
     
-    /*
-     * Get a list of the names of all the artists that exists in the database.
+    /**
+     * Get a list of the names from a list of artist ids.
+     * 
+     * @param ids A list of artist ids.
+     * @return A list of linkobjects linking names to artist ids.
      */
     @Override
     public List<LinkObject<String>> getArtistNames(List<Long> ids) {        
@@ -109,8 +116,10 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         return a;
     }
 
-    /*
+    /**
      * Add money to a User.
+     * 
+     * @param amount The amount of money to be added.
      */
     @Override
     public User addMoney(int amount) {
@@ -120,7 +129,7 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         return user;
     }
 
-    /*
+    /**
      * Sends a request to the admins about becoming an Artist.
      */
     @Override

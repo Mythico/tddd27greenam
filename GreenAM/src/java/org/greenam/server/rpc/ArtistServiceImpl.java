@@ -1,19 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.server.rpc;
 
-import com.google.gwt.user.client.Window;
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.Query;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.greenam.client.domain.*;
-import org.greenam.client.domain.Comment;
-
 import org.greenam.client.rpc.ArtistService;
 
 /**
@@ -26,8 +16,10 @@ import org.greenam.client.rpc.ArtistService;
  */
 public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
 
-    /*
+    /**
      * Get all events posted by an artist.
+     * @param artist An artist.
+     * @return A list of events.
      */
     @Override
     public List<Event> getEvents(Artist artist) {
@@ -37,8 +29,11 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
         return list;
     }
 
-    /*
+    /**
      * Get all blog entries made by the Artist.
+     * 
+     * @param artist An artist
+     * @return A list of blogs.
      */
     @Override
     public ArrayList<Blog> getBlog(Artist artist) {
@@ -46,8 +41,11 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
         return new ArrayList<Blog>(list);
     }
     
-    /*
+    /**
      * Get all the blog comments of a blog entry.
+     * 
+     * @param blog A blog.
+     * @return A list of comments.
      */
     @Override
     public ArrayList<Comment> getComment(Blog blog) {
@@ -55,8 +53,11 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
         return new ArrayList<Comment>(list);
     }
 
-    /*
+    /**
      * Save the biography of an artist if they have access to do so.
+     * 
+     * @param bio A biography to be saved.
+     * @param artistId An artist id
      */
     @Override
     public void editBiography(String bio, Long artistId) {
@@ -68,8 +69,10 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
         ofy.put(artist);
     }
     
-    /*
+    /**
      * Save a new event if the artist has access to do so.
+     * 
+     * @param event An event to be posted.
      */
     @Override
     public void postEvent(Event event) {
@@ -79,8 +82,10 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
         ofy.put(event);
     }
     
-    /*
+    /**
      * Delete a event if the artist has access to do so.
+     * 
+     * @param event An event to be deleted.
      */
     @Override
     public void deleteEvent(Event event) {
@@ -90,8 +95,10 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
         ofy.delete(Event.class, event.getId());
     }
 
-    /*
+    /**
      * Saves a blog entry if the artist has access to do so.
+     * 
+     * @param blog A blog to be posted.
      */
     @Override
     public void postBlog(Blog blog) {
@@ -101,17 +108,21 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
         ofy.put(blog);
     }
     
-    /*
+    /**
      * Saves comment to blog entry, no access needed since anyone should be able
      * to do it.
+     * 
+     * @param comment A comment to be posted.
      */
     @Override
     public void postComment(Comment comment) {
         ofy.put(comment);
     }
     
-    /*
+    /**      
      * Deletes all blog entry if artist has access to do so.
+     * 
+     * @param artist An artist whose blogs are being deleted.
      */
     @Override
     public void deleteBlog(Artist artist) {
@@ -122,8 +133,10 @@ public class ArtistServiceImpl extends ServiceImpl implements ArtistService {
         ofy.delete(blog);
     }
     
-    /*
+    /**
      * Deletes single blog entry if artist has access to do so.
+     * 
+     * @param blog A blog to be deleted.
      */
     @Override
     public void deleteBlog(Blog blog) {
