@@ -1,7 +1,6 @@
 package org.greenam.client.widget;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -71,9 +70,8 @@ public class BlogWidget extends VerticalPanel {
         });
     }
 
-    /*
+    /**
      * Saves the latest entry to the blog and updates the blog
-     * 
      */
     private void save() {
         if (!viewController.hasAccess()) {
@@ -98,9 +96,8 @@ public class BlogWidget extends VerticalPanel {
         });
     }
 
-    /*
+    /**
      * Gets the blog and shows it
-     * 
      */
     private void update() {
         blogArea.clear();
@@ -137,8 +134,10 @@ public class BlogWidget extends VerticalPanel {
         }
     }
 
-    /*
+    /**
      * Show the blog entry and all its comments.
+     * @param blog The blog to be shown.
+     * @param i An entry counter.
      */
     private void addBlog(final Blog blog, int i) {
         Date date = blog.getDate();
@@ -149,7 +148,7 @@ public class BlogWidget extends VerticalPanel {
         final DisclosurePanel panel;
         final Button addCommentButton = new Button("Add comment");
         final RichTextArea addComment = new RichTextArea();
-        VerticalPanel commentsPanel = new VerticalPanel();
+        VerticalPanel commentsPanel;
                 
         mainEntryPanel.setStyleName("gam-Box");
         addComment.setStyleName("gam-Textbox");
@@ -244,8 +243,12 @@ public class BlogWidget extends VerticalPanel {
          return panel;
     }
     
-    /*
+    /**
      * Save the comment to its blog entry.
+     * 
+     * @param commentToAdd A comment to be added.
+     * @param blog A blog where the comment will be added.
+     * @param user Name of the adding user.
      */
     private void saveComment(String commentToAdd, Blog blog, String user) {
         
@@ -264,9 +267,8 @@ public class BlogWidget extends VerticalPanel {
         });
     }
     
-    /*
+    /**
      * Deletes the entire blog
-     * 
      */
     private void clearEntireBlog() {
         Artist artist = viewController.getArtist();
@@ -284,9 +286,10 @@ public class BlogWidget extends VerticalPanel {
         });
     }
     
-    /*
+    /**
      * Deletes a specific entry
      * 
+     * @param blog A Blog to be deleted.
      */
     private void deleteBlogEntry(Blog blog) {
         artistInfo.deleteBlog(blog, new AsyncCallback() {
