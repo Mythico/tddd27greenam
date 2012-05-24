@@ -15,7 +15,7 @@ import org.greenam.client.domain.*;
 /**
  * An implementation of the Service interface. Here we register what classes
  * should be in the database and different User services.
- * 
+ *
  * @author Emil
  * @author Michael
  */
@@ -97,9 +97,9 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
         return user;
     }
 
-    /*
+    /**
      * Gets the FederatedId of the current User.
-     * 
+     *
      * @return Returns the FereratedId
      */
     protected String getFederatedId() {
@@ -121,43 +121,55 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
         return user;
     }
 
-    /*
+    /**
      * Saves the User to the database.
+     *
+     * @param user An User to be saved.
      */
     protected void save(User user) {
         ofy.put(user);
     }
-    
-    /*
+
+    /**
      * Saves the Artist to the database.
+     *
+     * @param artist An Artist to be saved.
      */
     protected void save(Artist artist) {
         ofy.put(artist);
     }
 
-    /*
+    /**
      * Saves the Album to the database.
+     *
+     * @param album An Album to be saved.
      */
     protected void save(Album album) {
         ofy.put(album);
     }
-    
-    /*
+
+    /**
      * Saves the record to the database.
+     *
+     * @param record A Record to be saved.
      */
     protected void save(Record record) {
         ofy.put(record);
     }
 
-     /*
-     * deletes the album from the database.
+    /**
+     * Deletes an album from the database.
+     * 
+     * @param album An Album to be deleted.
      */
     protected void delete(Album album) {
         ofy.delete(Album.class, album.getId());
     }
 
-    /*
-     * deletes the record from the database.
+    /**
+     * Deletes a record from the database.
+     * 
+     * @param record A Record to be deleted.
      */
     protected void delete(Record record) {
         ofy.delete(Record.class, record.getId());
@@ -169,8 +181,10 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
         //TODO: Remove actual blob
     }
 
-    /*
-     * deletes the artist from the database.
+    /**
+     * Deletes an artist from the database.
+     * 
+     * @param artist An Artist to be deleted.
      */
     protected void delete(Artist artist) {
         ofy.delete(Artist.class, artist.getId());
@@ -185,8 +199,10 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
         removeReferenses(artist);
     }
 
-    /*
-     * Remove all referenses to record in albums.
+    /**
+     * Remove all references to a record in the database.
+     * 
+     * @param record A record whose references is being deleted.
      */
     private void removeReferenses(Record record) {
         for (Album album : ofy.query(Album.class).filter("recordIds", record.getId())) {
@@ -208,8 +224,11 @@ public abstract class ServiceImpl extends RemoteServiceServlet {
             save(user);
         }
     }
-    /*
-     * Remove all referenses to artist in albums.
+    
+    /**
+     * Remove all references to an album in the database.
+     * 
+     * @param album An album whose references is being deleted.
      */
     private void removeReferenses(Artist artist) {
         for (Album album : ofy.query(Album.class).filter("artistIds", artist.getId())) {
