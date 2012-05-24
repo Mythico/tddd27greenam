@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.client.widget;
 
 import com.google.gwt.core.client.GWT;
@@ -9,7 +5,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RichTextArea;
 import org.greenam.client.domain.Artist;
 import org.greenam.client.rpc.ArtistService;
 import org.greenam.client.rpc.ArtistServiceAsync;
@@ -31,6 +30,10 @@ public class BiographyWidget extends BaseWidget {
     private final Button cancelButton = new Button("Cancel");
     private final Label bioLabel = new Label();
 
+    /**
+     * Creates a biography widget.
+     * @param viewController A link to the view controller.
+     */
     public BiographyWidget(final ViewController viewController) {
         super(viewController);
         setSize("100%", "100%");
