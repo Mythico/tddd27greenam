@@ -1,25 +1,24 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.client.widget;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.AudioElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.media.client.Audio;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import org.greenam.client.domain.LinkObject;
 import org.greenam.client.domain.Record;
 import org.greenam.client.domain.User;
-import org.greenam.client.rpc.*;
+import org.greenam.client.rpc.RecordService;
+import org.greenam.client.rpc.RecordServiceAsync;
+import org.greenam.client.rpc.UserService;
+import org.greenam.client.rpc.UserServiceAsync;
 import org.greenam.client.view.ViewController;
 
 /**
@@ -54,9 +53,11 @@ public class RecordListWidget extends BaseWidget {
 
     }
 
-    /*
+    /**
      * Get the records and show them with the play and buy button and the other
      * necessary information.
+     * 
+     * @param A list of records to be loaded.
      */
     private void load(List<Record> records) {
         int row = records.size() + 1;
@@ -146,8 +147,10 @@ public class RecordListWidget extends BaseWidget {
         albumFetch.fetch();
     }
 
-    /*
+    /**
      * Check if the currently logged in user owns the record.
+     * 
+     * @param  A record to be checked.
      */
     private boolean userOwnRecord(Record record) {
         User user = viewController.getUser();
@@ -158,6 +161,10 @@ public class RecordListWidget extends BaseWidget {
         }
         return false;
     }
+    
+    /**
+     * A public callback used by the search to load the widget with records.
+     */
     public final AsyncCallback<List<Record>> callback = new AsyncCallback<List<Record>>() {
 
         @Override
@@ -198,7 +205,11 @@ abstract class FetchObject {
         map.put(id, list);
     }
 
+    /**
+     * Fetches for all the mapped objects.
+     */
     public abstract void fetch();
+    
     protected AsyncCallback<List<LinkObject<String>>> callback = new AsyncCallback<List<LinkObject<String>>>() {
 
         @Override
@@ -239,6 +250,13 @@ abstract class FetchObject {
     }
 }
 
+/**
+ * Artists fetch object is a fetch object that fetches artists 
+ * belonging to a record.
+ * 
+ * @author Emil
+ * @author Michael
+ */
 class ArtistFetchObject extends FetchObject {
 
     private final UserServiceAsync userInfo = GWT.create(UserService.class);
@@ -261,6 +279,13 @@ class ArtistFetchObject extends FetchObject {
     }
 }
 
+/**
+ * Album fetch object is a fetch object that fetches albums 
+ * belonging to a record.
+ * 
+ * @author Emil
+ * @author Michael
+ */
 class AlbumFetchObject extends FetchObject {
 
     private final RecordServiceAsync recordInfo = GWT.create(RecordService.class);

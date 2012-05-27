@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.server.http;
 
 import com.google.appengine.api.blobstore.BlobKey;
