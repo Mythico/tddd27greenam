@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.greenam.client.widget;
 
 import com.google.gwt.core.client.GWT;
@@ -20,7 +16,7 @@ import org.greenam.client.view.ViewController;
 
 /**
  * AlbumListWidget gets and shows all albums made by an artist.
- * 
+ *
  * @author Emil
  * @author Michael
  */
@@ -32,6 +28,9 @@ public class AlbumListWidget extends BaseWidget {
         super(viewController);
     }
 
+    /**
+     * Load the albums of the current artist.
+     */
     private void load() {
         Artist artist = viewController.getArtist();
         recordInfo.getAlbums(artist, new AsyncCallback<List<Album>>() {
@@ -60,6 +59,12 @@ public class AlbumListWidget extends BaseWidget {
     }
 }
 
+/**
+ * Album panel is a panel for representing a single album in the album widget.
+ *
+ * @author Emil
+ * @author Michael
+ */
 class AlbumPanel extends BasePanel {
 
     private final RecordServiceAsync recordInfo = GWT.create(RecordService.class);
