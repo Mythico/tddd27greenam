@@ -11,9 +11,9 @@ import org.greenam.client.rpc.UserServiceAsync;
 import org.greenam.client.widget.BaseWidget;
 
 /**
- * ViewController helps to change between the different views, mostly
- * Artist, User or Admin view.
- * 
+ * ViewController helps to change between the different views, mostly Artist,
+ * User or Admin view.
+ *
  * @author Emil
  * @author Michael
  */
@@ -62,6 +62,7 @@ public final class ViewController extends DeckPanel {
 
     /**
      * Set the current view to the artist view .
+     *
      * @param artistId An artist id.
      */
     public void setArtistView(Long artistId) {
@@ -85,7 +86,36 @@ public final class ViewController extends DeckPanel {
      * Set the current view to the user view.
      */
     public void setUserView() {
-        userInfo.getCurrentUser(new AsyncCallback<User>() {
+        
+        //Fetches user data, artist status and admin status.
+        
+        final AsyncCallback<Boolean> getAdminCall = new AsyncCallback<Boolean>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void onSuccess(Boolean result) {
+                isAdmin = result;
+                showWidget(USER);
+            }
+        };
+        final AsyncCallback<Artist> getArtistCall = new AsyncCallback<Artist>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void onSuccess(Artist result) {
+                artist = result;
+                userInfo.isAdmin(getAdminCall);
+            }
+        };
+        AsyncCallback<User> getUserCall = new AsyncCallback<User>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -95,37 +125,15 @@ public final class ViewController extends DeckPanel {
             @Override
             public void onSuccess(User result) {
                 user = result;
-                userInfo.getAsArtist(user, new AsyncCallback<Artist>() {
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        throw new UnsupportedOperationException("Not supported yet.");
-                    }
-
-                    @Override
-                    public void onSuccess(Artist result) {
-                        artist = result;
-                        userInfo.isAdmin(new AsyncCallback<Boolean>() {
-
-                            @Override
-                            public void onFailure(Throwable caught) {
-                                throw new UnsupportedOperationException("Not supported yet.");
-                            }
-
-                            @Override
-                            public void onSuccess(Boolean result) {
-                                isAdmin = result;
-                                showWidget(USER);                                
-                            }
-                        });
-                    }
-                });
+                userInfo.getAsArtist(user, getArtistCall);
             }
-        });
+        };
+        userInfo.getCurrentUser(getUserCall);
     }
 
     /**
      * Set the current view to the album view.
+     *
      * @param albumId An album id.
      */
     public void setAlbumView(Long albumId) {
@@ -134,13 +142,14 @@ public final class ViewController extends DeckPanel {
 
     /**
      * Set the current view to the search view.
+     *
      * @param search A search string
      */
     public void setSearchView(String search) {
         searchResultView.search(search);
         showWidget(SEARCH);
     }
-    
+
     /**
      * Sets the current view to the home view.
      */
@@ -238,5 +247,4 @@ public final class ViewController extends DeckPanel {
     public void logout() {
         user = null;
     }
-
 }

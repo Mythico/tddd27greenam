@@ -1,7 +1,5 @@
 package org.greenam.server.rpc;
 
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyService;
 import java.util.LinkedList;
 import java.util.List;
 import org.greenam.client.domain.*;
@@ -56,13 +54,13 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
         return super.isAdmin();
     }   
     
-    /*
-     * Get the artist that is current logged in.
+    /**
+     * Get artist by id.
+     * @param artistId An artist id.
+     * @return An artist.
      */
     @Override
     public Artist getArtist(Long artistId) {
-        Objectify ofy = ObjectifyService.begin();
-
         Artist artist = ofy.get(Artist.class, artistId);
         return artist;
     }
@@ -131,6 +129,8 @@ public class UserServiceImpl extends ServiceImpl implements UserService {
 
     /**
      * Sends a request to the admins about becoming an Artist.
+     * @param msg A message to an administrator
+     * @param type The type of the message.
      */
     @Override
     public void sendRequest(String msg, int type) {
